@@ -1,0 +1,60 @@
+{
+  "originHash" : "1e7e92d5a87ab885018243dd3b6a0381ce1ee8660253d796b63f670e77ca76fc",
+  "pins" : [
+    {
+      "identity" : "combineasync",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hainayanda/CombineAsync.git",
+      "state" : {
+        "revision" : "ff6188edb948e29c2e7053f6b3c54caf16cf9d05",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "retain",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hainayanda/Retain.git",
+      "state" : {
+        "revision" : "9786a73cd2eb7ea247723e6245da9aae0adcbacc",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "swiftlintplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
+      "state" : {
+        "revision" : "9bbc46a4cf8275ceb39334f6276b6b215d67d5d5",
+        "version" : "0.62.2"
+      }
+    },
+    {
+      "identity" : "swiftui-onboarding",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Sedlacek-Solutions/SwiftUI-Onboarding.git",
+      "state" : {
+        "revision" : "abc75fa48204dc281387579580d83e5a669efa02",
+        "version" : "2.2.1"
+      }
+    },
+    {
+      "identity" : "welcomewindow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CodeEditApp/WelcomeWindow",
+      "state" : {
+        "branch" : "main",
+        "revision" : "cef2726ed3bd7b5beb585c9b6829f76d463a224c"
+      }
+    }
+  ],
+  "version" : 3
+}
