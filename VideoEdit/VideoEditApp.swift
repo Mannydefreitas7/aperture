@@ -6,19 +6,23 @@ import Onboarding
 @main
 struct ClaquetteApp: App {
     @StateObject private var appState = AppState()
-    
-    var body: some Scene {
+    @AppStorage(.onboardingKey) var showOnboarding: Bool = true
 
+    var body: some Scene {
 
         VIWelcomeWindow()
 
-        WindowGroup {
-            ContentView()
-                .environmentObject(appState)
-                .frame(minWidth: 900, minHeight: 600)
-        }
-        .windowStyle(.hiddenTitleBar)
-        .windowToolbarStyle(.automatic)
+        VIEditorWindow()
+
+
+//
+//        WindowGroup {
+//            ContentView()
+//                .environmentObject(appState)
+//                .frame(minWidth: 900, minHeight: 600)
+//        }
+//        .windowStyle(.hiddenTitleBar)
+//        .windowToolbarStyle(.automatic)
 
         .commands {
             CommandGroup(replacing: .newItem) {

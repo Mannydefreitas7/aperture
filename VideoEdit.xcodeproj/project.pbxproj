@@ -3,11 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 90;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1000000000000001 /* ClaquetteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000001 /* ClaquetteApp.swift */; };
+		1000000000000001 /* VideoEditApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000001 /* VideoEditApp.swift */; };
 		1000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000002 /* ContentView.swift */; };
 		1000000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2000000000000003 /* Assets.xcassets */; };
 		1000000000000005 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000005 /* ScreenRecorder.swift */; };
@@ -85,6 +85,20 @@
 		144E65FB2F0A538C00D044AD /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E65FA2F0A538900D044AD /* Button.swift */; };
 		144E65FD2F0A57C600D044AD /* WelcomeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E65FC2F0A57C600D044AD /* WelcomeButton.swift */; };
 		144E66002F0A583500D044AD /* FocusRingModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E65FF2F0A583500D044AD /* FocusRingModifier.swift */; };
+		144E66022F0A687100D044AD /* RectCorner+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E66012F0A687100D044AD /* RectCorner+Model.swift */; };
+		144E66042F0A6C0D00D044AD /* VIEditorWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E66032F0A6C0D00D044AD /* VIEditorWindow.swift */; };
+		144E66072F0A70DD00D044AD /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 144E66062F0A70DD00D044AD /* Onboarding */; };
+		146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EF72F0A7C0000AA07CC /* SwiftBasicFormat */; };
+		146E4EFA2F0A7C0000AA07CC /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EF92F0A7C0000AA07CC /* SwiftCompilerPlugin */; };
+		146E4EFC2F0A7C0000AA07CC /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EFB2F0A7C0000AA07CC /* SwiftDiagnostics */; };
+		146E4EFE2F0A7C0000AA07CC /* SwiftIDEUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EFD2F0A7C0000AA07CC /* SwiftIDEUtils */; };
+		146E4F002F0A7C0000AA07CC /* SwiftIfConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EFF2F0A7C0000AA07CC /* SwiftIfConfig */; };
+		146E4F032F0A7C1400AA07CC /* WelcomeWindow in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4F022F0A7C1400AA07CC /* WelcomeWindow */; };
+		146E4F062F0A7C2800AA07CC /* CombineAsync in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4F052F0A7C2800AA07CC /* CombineAsync */; };
+		146E4F092F0A7CC200AA07CC /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4F082F0A7CC200AA07CC /* Onboarding */; };
+		146E4F0B2F0A830000AA07CC /* VIRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */; };
+		146E4F0E2F0A8DE900AA07CC /* VideoEditorCore in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4F0D2F0A8DE900AA07CC /* VideoEditorCore */; };
+		146E4F102F0AA8B900AA07CC /* VICameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */; };
 		148AAC572F073A300087D649 /* AVFoundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */; };
 		148AAC582F073A300087D649 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC552F073A300087D649 /* NSImage+Extensions.swift */; };
 		148AAC592F073A300087D649 /* SwiftUI+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC562F073A300087D649 /* SwiftUI+Extensions.swift */; };
@@ -96,7 +110,6 @@
 		148AAC6A2F078B610087D649 /* ScreenRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC692F078B610087D649 /* ScreenRecorderView.swift */; };
 		148AAC6C2F0793A80087D649 /* View+Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6B2F07939E0087D649 /* View+Modifiers.swift */; };
 		148AAC6E2F0793D00087D649 /* View+NSViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */; };
-		14D9D69E2F04DBED00065B49 /* RectCorner+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1400C92C2F04C472001EF209 /* RectCorner+Model.swift */; };
 		14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A42F05974400065B49 /* SwiftBasicFormat */; };
 		14D9D6A72F05974400065B49 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A62F05974400065B49 /* SwiftCompilerPlugin */; };
 		14D9D6A92F05974400065B49 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A82F05974400065B49 /* SwiftDiagnostics */; };
@@ -160,7 +173,6 @@
 		1400C9292F04C472001EF209 /* RecentFilesManager+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecentFilesManager+Model.swift"; sourceTree = "<group>"; };
 		1400C92A2F04C472001EF209 /* RecordingError+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordingError+Model.swift"; sourceTree = "<group>"; };
 		1400C92B2F04C472001EF209 /* RecordingQuality+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecordingQuality+Model.swift"; sourceTree = "<group>"; };
-		1400C92C2F04C472001EF209 /* RectCorner+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "RectCorner+Model.swift"; path = "Claquette/Models/RectCorner+Model.swift"; sourceTree = SOURCE_ROOT; };
 		1400C92D2F04C472001EF209 /* RoundedCornerShape+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RoundedCornerShape+Model.swift"; sourceTree = "<group>"; };
 		1400C92E2F04C472001EF209 /* VideoBitrate+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoBitrate+Model.swift"; sourceTree = "<group>"; };
 		1400C92F2F04C472001EF209 /* VideoCodec+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VideoCodec+Model.swift"; sourceTree = "<group>"; };
@@ -177,6 +189,10 @@
 		144E65FA2F0A538900D044AD /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		144E65FC2F0A57C600D044AD /* WelcomeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeButton.swift; sourceTree = "<group>"; };
 		144E65FF2F0A583500D044AD /* FocusRingModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusRingModifier.swift; sourceTree = "<group>"; };
+		144E66012F0A687100D044AD /* RectCorner+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RectCorner+Model.swift"; sourceTree = "<group>"; };
+		144E66032F0A6C0D00D044AD /* VIEditorWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIEditorWindow.swift; sourceTree = "<group>"; };
+		146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIRecordingView.swift; sourceTree = "<group>"; };
+		146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VICameraCaptureView.swift; sourceTree = "<group>"; };
 		148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVFoundation+Extensions.swift"; sourceTree = "<group>"; };
 		148AAC542F073A300087D649 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		148AAC552F073A300087D649 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -189,33 +205,41 @@
 		148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NSViewRepresentable.swift"; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		14D9D6B12F0718AB00065B49 /* NamePrintable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePrintable.swift; sourceTree = "<group>"; };
-		2000000000000001 /* ClaquetteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaquetteApp.swift; sourceTree = "<group>"; };
+		2000000000000001 /* VideoEditApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditApp.swift; sourceTree = "<group>"; };
 		2000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2000000000000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2000000000000005 /* ScreenRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
 		2000000000000006 /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		2000000000000007 /* GIFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFExporter.swift; sourceTree = "<group>"; };
 		2000000000000010 /* MouseClickVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseClickVisualizer.swift; sourceTree = "<group>"; };
-		2000000000000011 /* Claquette.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Claquette.entitlements; sourceTree = "<group>"; };
+		2000000000000011 /* VideoEdit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoEdit.entitlements; sourceTree = "<group>"; };
 		2000000000000012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3000000000000001 /* Claquette.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Claquette.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3000000000000001 /* VideoEdit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoEdit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		4000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				14D9D6A92F05974400065B49 /* SwiftDiagnostics in Frameworks */,
 				148AAC632F075CBD0087D649 /* CombineAsync in Frameworks */,
+				146E4F092F0A7CC200AA07CC /* Onboarding in Frameworks */,
+				144E66072F0A70DD00D044AD /* Onboarding in Frameworks */,
 				14D9D6AB2F05974400065B49 /* SwiftIDEUtils in Frameworks */,
 				144E65E22F094FA400D044AD /* WelcomeWindow in Frameworks */,
+				146E4EFA2F0A7C0000AA07CC /* SwiftCompilerPlugin in Frameworks */,
 				14D9D6AD2F05974400065B49 /* SwiftIfConfig in Frameworks */,
+				146E4F062F0A7C2800AA07CC /* CombineAsync in Frameworks */,
 				144E65E52F09556E00D044AD /* Onboarding in Frameworks */,
 				14D9D6A72F05974400065B49 /* SwiftCompilerPlugin in Frameworks */,
+				146E4F002F0A7C0000AA07CC /* SwiftIfConfig in Frameworks */,
+				146E4F0E2F0A8DE900AA07CC /* VideoEditorCore in Frameworks */,
+				146E4EFC2F0A7C0000AA07CC /* SwiftDiagnostics in Frameworks */,
+				146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */,
+				146E4EFE2F0A7C0000AA07CC /* SwiftIDEUtils in Frameworks */,
+				146E4F032F0A7C1400AA07CC /* WelcomeWindow in Frameworks */,
 				14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -226,6 +250,7 @@
 				1400C8CA2F04C2A5001EF209 /* CameraManager.swift */,
 				1400C8CB2F04C2A5001EF209 /* CameraOverlayView.swift */,
 				1400C8CC2F04C2A5001EF209 /* CameraPreviewView.swift */,
+				146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -277,6 +302,7 @@
 				1400C8E22F04C2A5001EF209 /* RecordingSetupView.swift */,
 				1400C8E32F04C2A5001EF209 /* RecordingView.swift */,
 				148AAC692F078B610087D649 /* ScreenRecorderView.swift */,
+				146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */,
 			);
 			path = Recording;
 			sourceTree = "<group>";
@@ -369,6 +395,7 @@
 			isa = PBXGroup;
 			children = (
 				1400C8F52F04C2A5001EF209 /* VIWelcomeWindow.swift */,
+				144E66032F0A6C0D00D044AD /* VIEditorWindow.swift */,
 			);
 			path = Windows;
 			sourceTree = "<group>";
@@ -400,19 +427,19 @@
 			isa = PBXGroup;
 			children = (
 				144E65F72F0A390F00D044AD /* AppIcon.icon */,
-				5000000000000002 /* Claquette */,
+				5000000000000002 /* VideoEdit */,
 				5000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		5000000000000002 /* Claquette */ = {
+		5000000000000002 /* VideoEdit */ = {
 			isa = PBXGroup;
 			children = (
 				144E65F42F0966A100D044AD /* Controllers */,
 				148AAC642F0784CF0087D649 /* Windows */,
-				2000000000000011 /* Claquette.entitlements */,
+				2000000000000011 /* VideoEdit.entitlements */,
 				2000000000000012 /* Info.plist */,
-				2000000000000001 /* ClaquetteApp.swift */,
+				2000000000000001 /* VideoEditApp.swift */,
 				148AAC672F07854A0087D649 /* Constants.swift */,
 				2000000000000002 /* ContentView.swift */,
 				2000000000000003 /* Assets.xcassets */,
@@ -422,13 +449,13 @@
 				5000000000000006 /* Utilities */,
 				1400C8F62F04C2A5001EF209 /* Views */,
 			);
-			path = Claquette;
+			path = VideoEdit;
 			sourceTree = "<group>";
 		};
 		5000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3000000000000001 /* Claquette.app */,
+				3000000000000001 /* VideoEdit.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -454,7 +481,7 @@
 				1400C9292F04C472001EF209 /* RecentFilesManager+Model.swift */,
 				1400C92A2F04C472001EF209 /* RecordingError+Model.swift */,
 				1400C92B2F04C472001EF209 /* RecordingQuality+Model.swift */,
-				1400C92C2F04C472001EF209 /* RectCorner+Model.swift */,
+				144E66012F0A687100D044AD /* RectCorner+Model.swift */,
 				1400C92D2F04C472001EF209 /* RoundedCornerShape+Model.swift */,
 				1400C92E2F04C472001EF209 /* VideoBitrate+Model.swift */,
 				1400C92F2F04C472001EF209 /* VideoCodec+Model.swift */,
@@ -481,9 +508,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6000000000000001 /* Claquette */ = {
+		6000000000000001 /* VideoEdit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7000000000000003 /* Build configuration list for PBXNativeTarget "Claquette" */;
+			buildConfigurationList = 7000000000000003 /* Build configuration list for PBXNativeTarget "VideoEdit" */;
 			buildPhases = (
 				6000000000000002 /* Sources */,
 				4000000000000001 /* Frameworks */,
@@ -491,11 +518,9 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
-			name = Claquette;
+			name = VideoEdit;
 			productName = Claquette;
-			productReference = 3000000000000001 /* Claquette.app */;
+			productReference = 3000000000000001 /* VideoEdit.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -516,8 +541,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7000000000000001 /* Build configuration list for PBXProject "Claquette" */;
-			compatibilityVersion = "Xcode 14.0";
+			buildConfigurationList = 7000000000000001 /* Build configuration list for PBXProject "VideoEdit" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -525,17 +549,20 @@
 				Base,
 			);
 			mainGroup = 5000000000000001;
+			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				14D9D6A32F05974400065B49 /* XCRemoteSwiftPackageReference "swift-syntax" */,
-				148AAC612F075CBD0087D649 /* XCRemoteSwiftPackageReference "CombineAsync" */,
-				144E65E02F094FA400D044AD /* XCRemoteSwiftPackageReference "WelcomeWindow" */,
-				144E65E32F09556E00D044AD /* XCRemoteSwiftPackageReference "SwiftUI-Onboarding" */,
+				146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */,
+				146E4F012F0A7C1400AA07CC /* XCRemoteSwiftPackageReference "WelcomeWindow" */,
+				146E4F042F0A7C2800AA07CC /* XCRemoteSwiftPackageReference "CombineAsync" */,
+				146E4F072F0A7CC200AA07CC /* XCRemoteSwiftPackageReference "Onboarding" */,
+				146E4F0C2F0A8DE900AA07CC /* XCRemoteSwiftPackageReference "capcutsdk" */,
 			);
+			preferredProjectObjectVersion = 90;
 			productRefGroup = 5000000000000003 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6000000000000001 /* Claquette */,
+				6000000000000001 /* VideoEdit */,
 			);
 		};
 /* End PBXProject section */
@@ -543,19 +570,16 @@
 /* Begin PBXResourcesBuildPhase section */
 		6000000000000003 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				144E65F82F0A390F00D044AD /* AppIcon.icon in Resources */,
 				1000000000000003 /* Assets.xcassets in Resources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		6000000000000002 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 				148AAC572F073A300087D649 /* AVFoundation+Extensions.swift in Sources */,
 				148AAC582F073A300087D649 /* NSImage+Extensions.swift in Sources */,
@@ -567,16 +591,19 @@
 				144E65EB2F09624800D044AD /* WelcomeSubtitleView.swift in Sources */,
 				1400C9362F04C472001EF209 /* RecordingQuality+Model.swift in Sources */,
 				1400C9372F04C472001EF209 /* CameraSize+Model.swift in Sources */,
+				146E4F0B2F0A830000AA07CC /* VIRecordingView.swift in Sources */,
 				1400C9382F04C472001EF209 /* GIFExportError+Model.swift in Sources */,
 				1400C9392F04C472001EF209 /* ExportQuality+Model.swift in Sources */,
 				1400C93A2F04C472001EF209 /* RecordingError+Model.swift in Sources */,
 				1400C93C2F04C472001EF209 /* CameraPosition+Model.swift in Sources */,
+				146E4F102F0AA8B900AA07CC /* VICameraCaptureView.swift in Sources */,
 				1400C93D2F04C472001EF209 /* VideoEditorError+Model.swift in Sources */,
 				1400C93E2F04C472001EF209 /* ClickEvent+Model.swift in Sources */,
 				1400C93F2F04C472001EF209 /* VideoDocument+Model.swift in Sources */,
 				1400C9412F04C472001EF209 /* ExportPreset+Model.swift in Sources */,
 				1400C9422F04C472001EF209 /* CameraShape+Model.swift in Sources */,
 				1400C9432F04C472001EF209 /* AspectRatio+Model.swift in Sources */,
+				144E66042F0A6C0D00D044AD /* VIEditorWindow.swift in Sources */,
 				144E66002F0A583500D044AD /* FocusRingModifier.swift in Sources */,
 				1400C9442F04C472001EF209 /* RoundedCornerShape+Model.swift in Sources */,
 				1400C9452F04C472001EF209 /* VideoCodec+Model.swift in Sources */,
@@ -589,7 +616,7 @@
 				148AAC6A2F078B610087D649 /* ScreenRecorderView.swift in Sources */,
 				144E65E92F0961ED00D044AD /* OpenFileOrFolderButton.swift in Sources */,
 				1400C94B2F04C472001EF209 /* ExportFormat+Model.swift in Sources */,
-				1000000000000001 /* ClaquetteApp.swift in Sources */,
+				1000000000000001 /* VideoEditApp.swift in Sources */,
 				1000000000000002 /* ContentView.swift in Sources */,
 				1000000000000005 /* ScreenRecorder.swift in Sources */,
 				1000000000000006 /* VideoEditor.swift in Sources */,
@@ -617,6 +644,7 @@
 				14D9D6B22F0718B400065B49 /* NamePrintable.swift in Sources */,
 				144E65F12F0963BA00D044AD /* AppKit+Extensions.swift in Sources */,
 				1400C9062F04C2A5001EF209 /* CameraSettingsView.swift in Sources */,
+				144E66022F0A687100D044AD /* RectCorner+Model.swift in Sources */,
 				1400C9072F04C2A5001EF209 /* FormatButton.swift in Sources */,
 				1400C9082F04C2A5001EF209 /* CropOverlay.swift in Sources */,
 				148AAC6E2F0793D00087D649 /* View+NSViewRepresentable.swift in Sources */,
@@ -629,7 +657,6 @@
 				1400C90E2F04C2A5001EF209 /* VideoTimeline.swift in Sources */,
 				1400C90F2F04C2A5001EF209 /* PresetButton.swift in Sources */,
 				144E65F32F0964F500D044AD /* EnvironmentValues.swift in Sources */,
-				14D9D69E2F04DBED00065B49 /* RectCorner+Model.swift in Sources */,
 				1400C9102F04C2A5001EF209 /* CropHandleView.swift in Sources */,
 				1400C9112F04C2A5001EF209 /* CameraManager.swift in Sources */,
 				144E65FD2F0A57C600D044AD /* WelcomeButton.swift in Sources */,
@@ -645,12 +672,11 @@
 				1400C9192F04C2A5001EF209 /* ToolButton.swift in Sources */,
 				1000000000000010 /* MouseClickVisualizer.swift in Sources */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		7000000000000004 /* Debug */ = {
+		7000000000000004 /* Debug configuration for PBXProject "VideoEdit" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -714,7 +740,7 @@
 			};
 			name = Debug;
 		};
-		7000000000000005 /* Release */ = {
+		7000000000000005 /* Release configuration for PBXProject "VideoEdit" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -770,15 +796,15 @@
 			};
 			name = Release;
 		};
-		7000000000000006 /* Debug */ = {
+		7000000000000006 /* Debug configuration for PBXNativeTarget "VideoEdit" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				AUTOMATION_APPLE_EVENTS = YES;
-				CODE_SIGN_ENTITLEMENTS = Claquette/Claquette.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_ENTITLEMENTS = VideoEdit/VideoEdit.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -803,22 +829,23 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Claquette/Info.plist;
+				INFOPLIST_FILE = VideoEdit/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VideoEdit;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "VideoEdit uses Apple Events for Finder integration.";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Claquette needs access to your camera to add a camera overlay to your recordings.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "VideoEdit needs access to your camera to add a camera overlay to your recordings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024. All rights reserved.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Claquette needs access to your microphone to record audio with your screen recordings.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VideoEdit needs access to your microphone to record audio with your screen recordings.";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.philagora.VideoEdit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
 				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
 				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = NO;
@@ -830,15 +857,15 @@
 			};
 			name = Debug;
 		};
-		7000000000000007 /* Release */ = {
+		7000000000000007 /* Release configuration for PBXNativeTarget "VideoEdit" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				AUTOMATION_APPLE_EVENTS = YES;
-				CODE_SIGN_ENTITLEMENTS = Claquette/Claquette.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_ENTITLEMENTS = VideoEdit/VideoEdit.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -863,22 +890,23 @@
 				ENABLE_RESOURCE_ACCESS_USB = NO;
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Claquette/Info.plist;
+				INFOPLIST_FILE = VideoEdit/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VideoEdit;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "VideoEdit uses Apple Events for Finder integration.";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Claquette needs access to your camera to add a camera overlay to your recordings.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "VideoEdit needs access to your camera to add a camera overlay to your recordings.";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2024. All rights reserved.";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Claquette needs access to your microphone to record audio with your screen recordings.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VideoEdit needs access to your microphone to record audio with your screen recordings.";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.philagora.VideoEdit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
 				RUNTIME_EXCEPTION_ALLOW_JIT = NO;
 				RUNTIME_EXCEPTION_ALLOW_UNSIGNED_EXECUTABLE_MEMORY = NO;
@@ -893,22 +921,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7000000000000001 /* Build configuration list for PBXProject "Claquette" */ = {
+		7000000000000001 /* Build configuration list for PBXProject "VideoEdit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7000000000000004 /* Debug */,
-				7000000000000005 /* Release */,
+				7000000000000004 /* Debug configuration for PBXProject "VideoEdit" */,
+				7000000000000005 /* Release configuration for PBXProject "VideoEdit" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		7000000000000003 /* Build configuration list for PBXNativeTarget "Claquette" */ = {
+		7000000000000003 /* Build configuration list for PBXNativeTarget "VideoEdit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7000000000000006 /* Debug */,
-				7000000000000007 /* Release */,
+				7000000000000006 /* Debug configuration for PBXNativeTarget "VideoEdit" */,
+				7000000000000007 /* Release configuration for PBXNativeTarget "VideoEdit" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
@@ -928,6 +954,54 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.2.1;
+			};
+		};
+		144E66052F0A70DD00D044AD /* XCRemoteSwiftPackageReference "Onboarding" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Mannydefreitas7/Onboarding";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-syntax.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 602.0.0;
+			};
+		};
+		146E4F012F0A7C1400AA07CC /* XCRemoteSwiftPackageReference "WelcomeWindow" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CodeEditApp/WelcomeWindow";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		146E4F042F0A7C2800AA07CC /* XCRemoteSwiftPackageReference "CombineAsync" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hainayanda/CombineAsync.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		146E4F072F0A7CC200AA07CC /* XCRemoteSwiftPackageReference "Onboarding" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Mannydefreitas7/Onboarding";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		146E4F0C2F0A8DE900AA07CC /* XCRemoteSwiftPackageReference "capcutsdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Mannydefreitas7/capcutsdk";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 		148AAC612F075CBD0087D649 /* XCRemoteSwiftPackageReference "CombineAsync" */ = {
@@ -958,6 +1032,56 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 144E65E32F09556E00D044AD /* XCRemoteSwiftPackageReference "SwiftUI-Onboarding" */;
 			productName = Onboarding;
+		};
+		144E66062F0A70DD00D044AD /* Onboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 144E66052F0A70DD00D044AD /* XCRemoteSwiftPackageReference "Onboarding" */;
+			productName = Onboarding;
+		};
+		146E4EF72F0A7C0000AA07CC /* SwiftBasicFormat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftBasicFormat;
+		};
+		146E4EF92F0A7C0000AA07CC /* SwiftCompilerPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftCompilerPlugin;
+		};
+		146E4EFB2F0A7C0000AA07CC /* SwiftDiagnostics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftDiagnostics;
+		};
+		146E4EFD2F0A7C0000AA07CC /* SwiftIDEUtils */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftIDEUtils;
+		};
+		146E4EFF2F0A7C0000AA07CC /* SwiftIfConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4EF62F0A7C0000AA07CC /* XCRemoteSwiftPackageReference "swift-syntax" */;
+			productName = SwiftIfConfig;
+		};
+		146E4F022F0A7C1400AA07CC /* WelcomeWindow */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4F012F0A7C1400AA07CC /* XCRemoteSwiftPackageReference "WelcomeWindow" */;
+			productName = WelcomeWindow;
+		};
+		146E4F052F0A7C2800AA07CC /* CombineAsync */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4F042F0A7C2800AA07CC /* XCRemoteSwiftPackageReference "CombineAsync" */;
+			productName = CombineAsync;
+		};
+		146E4F082F0A7CC200AA07CC /* Onboarding */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4F072F0A7CC200AA07CC /* XCRemoteSwiftPackageReference "Onboarding" */;
+			productName = Onboarding;
+		};
+		146E4F0D2F0A8DE900AA07CC /* VideoEditorCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4F0C2F0A8DE900AA07CC /* XCRemoteSwiftPackageReference "capcutsdk" */;
+			productName = VideoEditorCore;
 		};
 		148AAC622F075CBD0087D649 /* CombineAsync */ = {
 			isa = XCSwiftPackageProductDependency;

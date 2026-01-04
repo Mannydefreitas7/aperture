@@ -2,7 +2,7 @@ import SwiftUI
 import AVFoundation
 
 struct CameraSettingsView: View {
-    @ObservedObject var cameraManager: CameraManager
+    @ObservedObject var cameraManager: CameraPreviewViewModel
     @Binding var position: CameraPosition
     @Binding var size: CameraSize
     @Binding var shape: CameraShape

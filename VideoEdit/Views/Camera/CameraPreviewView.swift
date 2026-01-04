@@ -2,22 +2,19 @@ import SwiftUI
 import AVFoundation
 
 struct CameraPreviewView: NSViewRepresentable {
-    let session: VCCameraSession
+    @Binding var session: AVCaptureSession
 
     func makeNSView(context: Context) -> NSView {
         let view = CameraPreviewNSView()
-        Task {
-            view.session = await session.current
-        }
+        view.session =  session
 
         return view
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {
         guard let previewView = nsView as? CameraPreviewNSView else { return }
-          Task {
-            previewView.session = await session.current
-        }
+        previewView.session =  session
+
     }
 }
 
@@ -35,10 +32,12 @@ class CameraPreviewNSView: NSView {
         wantsLayer = true
     }
 
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         wantsLayer = true
     }
+
 
     override func layout() {
         super.layout()

@@ -7,9 +7,7 @@ import AppKit
 struct VIWelcomeWindow: Scene {
     @EnvironmentObject var appState: AppState
     @FocusState var focusedField: FocusTarget?
-    @AppStorage(.onboardingKey) var showOnboarding: Bool = true
     @Environment(\.openWindow) var openWindow
-
 
     var createAction: AnyView {
         AnyView(createProjectButton())
@@ -19,10 +17,8 @@ struct VIWelcomeWindow: Scene {
         AnyView(openProjectButton())
     }
 
-
-
     var body: some Scene {
-        // Alternatives: Image(.appIcon) if using ImageResource, or Image(nsImage: NSApp.applicationIconImage) for the macOS app icon.
+
         WelcomeWindow(iconImage: .appIcon) {
             WelcomeSubtitleView()
                 .showOnboardingIfNeeded { markComplete in
@@ -33,19 +29,13 @@ struct VIWelcomeWindow: Scene {
 
         actions: { dismissWindow in
 
-
             VIWelcomeButton(
                 iconName: "record.circle",
                 title: "Record",
                 action: {
-                    NSDocumentController.shared.createFileDocumentWithDialog(
-                        configuration: .init(title: "Create new text document"),
-                        onCompletion: { dismissWindow() }
-                    )
+                    openWindow(sceneID: .editor)
                 }
             )
-
-
 
             VIWelcomeButton(
                 iconName: "square.and.arrow.down",

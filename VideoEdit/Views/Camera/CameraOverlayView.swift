@@ -3,7 +3,7 @@ import AVFoundation
 import Combine
 
 struct CameraOverlayView: View {
-    @StateObject private var cameraManager = CameraManager()
+    @StateObject private var cameraManager = CameraPreviewViewModel()
     @Binding var isVisible: Bool
     @Binding var position: CameraPosition
     @Binding var size: CameraSize
@@ -17,7 +17,7 @@ struct CameraOverlayView: View {
             GeometryReader { geometry in
                 ZStack {
                     // Camera preview
-                    CameraPreviewView(session: cameraManager.session)
+                    CameraPreviewView(session: $cameraManager.session)
                         .frame(width: size.dimensions.width, height: size.dimensions.height)
                         .clipShape(shape.shape)
                         .overlay(
@@ -47,7 +47,7 @@ struct CameraOverlayView: View {
                 }
             }
             .task {
-                await cameraManager.startSession()
+                await cameraManager.loadcameras()
             }
 
             .onAppear {

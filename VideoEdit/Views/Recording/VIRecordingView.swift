@@ -6,10 +6,11 @@
 //
 
 import SwiftUI
+import AVKit
 
 struct VIRecordingView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VideoPlayer(player: nil)
     }
 }
 

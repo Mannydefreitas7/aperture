@@ -1,6 +1,15 @@
 {
-  "originHash" : "1e7e92d5a87ab885018243dd3b6a0381ce1ee8660253d796b63f670e77ca76fc",
+  "originHash" : "95fae8622619fd3d30b75307600cf17c403f8ec90db0a10e744f67c8e430e7bb",
   "pins" : [
+    {
+      "identity" : "capcutsdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mannydefreitas7/capcutsdk",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7d56dc52af0da181aab2a412e8ef4399f965ae34"
+      }
+    },
     {
       "identity" : "combineasync",
       "kind" : "remoteSourceControl",
@@ -8,6 +17,15 @@
       "state" : {
         "revision" : "ff6188edb948e29c2e7053f6b3c54caf16cf9d05",
         "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "onboarding",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Mannydefreitas7/Onboarding",
+      "state" : {
+        "branch" : "main",
+        "revision" : "14cb9ad40982d96ff74778b7cc4570124e76ffad"
       }
     },
     {
@@ -35,15 +53,6 @@
       "state" : {
         "revision" : "9bbc46a4cf8275ceb39334f6276b6b215d67d5d5",
         "version" : "0.62.2"
-      }
-    },
-    {
-      "identity" : "swiftui-onboarding",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Sedlacek-Solutions/SwiftUI-Onboarding.git",
-      "state" : {
-        "revision" : "abc75fa48204dc281387579580d83e5a669efa02",
-        "version" : "2.2.1"
       }
     },
     {

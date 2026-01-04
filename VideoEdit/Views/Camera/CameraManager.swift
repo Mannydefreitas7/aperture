@@ -12,15 +12,8 @@ struct CameraInfo: Identifiable, Hashable {
     let device: AVCaptureDevice
 }
 
-actor VCCameraSession {
+actor VCDeviceCameraManager {
 
-    private let session = AVCaptureSession()
-
-    @MainActor var current: AVCaptureSession {
-        get async {
-            await session.self
-        }
-    }
 
     func loadAvailableCameras() -> [CameraInfo] {
         let discoverySession = AVCaptureDevice.DiscoverySession(
@@ -41,7 +34,7 @@ actor VCCameraSession {
     }
 
 
-    func startSession(with selectedCamera: CameraInfo?) async throws -> AVCaptureDeviceInput {
+    func start(_ session: AVCaptureSession, with selectedCamera: CameraInfo?) async throws -> AVCaptureDeviceInput {
         guard !session.isRunning else {
             throw NSError(domain: String(describing: self), code: AVError.sessionNotRunning.rawValue)
         }
@@ -67,7 +60,7 @@ actor VCCameraSession {
         return input
     }
 
-    func stopSession() async -> Void {
+    func stop(_ session: AVCaptureSession) async -> Void {
         guard session.isRunning else { return }
 
         await MainActor.run {
@@ -78,9 +71,11 @@ actor VCCameraSession {
 
 }
 
-public final class CameraManager: ObservableObject {
-    @Published var session = VCCameraSession()
+@MainActor
+public final class CameraPreviewViewModel: ObservableObject {
+    @Published var session = AVCaptureSession()
     private var videoInput: AVCaptureDeviceInput?
+    private let cameraManager = VCDeviceCameraManager()
     var cancellables: Set<AnyCancellable> = []
 
     @Published var isRunning = false
@@ -93,11 +88,6 @@ public final class CameraManager: ObservableObject {
 
     init() {
 
-        $session
-            .asyncMap { await $0.current }
-            .assign(to: \.currentSession, on: self)
-            .store(in: &cancellables)
-
         $currentSession
             .compactMap { $0 }
             .map { $0.isRunning }
@@ -107,8 +97,9 @@ public final class CameraManager: ObservableObject {
 
         $availableCameras
             .map { cameras in
+
                 cameras.first {
-                   $0.device.isConnected
+                    $0.device.isConnected
                }
             }
             .assign(to: \.selectedCamera, on: self)
@@ -123,9 +114,15 @@ public final class CameraManager: ObservableObject {
     }
 
 
+    func loadcameras() async {
+        availableCameras = await cameraManager.loadAvailableCameras()
+        print("Available Cameras: \(availableCameras)")
+    }
+
+
     func startSession(_ device: CameraInfo? = nil) async {
         do {
-            videoInput = try await session.startSession(with: device)
+            videoInput = try await cameraManager.start(session, with: device)
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -133,7 +130,7 @@ public final class CameraManager: ObservableObject {
 
     func stopSession() async {
         videoInput = nil
-         await session.stopSession()
+        await cameraManager.stop(session)
     }
 
 
@@ -142,7 +139,7 @@ public final class CameraManager: ObservableObject {
         guard let currentSession else { return }
 
         if currentSession.isRunning {
-            await session.stopSession()
+            await cameraManager.stop(session)
         }
 
         await startSession(device)
