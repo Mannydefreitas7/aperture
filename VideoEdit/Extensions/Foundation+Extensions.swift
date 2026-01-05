@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 // MARK: - Double Extensions
 
@@ -30,6 +31,37 @@ extension Date {
     }
 }
 
+extension CGSize {
+    var aspectRatio: CGFloat {
+        width.isZero ? 1.0 : CGFloat(height) / CGFloat(width)
+    }
+
+
+    var windowSize: Self {
+
+        guard let window = NSApplication.shared.keyWindow else {
+            return .zero
+        }
+        return window.frame.size
+
+
+    }
+}
+
+// MARK: - CGFloat
+
+extension CGFloat {
+    var isEven: Bool { truncatingRemainder(dividingBy: 2) == 0 }
+
+    static var windowWidth: Self {
+
+        guard let window = NSApplication.shared.keyWindow else {
+            return .zero
+        }
+        return window.frame.width
+
+    }
+}
 
 // MARK: - CGRect
 

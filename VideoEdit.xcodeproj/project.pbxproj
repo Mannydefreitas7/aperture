@@ -99,6 +99,7 @@
 		146E4F0B2F0A830000AA07CC /* VIRecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */; };
 		146E4F0E2F0A8DE900AA07CC /* VideoEditorCore in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4F0D2F0A8DE900AA07CC /* VideoEditorCore */; };
 		146E4F102F0AA8B900AA07CC /* VICameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */; };
+		146E4F122F0B5DA900AA07CC /* CameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F112F0B5DA900AA07CC /* CameraCaptureView.swift */; };
 		148AAC572F073A300087D649 /* AVFoundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */; };
 		148AAC582F073A300087D649 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC552F073A300087D649 /* NSImage+Extensions.swift */; };
 		148AAC592F073A300087D649 /* SwiftUI+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC562F073A300087D649 /* SwiftUI+Extensions.swift */; };
@@ -193,6 +194,7 @@
 		144E66032F0A6C0D00D044AD /* VIEditorWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIEditorWindow.swift; sourceTree = "<group>"; };
 		146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIRecordingView.swift; sourceTree = "<group>"; };
 		146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VICameraCaptureView.swift; sourceTree = "<group>"; };
+		146E4F112F0B5DA900AA07CC /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
 		148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVFoundation+Extensions.swift"; sourceTree = "<group>"; };
 		148AAC542F073A300087D649 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		148AAC552F073A300087D649 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 				1400C8CB2F04C2A5001EF209 /* CameraOverlayView.swift */,
 				1400C8CC2F04C2A5001EF209 /* CameraPreviewView.swift */,
 				146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */,
+				146E4F112F0B5DA900AA07CC /* CameraCaptureView.swift */,
 			);
 			path = Camera;
 			sourceTree = "<group>";
@@ -589,6 +592,7 @@
 				1400C9342F04C472001EF209 /* ExportResolution+Model.swift in Sources */,
 				1400C9352F04C472001EF209 /* EditingTool+Model.swift in Sources */,
 				144E65EB2F09624800D044AD /* WelcomeSubtitleView.swift in Sources */,
+				146E4F122F0B5DA900AA07CC /* CameraCaptureView.swift in Sources */,
 				1400C9362F04C472001EF209 /* RecordingQuality+Model.swift in Sources */,
 				1400C9372F04C472001EF209 /* CameraSize+Model.swift in Sources */,
 				146E4F0B2F0A830000AA07CC /* VIRecordingView.swift in Sources */,

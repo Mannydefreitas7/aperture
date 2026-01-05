@@ -25,6 +25,36 @@ class Constants {
         static let appIcon = NSApplication.shared.applicationIconImage.suggestedFilename ?? "AppIcon"
     }
 
+    static let cameraToolbarID = "camera-toolbar"
+    static let guideToggleID = "guide-toggle"
+    static let mirrorToggleID = "mirror-toggle"
+    static let maskToggleID = "mask-toggle"
+    static let aspectRatioPickerID = "aspect-ratio-picker2"
+
+    static let showGuidesTitle = "Show Guides"
+    static let showGuidesHelp = "Show/hide the Guides for the current selected platform"
+
+    static let showMaskTitle = "Show Mask"
+    static let showMaskHelp = "Show/hide the mask for the current aspect ratio"
+
+    static let ratioMenuTitle = "Ratio"
+    static let ratioMenuHelp = "Change the aspect ratio"
+
+    static let mirrorTitle = "Mirror video"
+    static let mirrorHelp = "Mirror the video horizontally"
+
+    static let screenshareMode = "Screenshare"
+    static let cameraMode = "Camera"
+
+    static let youtubePreset = "YouTube"
+    static let tiktokPreset = "TikTok"
+    static let instagramPreset = "Instagram"
+
+    static let aspectPresetStorageKey = "VICameraCaptureView.aspectPreset"
+    static let showAspectMaskStorageKey = "VICameraCaptureView.showAspectMask"
+    static let showSafeGuidesStorageKey = "VICameraCaptureView.showSafeGuides"
+    static let showPlatformSafeStorageKey = "VICameraCaptureView.showPlatformSafe"
+
     static let screen_capture_security_key: String = "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
 
 }

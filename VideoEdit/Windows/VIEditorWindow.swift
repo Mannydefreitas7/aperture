@@ -13,17 +13,27 @@ struct VIEditorWindow: Scene {
     @StateObject var viewModel = ViewModel()
 
     var body: some Scene {
-        Window("", id: Constants.SceneID.editor.rawValue) {
+        WindowGroup("Editor", id: Constants.SceneID.editor.rawValue) {
             VICameraCaptureView()
+
+            //    .aspectRatio(16 / 9, contentMode: .fill)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .windowResizeAnchor(.bottomLeading)
+                .ignoresSafeArea(.all)
+                .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
+
 
                 .environmentObject(appState)
         }
-        .windowStyle(.hiddenTitleBar)
-        .windowBackgroundDragBehavior(.enabled)
+        .windowStyle(.titleBar)
+        .windowToolbarStyle(.unified)
+        .windowResizability(.contentSize)
     }
 }
 
 extension VIEditorWindow {
+
+  
 
     class ViewModel: ObservableObject {
 
@@ -32,6 +42,7 @@ extension VIEditorWindow {
         @Published var size: CameraSize = .small
         @Published var shape: CameraShape = .circle
 
+    
 
     }
 
