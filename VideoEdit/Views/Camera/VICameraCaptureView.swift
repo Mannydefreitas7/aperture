@@ -21,7 +21,21 @@ struct VICameraCaptureView: View {
     @AppStorage(Constants.showPlatformSafeStorageKey) private var showPlatformSafe: Bool = true
     @AppStorage(Constants.mirrorToggleID) private var isMirrored: Bool = true
 
+
+    @State private var spacing: CGFloat = 8
+    @State private var isTimerEnabled: Bool = false
+    @State private var timerSelection: TimerSelection = .threeSeconds
+
+    enum TimerSelection: String, CaseIterable, Identifiable {
+        case threeSeconds = "3"
+        case fiveSeconds = "5"
+        case tenSeconds = "10"
+
+        var id: String { rawValue }
+    }
+
     @Namespace private var namespace
+    @Namespace private var namespace2
 
     var body: some View {
 
@@ -30,16 +44,15 @@ struct VICameraCaptureView: View {
                 .ignoresSafeArea(.all)
 
             AspectMaskOverlay(
+                aspectPreset: aspectPreset,
                 showGuides: showSafeGuides,
                 showMask: showAspectMask,
                 showPlatformSafe: showPlatformSafe
             )
-            .animation(.easeInOut, value: aspectPreset)
-
             .allowsHitTesting(false)
 
-                     bottomContent()
-                    .frame(maxWidth: .windowWidth * 0.3)
+            bottomContent()
+            //    .frame(width: .windowWidth * 0.3)
 
 
         }
@@ -48,7 +61,10 @@ struct VICameraCaptureView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar {
             topTrailingControls()
+
         }
+
+        .controlSize(.extraLarge)
 
 
     }
@@ -61,25 +77,30 @@ extension VICameraCaptureView {
     @ViewBuilder
     func recordButton() -> some View {
 
+        Button {
+            //
+        } label: {
+            Label {
+                Text("Record")
+
+            } icon: {
+                Image(systemName: viewModel.isRecording ? "stop.circle.fill" : "record.circle")
+                    .font(.system(size: 24))
+                    .padding(4)
+                    .background(Color(.recordingRed), in: .circle, fillStyle: FillStyle(eoFill: true))
 
 
-            Button(role: .cancel) {
-                //
-            } label: {
-                LabeledContent {
-                    Image(systemName: viewModel.isRecording ? "stop.circle.fill" : "record.circle")
-
-                        .symbolRenderingMode(.hierarchical)
-                        .foregroundStyle(.recordingRed)
-                } label: {
-                    Text("Record")
-                }
-
-
+                // .glassEffect(.regular.tint(.recordingRed), in: .circle)
             }
-            .keyboardShortcut("r", modifiers: [])
-            .glassEffectID("togglebutton", in: namespace)
-            .buttonStyle(.glass)
+           // .offset(x: -8)
+
+        }
+
+        .keyboardShortcut("r", modifiers: [])
+        .buttonStyle(.plain)
+        .buttonSizing(.fitted)
+        .glassEffectUnion(id: 1, namespace: namespace2)
+        .glassEffectTransition(.matchedGeometry)
 
 
     }
@@ -130,10 +151,21 @@ extension VICameraCaptureView {
     @ToolbarContentBuilder
     func topTrailingControls() -> some ToolbarContent {
 
-        ToolbarItem(id: Constants.aspectRatioPickerID) {
+        ToolbarItemGroup {
 
-            GlassEffectContainer(spacing: 12) {
+            GlassEffectContainer {
                 HStack {
+
+                    Toggle(
+                        Constants.showGuidesTitle,
+                        systemImage: "viewfinder",
+                        isOn: $showSafeGuides
+                    )
+                    .help(Constants.showGuidesHelp)
+                    .toggleStyle(.button)
+                    //  .buttonStyle(.glass)
+                    .glassEffectID("toolbar.glass.guide", in: namespace)
+
                     Toggle(
                         Constants.showMaskTitle,
                         systemImage: "circle.rectangle.filled.pattern.diagonalline",
@@ -141,23 +173,33 @@ extension VICameraCaptureView {
                     )
                     .help(Constants.showMaskHelp)
                     .toggleStyle(.button)
-                    .buttonStyle(.glass)
-                    // When the mask is ON, the glass "focus" sits on this button.
-                    // When OFF, the glass "focus" animates over to the aspect-ratio menu.
-                    .glassEffectID(showAspectMask ? "toolbar.glass.focus" : "toolbar.glass.secondary", in: namespace)
+                    //r .buttonStyle(.glass)
+                    .glassEffectID("toolbar.glass.mask", in: namespace)
                     .animation(.spring(response: 0.35, dampingFraction: 0.85), value: showAspectMask)
 
-                    Picker(Constants.ratioMenuTitle, systemImage: "aspectratio", selection: $aspectPreset) {
-                        ForEach(AspectPreset.allCases) { preset in
-                                Text(preset.rawValue)
+                    if showAspectMask {
+
+                        Picker(Constants.ratioMenuTitle, systemImage: "aspectratio", selection: $aspectPreset) {
+                            ForEach(AspectPreset.allCases) { preset in
+                                Label(preset.rawValue.capitalized, systemImage: preset.icon)
                                     .tag(preset)
+                                    .labelStyle(.titleAndIcon)
+                            }
                         }
+
+
+                        .pickerStyle(.automatic)
+                        .buttonStyle(.glass)
+                        .glassEffectID("toolbar.glass.focus", in: namespace)
                     }
-                    .pickerStyle(.inline)
-                    .animation(.spring(response: 0.35, dampingFraction: 0.85), value: showAspectMask)
                 }
             }
+            .glassEffectTransition(.materialize)
+
         }
+
+
+        ToolbarSpacer(.flexible)
 
         ToolbarItem {
             Toggle(
@@ -167,49 +209,72 @@ extension VICameraCaptureView {
             )
             .help(Constants.mirrorHelp)
             .toggleStyle(.button)
-            .buttonStyle(.glass)
+
         }
 
-
-        ToolbarItem {
-            Toggle(
-                Constants.showGuidesTitle,
-                systemImage: "viewfinder",
-                isOn: $showSafeGuides
-            )
-            .help(Constants.showGuidesHelp)
-            .toggleStyle(.button)
-            .buttonStyle(.glass)
-        }
-
-        ToolbarItem {
-            Toggle(
-                Constants.showMaskTitle,
-                systemImage: "circle.rectangle.filled.pattern.diagonalline",
-                isOn: $showAspectMask
-            )
-            .help(Constants.showMaskHelp)
-            .toggleStyle(.button)
-            .buttonStyle(.glass)
-            // When the mask is ON, the glass "focus" sits on this button.
-            // When OFF, the glass "focus" animates over to the aspect-ratio menu.
-            .glassEffectID(showAspectMask ? "toolbar.glass.focus" : "toolbar.glass.secondary", in: namespace)
-            .animation(.spring(response: 0.35, dampingFraction: 0.85), value: showAspectMask)
-        }
     }
 
     @ViewBuilder
     func bottomContent() -> some View {
-        GlassEffectContainer {
-            HStack(spacing: 12) {
+        GlassEffectContainer(spacing: isTimerEnabled ? 8 : 0) {
+            HStack(alignment: .center) {
+                Spacer()
                 recordButton()
-            }
-            .padding(.vertical, 24)
-            .padding(.horizontal, 18)
+                    .padding(.vertical, 8)
+                    .padding(.trailing, 16)
+                    .padding(.leading, 8)
+                    .glassEffect()
+                    .glassEffectUnion(id: 1, namespace: namespace2)
+                    .glassEffectTransition(.materialize)
 
-            .frame(maxWidth: .infinity)
+
+                HStack {
+
+
+                    Toggle(isOn: $isTimerEnabled) {
+                        Label("Timer", systemImage: "timer")
+                    }
+                    .labelStyle(.iconOnly)
+                    .symbolVariableValueMode(.draw)
+                    .fontWeight(.bold)
+                    .toggleStyle(.button)
+                    .buttonBorderShape(.circle)
+
+
+                    if isTimerEnabled {
+                        Picker("Timer", selection: $timerSelection) {
+                            ForEach(TimerSelection.allCases) { option in
+                                Text("\(option.rawValue)s").tag(option)
+                            }
+                        }
+                        .labelsHidden()
+                        .pickerStyle(.segmented)
+
+
+                    }
+
+                }
+
+                .padding(8)
+                .glassEffect(.regular.interactive())
+                .glassEffectUnion(id: isTimerEnabled ? 2 : 1, namespace: namespace2)
+                .animation(.bouncy.delay(isTimerEnabled ? 0.2 : 0), value: isTimerEnabled)
+                .glassEffectTransition(.materialize)
+
+
+                Spacer()
+
+            }
+
+
+
+
+            .glassEffectTransition(.materialize)
+           // .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isTimerEnabled)
         }
+
         .padding(.bottom, DesignToken.bottomPadding / 2)
+        .animation(.bouncy, value: isTimerEnabled)
     }
 }
 
@@ -283,7 +348,18 @@ extension VICameraCaptureView {
                     return CGSize(width: 9, height: 16)
                 case .instagram:
                     // Feed-safe default (4:5)
-                    return CGSize(width: 4, height: 5)
+                    return CGSize(width: 3, height: 4)
+            }
+        }
+
+        var icon: String {
+            switch self {
+                case .youtube:
+                    return "rectangle.ratio.16.to.9"
+                case .tiktok:
+                    return "rectangle.ratio.9.to.16"
+                case .instagram:
+                    return "rectangle.ratio.3.to.4"
             }
         }
 
@@ -313,8 +389,7 @@ extension VICameraCaptureView {
     /// Visual overlay showing the selected aspect ratio as a centered mask.
     /// The window remains freely resizable; this is purely a guide.
     struct AspectMaskOverlay: View {
-        @AppStorage(Constants.aspectPresetStorageKey)
-        private var aspectPreset: AspectPreset = .youtube
+        var aspectPreset: AspectPreset = .youtube
         var showGuides: Bool = false
         var showMask: Bool = false
         var showPlatformSafe: Bool = true
@@ -334,123 +409,127 @@ extension VICameraCaptureView {
 
                 let target = fittedSize(container: paddedContainer, ratio: aspectPreset.ratio)
 
-                let rect = CGRect(
-                    x: (container.width - target.width) / 2,
-                    y: topPadding + (paddedContainer.height - target.height) / 2,
-                    width: target.width,
-                    height: target.height
-                )
+                // Centered target rect inside the padded container.
+                let originX = (container.width - target.width) / 2
+                let originY = topPadding + (paddedContainer.height - target.height) / 2
 
+                ZStack {
+                    if showMask {
+                        // Dim everything outside the target rect.
+                        AnimatableEvenOddMask(
+                            outerSize: container,
+                            innerRect: CGRect(x: originX, y: originY, width: target.width, height: target.height),
+                            cornerRadius: cornerRadius
+                        )
+                        .fill(.ultraThinMaterial, style: FillStyle(eoFill: true))
 
-
-                if showMask {
-                    // Dim everything outside the target rect.
-                    Path { path in
-
-                            path.addRect(CGRect(origin: .zero, size: container))
-                            path.addRoundedRect(in: rect, cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
-
-
-                    }
-                    .fill(.ultraThinMaterial, style: FillStyle(eoFill: true))
-
-
-
-                    if showPlatformSafe, let avoid = aspectPreset.platformAvoidance {
-                        // Shade platform UI areas inside the target rect to indicate regions to avoid.
-                        if avoid.top > 0 {
-                            UnevenRoundedRectangle(
-                                cornerRadii: .init(topLeading: cornerRadius, topTrailing: cornerRadius)
-                            )
-                            .path(
-                                in: CGRect(
-                                    x: rect.minX,
-                                    y: rect.minY,
-                                    width: rect.width,
-                                    height: rect.height * avoid.top
-                                ),
-
-                            )
-
-                            .fill(DesignToken.maskColor)
-
-                        }
-                        if avoid.bottom > 0 {
-                            UnevenRoundedRectangle(
-                                cornerRadii: .init(bottomLeading: cornerRadius, bottomTrailing: cornerRadius)
-                            )
-                            .path(
-                                in: CGRect(
-                                    x: rect.minX,
-                                    y: rect.maxY - (rect.height * avoid.bottom),
-                                    width: rect.width,
-                                    height: rect.height * avoid.bottom
+                        if showPlatformSafe, let avoid = aspectPreset.platformAvoidance {
+                            // Top avoid area
+                            if avoid.top > 0 {
+                                UnevenRoundedRectangle(
+                                    cornerRadii: .init(topLeading: cornerRadius, topTrailing: cornerRadius)
                                 )
-                            )
-                            .fill(DesignToken.maskColor)
-                            .cornerRadius(cornerRadius, corners: [.bottom])
-                        }
-                        if avoid.left > 0 {
-                            UnevenRoundedRectangle(
-                                cornerRadii: .init(topLeading: cornerRadius, bottomLeading: cornerRadius)
-                            )
-                            .path(
-                                in: CGRect(
-                                    x: rect.minX,
-                                    y: rect.minY,
-                                    width: rect.width * avoid.left,
-                                    height: rect.height
+                                .fill(DesignToken.maskColor)
+                                .frame(width: target.width, height: target.height * avoid.top)
+                                .position(x: originX + target.width / 2, y: originY + (target.height * avoid.top) / 2)
+
+                            }
+
+                            // Bottom avoid area
+                            if avoid.bottom > 0 {
+                                UnevenRoundedRectangle(
+                                    cornerRadii: .init(bottomLeading: cornerRadius, bottomTrailing: cornerRadius)
                                 )
-                            )
-                            .fill(DesignToken.maskColor)
-                            .cornerRadius(cornerRadius, corners: [.left])
-                        }
-                        if avoid.right > 0 {
-                            UnevenRoundedRectangle(
-                                cornerRadii: .init(bottomTrailing: cornerRadius, topTrailing: cornerRadius)
-                            )
-                            .path(
-                                in: CGRect(
-                                    x: rect.maxX - (rect.width * avoid.right),
-                                    y: rect.minY,
-                                    width: rect.width * avoid.right,
-                                    height: rect.height
+                                .fill(DesignToken.maskColor)
+                                .frame(width: target.width, height: target.height * avoid.bottom)
+                                .position(x: originX + target.width / 2, y: originY + target.height - (target.height * avoid.bottom) / 2)
+
+                            }
+
+                            // Left avoid area
+                            if avoid.left > 0 {
+                                UnevenRoundedRectangle(
+                                    cornerRadii: .init(topLeading: cornerRadius, bottomLeading: cornerRadius)
                                 )
-                            )
-                            .fill(DesignToken.maskColor)
-                            .cornerRadius(cornerRadius, corners: [.right])
+                                .fill(DesignToken.maskColor)
+                                .frame(width: target.width * avoid.left, height: target.height)
+                                .position(x: originX + (target.width * avoid.left) / 2, y: originY + target.height / 2)
+
+                            }
+
+                            // Right avoid area
+                            if avoid.right > 0 {
+                                UnevenRoundedRectangle(
+                                    cornerRadii: .init(bottomTrailing: cornerRadius, topTrailing: cornerRadius)
+                                )
+                                .fill(DesignToken.maskColor)
+                                .frame(width: target.width * avoid.right, height: target.height)
+                                .position(x: originX + target.width - (target.width * avoid.right) / 2, y: originY + target.height / 2)
+
+                            }
                         }
+
+                        // Border for the target rect.
+                        RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                            .stroke(.regularMaterial, lineWidth: borderLineWidth * 2)
+                            .frame(width: target.width, height: target.height)
+                            .position(x: originX + target.width / 2, y: originY + target.height / 2)
                     }
 
-                    // Border for the target rect.
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .path(in: rect)
-                        .stroke(.regularMaterial, lineWidth: borderLineWidth * 2)
-                        .clipped()
+                    if showGuides {
+                        // Inner safe guides.
+                        let insetX = target.width * 0.05
+                        let insetY = target.height * 0.05
 
+                        RoundedRectangle(cornerRadius: max(0, cornerRadius - 2))
+                            .stroke(DesignToken.guideColor, style: StrokeStyle(lineWidth: 2, dash: [6, 6]))
+                            .frame(width: target.width - (insetX * 2), height: target.height - (insetY * 2))
+                            .position(x: originX + target.width / 2, y: originY + target.height / 2)
 
-                }
-
-
-                if showGuides {
-                    // Inner safe guides (e.g., title/action safe).
-                    let rect90 = rect.insetBy(dx: rect.width * 0.05, dy: rect.height * 0.05)
-
-                    RoundedRectangle(cornerRadius: max(0, cornerRadius - 2))
-                        .path(in: rect90)
-                        .stroke(DesignToken.guideColor, style: StrokeStyle(lineWidth: 2, dash: [6, 6]))
-
-                    // Crosshair guides (subtle).
-                    Path { p in
-                        p.move(to: CGPoint(x: rect.midX, y: rect.minY))
-                        p.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-                        p.move(to: CGPoint(x: rect.minX, y: rect.midY))
-                        p.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+                        // Crosshair guides.
+                        Path { p in
+                            p.move(to: CGPoint(x: originX + target.width / 2, y: originY))
+                            p.addLine(to: CGPoint(x: originX + target.width / 2, y: originY + target.height))
+                            p.move(to: CGPoint(x: originX, y: originY + target.height / 2))
+                            p.addLine(to: CGPoint(x: originX + target.width, y: originY + target.height / 2))
+                        }
+                        .stroke(DesignToken.guideColor, lineWidth: 1)
                     }
-                    .stroke(DesignToken.guideColor, lineWidth: 1)
                 }
             }
-            .animation(.easeInOut, value: aspectPreset.ratio)
+            // Animate when the selected preset changes.
+            .animation(.interactiveSpring, value: aspectPreset)
+        }
+
+        /// An even-odd shape (outer rect with an inner rounded-rect cutout) whose inner rect animates.
+        struct AnimatableEvenOddMask: Shape {
+            var outerSize: CGSize
+            var innerRect: CGRect
+            var cornerRadius: CGFloat
+
+            // Animate using center + size (CGRect itself isn't animatable).
+            var animatableData: AnimatablePair<AnimatablePair<CGFloat, CGFloat>, AnimatablePair<CGFloat, CGFloat>> {
+                get {
+                    .init(
+                        .init(innerRect.midX, innerRect.midY),
+                        .init(innerRect.width, innerRect.height)
+                    )
+                }
+                set {
+                    let midX = newValue.first.first
+                    let midY = newValue.first.second
+                    let width = max(0, newValue.second.first)
+                    let height = max(0, newValue.second.second)
+                    innerRect = CGRect(x: midX - width / 2, y: midY - height / 2, width: width, height: height)
+                }
+            }
+
+            func path(in rect: CGRect) -> Path {
+                var path = Path()
+                path.addRect(CGRect(origin: .zero, size: outerSize))
+                path.addRoundedRect(in: innerRect, cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
+                return path
+            }
         }
 
         private func fittedSize(container: CGSize, ratio: CGSize) -> CGSize {
@@ -458,18 +537,18 @@ extension VICameraCaptureView {
             let containerAspect = container.width / max(container.height, 1)
             let targetAspect = ratio.width / ratio.height
 
-                // Fit the target rect fully inside the container.
-                if containerAspect >= targetAspect {
-                    // Container is wider than target → limit by height.
-                    let height = container.height
-                    let width = height * targetAspect
-                    return CGSize(width: width, height: height)
-                } else {
-                    // Container is taller than target → limit by width.
-                    let width = container.width
-                    let height = width / targetAspect
-                    return CGSize(width: width, height: height)
-                }
+            // Fit the target rect fully inside the container.
+            if containerAspect >= targetAspect {
+                // Container is wider than target → limit by height.
+                let height = container.height
+                let width = height * targetAspect
+                return CGSize(width: width, height: height)
+            } else {
+                // Container is taller than target → limit by width.
+                let width = container.width
+                let height = width / targetAspect
+                return CGSize(width: width, height: height)
+            }
 
 
         }

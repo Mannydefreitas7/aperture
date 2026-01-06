@@ -27,6 +27,41 @@
     {
       "layers" : [
         {
+          "image-name" : "ViedoEdit.png",
+          "name" : "ViedoEdit",
+          "position-specializations" : [
+            {
+              "value" : {
+                "scale" : 1,
+                "translation-in-points" : [
+                  13.3515625,
+                  -14.9140625
+                ]
+              }
+            },
+            {
+              "idiom" : "square",
+              "value" : {
+                "scale" : 1,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "idiom" : "watchOS",
+              "value" : {
+                "scale" : 1.11,
+                "translation-in-points" : [
+                  13.3515625,
+                  -14.9140625
+                ]
+              }
+            }
+          ]
+        },
+        {
           "blend-mode-specializations" : [
             {
               "value" : "darken"
@@ -45,7 +80,7 @@
               "value" : "automatic"
             }
           ],
-          "hidden" : false,
+          "hidden" : true,
           "image-name" : "Image.png",
           "name" : "Image"
         }
