@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Color Extensions
 
 extension Color {
-    static let recordingRed = Color(red: 0.9, green: 0.2, blue: 0.2)
+    
     static let pausedOrange = Color(red: 0.95, green: 0.6, blue: 0.1)
     static let successGreen = Color(red: 0.2, green: 0.8, blue: 0.4)
 

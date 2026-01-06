@@ -21,6 +21,9 @@ struct VICameraCaptureView: View {
     @AppStorage(Constants.showSafeGuidesStorageKey) private var showSafeGuides: Bool = true
     @AppStorage(Constants.showPlatformSafeStorageKey) private var showPlatformSafe: Bool = true
     @AppStorage(Constants.mirrorToggleID) private var isMirrored: Bool = true
+
+    @Namespace private var namespace
+
     private var aspectPreset: AspectPreset {
         get { AspectPreset(rawValue: aspectPresetRawValue) ?? .youtube }
         set { aspectPresetRawValue = newValue.rawValue }
@@ -38,79 +41,20 @@ struct VICameraCaptureView: View {
                 showMask: showAspectMask,
                 showPlatformSafe: showPlatformSafe
             )
-
             .allowsHitTesting(false)
 
-            LazyVStack {
-                bottomControls
-            }
-
+                     bottomContent()
+                    .frame(maxWidth: .windowWidth * 0.3)
 
 
         }
-
-        .toolbar(id: Constants.cameraToolbarID) {
-
-            ToolbarSpacer()
-
-            ToolbarItem(id: Constants.mirrorToggleID) {
-
-                Toggle(
-                    Constants.mirrorTitle,
-                    systemImage: "arrowtriangle.right.and.line.vertical.and.arrowtriangle.left",
-                    isOn: $isMirrored
-                )
-                .help(Constants.mirrorHelp)
-
-            }.customizationBehavior(.reorderable)
-
-
-
-            ToolbarItem(id: Constants.guideToggleID) {
-
-                Toggle(
-                    Constants.showGuidesTitle,
-                    systemImage: "squareshape.split.2x2.dotted.inside.and.outside",
-                    isOn: $showSafeGuides
-                )
-                .help(Constants.showGuidesHelp)
-
-            }.customizationBehavior(.reorderable)
-
-            ToolbarItem(id: Constants.maskToggleID) {
-
-                Toggle(Constants.showMaskTitle, systemImage: "circle.rectangle.filled.pattern.diagonalline", isOn: $showAspectMask)
-                    .help(Constants.showMaskHelp)
-
-            }.customizationBehavior(.reorderable)
-
-            ToolbarItem(id: Constants.aspectRatioPickerID) {
-
-                Menu {
-                    Picker(Constants.ratioMenuTitle, systemImage: "aspectratio", selection: $aspectPresetRawValue) {
-                        ForEach(AspectPreset.allCases) { preset in
-                            Text(preset.rawValue).tag(preset.rawValue)
-                        }
-                    }
-                    .pickerStyle(.inline)
-
-                } label: {
-                    Label {
-                        Text(Constants.ratioMenuTitle)
-                    } icon: {
-                        Image(systemName: "aspectratio")
-                    }
-                }
-                .help(Constants.ratioMenuHelp)
-            }
-            .sharedBackgroundVisibility(.visible)
-            .customizationBehavior(.reorderable)
-        }
-
         // Keep the window resizable but constrained to 16:9.
         .background(WindowAspectRatioLock(ratio: CGSize(width: 16, height: 9)))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-
+        .toolbar {
+            topTrailingControls()
+        }
+        
     }
 }
 
@@ -118,86 +62,165 @@ struct VICameraCaptureView: View {
 
 extension VICameraCaptureView {
 
-    var recordButton: some View {
-        Button("", systemImage: viewModel.isRecording ? "stop.circle.fill" : "record.circle.fill") {
-            //
-        }
-        .controlSize(.extraLarge)
-        .font(.system(size: 24))
-        .symbolRenderingMode(.hierarchical)
-        .keyboardShortcut("r", modifiers: [])
-        .buttonBorderShape(.circle)
-        .buttonStyle(.glass)
-        .tint(Color(.systemRed))
+    @ViewBuilder
+    func recordButton() -> some View {
 
+
+
+            Button(role: .cancel) {
+                //
+            } label: {
+                LabeledContent {
+                    Image(systemName: viewModel.isRecording ? "stop.circle.fill" : "record.circle")
+
+                        .symbolRenderingMode(.hierarchical)
+                        .foregroundStyle(.recordingRed)
+                } label: {
+                    Text("Record")
+                }
+
+
+            }
+            .keyboardShortcut("r", modifiers: [])
+            .glassEffectID("togglebutton", in: namespace)
+            .buttonStyle(.glass)
+
+
+    }
+
+    @ViewBuilder
+    func timeLabel() -> some View {
+        Text(viewModel.recordingTimeString)
+            .font(.system(.title3, design: .monospaced))
+            .foregroundStyle(viewModel.isRecording ? .red : .secondary)
     }
 
     var finderURL: some View {
-//        if let url = viewModel.lastSavedURL {
-            HStack(spacing: 12) {
-                if let thumb = viewModel.lastThumbnail {
-                    Image(nsImage: thumb)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 72, height: 48)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(.white.opacity(0.15), lineWidth: 1)
-                        )
-                }
-
-                Text(
-                //    url.path
-                    ""
-                )
-                    .font(.callout)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                    .foregroundStyle(.secondary)
-
-                Spacer()
-
-                Button("Show in Finder") {
-                    // viewModel.revealLastSavedInFinder()
-                }
+        //        if let url = viewModel.lastSavedURL {
+        HStack(spacing: 12) {
+            if let thumb = viewModel.lastThumbnail {
+                Image(nsImage: thumb)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 72, height: 48)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.white.opacity(0.15), lineWidth: 1)
+                    )
             }
-            .padding(12)
-            .background(.ultraThinMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+
+            Text(
+                //    url.path
+                ""
+            )
+            .font(.callout)
+            .lineLimit(1)
+            .truncationMode(.middle)
+            .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Button("Show in Finder") {
+                // viewModel.revealLastSavedInFinder()
+            }
+        }
+        .padding(12)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
 
     }
 
-    private var bottomControls: some View {
-        ZStack {
+    @ToolbarContentBuilder
+    func topTrailingControls() -> some ToolbarContent {
+
+        ToolbarItem(id: Constants.aspectRatioPickerID) {
+
+            GlassEffectContainer(spacing: 12) {
+                HStack {
+                    Toggle(
+                        Constants.showMaskTitle,
+                        systemImage: "circle.rectangle.filled.pattern.diagonalline",
+                        isOn: $showAspectMask
+                    )
+                    .help(Constants.showMaskHelp)
+                    .toggleStyle(.button)
+                    .buttonStyle(.glass)
+                    // When the mask is ON, the glass "focus" sits on this button.
+                    // When OFF, the glass "focus" animates over to the aspect-ratio menu.
+                    .glassEffectID(showAspectMask ? "toolbar.glass.focus" : "toolbar.glass.secondary", in: namespace)
+                    .animation(.spring(response: 0.35, dampingFraction: 0.85), value: showAspectMask)
+
+                    Picker(Constants.ratioMenuTitle, systemImage: "aspectratio", selection: $aspectPresetRawValue) {
+                        ForEach(AspectPreset.allCases) { preset in
+                            if showAspectMask && aspectPresetRawValue == preset.rawValue {
+                                Text(preset.rawValue)
+                                    .tag(preset.rawValue)
+                                // Glass focus animates between the selected presets (YouTube/TikTok/Instagram)
+                                    .glassEffectID("toolbar.preset.focus", in: namespace)
+                            } else {
+                                Text(preset.rawValue)
+                                    .tag(preset.rawValue)
+                            }
+                        }
+                    }
+                    .pickerStyle(.inline)
+                }
+            }
+        }
+
+        ToolbarItem {
+            Toggle(
+                Constants.mirrorTitle,
+                systemImage: "arrow.trianglehead.left.and.right.righttriangle.left.righttriangle.right",
+                isOn: $isMirrored
+            )
+            .help(Constants.mirrorHelp)
+            .toggleStyle(.button)
+            .buttonStyle(.glass)
+        }
+
+
+        ToolbarItem {
+            Toggle(
+                Constants.showGuidesTitle,
+                systemImage: "viewfinder",
+                isOn: $showSafeGuides
+            )
+            .help(Constants.showGuidesHelp)
+            .toggleStyle(.button)
+            .buttonStyle(.glass)
+        }
+
+        ToolbarItem {
+            Toggle(
+                Constants.showMaskTitle,
+                systemImage: "circle.rectangle.filled.pattern.diagonalline",
+                isOn: $showAspectMask
+            )
+            .help(Constants.showMaskHelp)
+            .toggleStyle(.button)
+            .buttonStyle(.glass)
+            // When the mask is ON, the glass "focus" sits on this button.
+            // When OFF, the glass "focus" animates over to the aspect-ratio menu.
+            .glassEffectID(showAspectMask ? "toolbar.glass.focus" : "toolbar.glass.secondary", in: namespace)
+            .animation(.spring(response: 0.35, dampingFraction: 0.85), value: showAspectMask)
+        }
+    }
+
+    @ViewBuilder
+    func bottomContent() -> some View {
+        GlassEffectContainer {
             HStack(spacing: 12) {
-                Spacer()
-                Text(viewModel.recordingTimeString)
-                    .font(.system(.title3, design: .monospaced))
-                    .foregroundStyle(viewModel.isRecording ? .red : .secondary)
+                recordButton()
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 18)
-            .frame(width: .windowWidth * 0.3)
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            .glassEffect(.clear)
 
-            recordButton
-                .disabled(true)
-                .blendMode(.destinationOut)
-
-            recordButton
-
+            .frame(maxWidth: .infinity)
         }
-
-        .compositingGroup()
-        .padding(.bottom, DesignToken.bottomPadding / 3)
-
-
-
-
+        .padding(.bottom, DesignToken.bottomPadding / 2)
     }
-
 }
 
 
@@ -211,7 +234,7 @@ extension VICameraCaptureView {
         static let bottomPadding: CGFloat = 64
         static let dimmingAlpha: CGFloat = 0.5
 
-        static let maskColor: Color = .black.opacity(0.25)
+        static let maskColor: Color = .recordingRed.opacity(0.1)
         static let guideColor: Color = .white.opacity(0.5)
     }
 
@@ -327,44 +350,91 @@ extension VICameraCaptureView {
                     height: target.height
                 )
 
+
+
                 if showMask {
                     // Dim everything outside the target rect.
                     Path { path in
                         path.addRect(CGRect(origin: .zero, size: container))
                         path.addRoundedRect(in: rect, cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
                     }
-                    .fill(.black.opacity(dimOpacity), style: FillStyle(eoFill: true))
+                    .fill(.ultraThinMaterial, style: FillStyle(eoFill: true))
 
-                    // Border for the target rect.
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .path(in: rect)
-                        .stroke(.white.opacity(0.9), lineWidth: borderLineWidth)
+
+
+
 
                     if showPlatformSafe, let avoid = preset.platformAvoidance {
                         // Shade platform UI areas inside the target rect to indicate regions to avoid.
                         if avoid.top > 0 {
-                            Rectangle()
-                                .path(in: CGRect(x: rect.minX, y: rect.minY, width: rect.width, height: rect.height * avoid.top))
-                                .fill(DesignToken.maskColor)
+                            UnevenRoundedRectangle(
+                                cornerRadii: .init(topLeading: cornerRadius, topTrailing: cornerRadius)
+                            )
+                            .path(
+                                in: CGRect(
+                                    x: rect.minX,
+                                    y: rect.minY,
+                                    width: rect.width,
+                                    height: rect.height * avoid.top
+                                ),
+
+                            )
+
+                            .fill(DesignToken.maskColor)
+
                         }
                         if avoid.bottom > 0 {
-                            Rectangle()
-                                .path(in: CGRect(x: rect.minX, y: rect.maxY - (rect.height * avoid.bottom), width: rect.width, height: rect.height * avoid.bottom))
-                                .fill(DesignToken.maskColor)
+                            UnevenRoundedRectangle(
+                                cornerRadii: .init(bottomLeading: cornerRadius, bottomTrailing: cornerRadius)
+                            )
+                            .path(
+                                in: CGRect(
+                                    x: rect.minX,
+                                    y: rect.maxY - (rect.height * avoid.bottom),
+                                    width: rect.width,
+                                    height: rect.height * avoid.bottom
+                                )
+                            )
+                            .fill(DesignToken.maskColor)
+                            .cornerRadius(cornerRadius, corners: [.bottom])
                         }
                         if avoid.left > 0 {
-                            Rectangle()
-                                .path(in: CGRect(x: rect.minX, y: rect.minY, width: rect.width * avoid.left, height: rect.height))
-                                .fill(DesignToken.maskColor)
+                            UnevenRoundedRectangle(
+                                cornerRadii: .init(topLeading: cornerRadius, bottomLeading: cornerRadius)
+                            )
+                            .path(
+                                in: CGRect(
+                                    x: rect.minX,
+                                    y: rect.minY,
+                                    width: rect.width * avoid.left,
+                                    height: rect.height
+                                )
+                            )
+                            .fill(DesignToken.maskColor)
+                            .cornerRadius(cornerRadius, corners: [.left])
                         }
                         if avoid.right > 0 {
-                            Rectangle()
-                                .path(in: CGRect(x: rect.maxX - (rect.width * avoid.right), y: rect.minY, width: rect.width * avoid.right, height: rect.height))
-                                .fill(DesignToken.maskColor)
+                            UnevenRoundedRectangle(
+                                cornerRadii: .init(bottomTrailing: cornerRadius, topTrailing: cornerRadius)
+                            )
+                            .path(
+                                in: CGRect(
+                                    x: rect.maxX - (rect.width * avoid.right),
+                                    y: rect.minY,
+                                    width: rect.width * avoid.right,
+                                    height: rect.height
+                                )
+                            )
+                            .fill(DesignToken.maskColor)
+                            .cornerRadius(cornerRadius, corners: [.right])
                         }
                     }
 
-
+                    // Border for the target rect.
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .path(in: rect)
+                        .stroke(.regularMaterial, lineWidth: borderLineWidth * 2)
+                        .clipped()
                 }
 
 
@@ -375,11 +445,11 @@ extension VICameraCaptureView {
 
                     RoundedRectangle(cornerRadius: max(0, cornerRadius - 2))
                         .path(in: rect90)
-                        .stroke(DesignToken.guideColor, style: StrokeStyle(lineWidth: 1.5, dash: [6, 6]))
+                        .stroke(DesignToken.guideColor, style: StrokeStyle(lineWidth: 2, dash: [6, 6]))
 
-                    RoundedRectangle(cornerRadius: max(0, cornerRadius - 4))
-                        .path(in: rect80)
-                        .stroke(DesignToken.guideColor, style: StrokeStyle(lineWidth: 1.5, dash: [4, 6]))
+                    //                    RoundedRectangle(cornerRadius: max(0, cornerRadius - 4))
+                    //                        .path(in: rect80)
+                    //                        .stroke(DesignToken.guideColor, style: StrokeStyle(lineWidth: 1.5, dash: [4, 6]))
 
                     // Crosshair guides (subtle).
                     Path { p in
