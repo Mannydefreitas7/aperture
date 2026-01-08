@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import AppKit
 
 // MARK: - Double Extensions
@@ -38,20 +39,30 @@ extension CGSize {
 
 
     var windowSize: Self {
-
         guard let window = NSApplication.shared.keyWindow else {
             return .zero
         }
         return window.frame.size
-
-
     }
+
+    static var systemSize: SystemSize {
+        return SystemSize()
+    }
+
+    struct SystemSize {
+        let recordButton: CGSize = .init(width: .recordWidth, height: .recordHeight)
+    }
+
 }
 
 // MARK: - CGFloat
 
 extension CGFloat {
     var isEven: Bool { truncatingRemainder(dividingBy: 2) == 0 }
+
+    static var recordWidth: Self { 36 }
+    static var recordHeight: Self { 36 }
+
 
     static var windowWidth: Self {
 

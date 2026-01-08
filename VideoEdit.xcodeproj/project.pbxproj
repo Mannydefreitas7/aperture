@@ -100,6 +100,9 @@
 		146E4F102F0AA8B900AA07CC /* VICameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */; };
 		146E4F122F0B5DA900AA07CC /* CameraCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F112F0B5DA900AA07CC /* CameraCaptureView.swift */; };
 		146E4F142F0D66EB00AA07CC /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 146E4F132F0D66EB00AA07CC /* AppIcon.icon */; };
+		146E4F172F0DA03700AA07CC /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4F162F0DA03700AA07CC /* Pow */; };
+		146E4F192F0DA45E00AA07CC /* RecordButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F182F0DA45E00AA07CC /* RecordButtonView.swift */; };
+		146E4F1B2F0DE4F200AA07CC /* Button+ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146E4F1A2F0DE4F200AA07CC /* Button+ViewModifier.swift */; };
 		148AAC572F073A300087D649 /* AVFoundation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */; };
 		148AAC582F073A300087D649 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC552F073A300087D649 /* NSImage+Extensions.swift */; };
 		148AAC592F073A300087D649 /* SwiftUI+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC562F073A300087D649 /* SwiftUI+Extensions.swift */; };
@@ -111,6 +114,7 @@
 		148AAC6A2F078B610087D649 /* ScreenRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC692F078B610087D649 /* ScreenRecorderView.swift */; };
 		148AAC6C2F0793A80087D649 /* View+Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6B2F07939E0087D649 /* View+Modifiers.swift */; };
 		148AAC6E2F0793D00087D649 /* View+NSViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */; };
+		14972F432F0EC72A002CE41C /* View+ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F422F0EC72A002CE41C /* View+ViewModifier.swift */; };
 		14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A42F05974400065B49 /* SwiftBasicFormat */; };
 		14D9D6A72F05974400065B49 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A62F05974400065B49 /* SwiftCompilerPlugin */; };
 		14D9D6A92F05974400065B49 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A82F05974400065B49 /* SwiftDiagnostics */; };
@@ -195,6 +199,8 @@
 		146E4F0F2F0AA8B900AA07CC /* VICameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VICameraCaptureView.swift; sourceTree = "<group>"; };
 		146E4F112F0B5DA900AA07CC /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
 		146E4F132F0D66EB00AA07CC /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
+		146E4F182F0DA45E00AA07CC /* RecordButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButtonView.swift; sourceTree = "<group>"; };
+		146E4F1A2F0DE4F200AA07CC /* Button+ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+ViewModifier.swift"; sourceTree = "<group>"; };
 		148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVFoundation+Extensions.swift"; sourceTree = "<group>"; };
 		148AAC542F073A300087D649 /* Foundation+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Foundation+Extensions.swift"; sourceTree = "<group>"; };
 		148AAC552F073A300087D649 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
@@ -205,6 +211,7 @@
 		148AAC692F078B610087D649 /* ScreenRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorderView.swift; sourceTree = "<group>"; };
 		148AAC6B2F07939E0087D649 /* View+Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Modifiers.swift"; sourceTree = "<group>"; };
 		148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NSViewRepresentable.swift"; sourceTree = "<group>"; };
+		14972F422F0EC72A002CE41C /* View+ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ViewModifier.swift"; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		14D9D6B12F0718AB00065B49 /* NamePrintable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePrintable.swift; sourceTree = "<group>"; };
 		2000000000000001 /* VideoEditApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditApp.swift; sourceTree = "<group>"; };
@@ -236,6 +243,7 @@
 				14D9D6A72F05974400065B49 /* SwiftCompilerPlugin in Frameworks */,
 				146E4F002F0A7C0000AA07CC /* SwiftIfConfig in Frameworks */,
 				146E4F0E2F0A8DE900AA07CC /* VideoEditorCore in Frameworks */,
+				146E4F172F0DA03700AA07CC /* Pow in Frameworks */,
 				146E4EFC2F0A7C0000AA07CC /* SwiftDiagnostics in Frameworks */,
 				146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */,
 				146E4EFE2F0A7C0000AA07CC /* SwiftIDEUtils in Frameworks */,
@@ -276,6 +284,7 @@
 				1400C8D62F04C2A5001EF209 /* ShortcutRow.swift */,
 				1400C8D72F04C2A5001EF209 /* TimeInputField.swift */,
 				1400C8D82F04C2A5001EF209 /* ToolButton.swift */,
+				146E4F182F0DA45E00AA07CC /* RecordButtonView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -389,7 +398,9 @@
 		144E65FE2F0A582A00D044AD /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
+				14972F422F0EC72A002CE41C /* View+ViewModifier.swift */,
 				144E65FF2F0A583500D044AD /* FocusRingModifier.swift */,
+				146E4F1A2F0DE4F200AA07CC /* Button+ViewModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -559,6 +570,7 @@
 				146E4F042F0A7C2800AA07CC /* XCRemoteSwiftPackageReference "CombineAsync" */,
 				146E4F072F0A7CC200AA07CC /* XCRemoteSwiftPackageReference "Onboarding" */,
 				146E4F0C2F0A8DE900AA07CC /* XCRemoteSwiftPackageReference "capcutsdk" */,
+				146E4F152F0DA03700AA07CC /* XCRemoteSwiftPackageReference "Pow" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 5000000000000003 /* Products */;
@@ -587,6 +599,7 @@
 				148AAC572F073A300087D649 /* AVFoundation+Extensions.swift in Sources */,
 				148AAC582F073A300087D649 /* NSImage+Extensions.swift in Sources */,
 				148AAC592F073A300087D649 /* SwiftUI+Extensions.swift in Sources */,
+				146E4F192F0DA45E00AA07CC /* RecordButtonView.swift in Sources */,
 				148AAC5A2F073A300087D649 /* Foundation+Extensions.swift in Sources */,
 				1400C9332F04C472001EF209 /* VideoBitrate+Model.swift in Sources */,
 				1400C9342F04C472001EF209 /* ExportResolution+Model.swift in Sources */,
@@ -648,6 +661,7 @@
 				14D9D6B22F0718B400065B49 /* NamePrintable.swift in Sources */,
 				144E65F12F0963BA00D044AD /* AppKit+Extensions.swift in Sources */,
 				1400C9062F04C2A5001EF209 /* CameraSettingsView.swift in Sources */,
+				146E4F1B2F0DE4F200AA07CC /* Button+ViewModifier.swift in Sources */,
 				144E66022F0A687100D044AD /* RectCorner+Model.swift in Sources */,
 				1400C9072F04C2A5001EF209 /* FormatButton.swift in Sources */,
 				1400C9082F04C2A5001EF209 /* CropOverlay.swift in Sources */,
@@ -655,6 +669,7 @@
 				1400C9092F04C2A5001EF209 /* SettingsView.swift in Sources */,
 				1400C90A2F04C2A5001EF209 /* InfoRow.swift in Sources */,
 				1400C90B2F04C2A5001EF209 /* PlaybackControls.swift in Sources */,
+				14972F432F0EC72A002CE41C /* View+ViewModifier.swift in Sources */,
 				1400C90C2F04C2A5001EF209 /* ExportSettingsView.swift in Sources */,
 				1400C90D2F04C2A5001EF209 /* VideoPlayerView.swift in Sources */,
 				144E65F62F0966AB00D044AD /* DocumentController.swift in Sources */,
@@ -1008,6 +1023,14 @@
 				kind = branch;
 			};
 		};
+		146E4F152F0DA03700AA07CC /* XCRemoteSwiftPackageReference "Pow" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/EmergeTools/Pow";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.5;
+			};
+		};
 		148AAC612F075CBD0087D649 /* XCRemoteSwiftPackageReference "CombineAsync" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hainayanda/CombineAsync.git";
@@ -1086,6 +1109,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 146E4F0C2F0A8DE900AA07CC /* XCRemoteSwiftPackageReference "capcutsdk" */;
 			productName = VideoEditorCore;
+		};
+		146E4F162F0DA03700AA07CC /* Pow */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 146E4F152F0DA03700AA07CC /* XCRemoteSwiftPackageReference "Pow" */;
+			productName = Pow;
 		};
 		148AAC622F075CBD0087D649 /* CombineAsync */ = {
 			isa = XCSwiftPackageProductDependency;

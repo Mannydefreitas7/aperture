@@ -32,3 +32,4 @@ struct WindowCenteredModifier: ViewModifier {
             .background(WindowCenteredAccessor())
     }
 }
+

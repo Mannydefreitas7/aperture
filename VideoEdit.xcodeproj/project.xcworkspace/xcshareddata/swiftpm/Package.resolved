@@ -1,5 +1,5 @@
 {
-  "originHash" : "95fae8622619fd3d30b75307600cf17c403f8ec90db0a10e744f67c8e430e7bb",
+  "originHash" : "bb983ffe6661b316b29addadccc589a5f24439da94f71d896ebfede871736c97",
   "pins" : [
     {
       "identity" : "capcutsdk",
@@ -26,6 +26,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "14cb9ad40982d96ff74778b7cc4570124e76ffad"
+      }
+    },
+    {
+      "identity" : "pow",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/EmergeTools/Pow",
+      "state" : {
+        "revision" : "a504eb6d144bcf49f4f33029a2795345cb39e6b4",
+        "version" : "1.0.5"
       }
     },
     {

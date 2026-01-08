@@ -5,6 +5,7 @@
 //  Created by Emmanuel on 2026-01-03.
 //
 import SwiftUI
+import Pow
 
 struct WelcomeButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -23,5 +24,32 @@ struct WelcomeButtonStyle: ButtonStyle {
             }
         }
         return buttonBody
+    }
+}
+
+struct PushDownButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.75 : 1)
+            .conditionalEffect(
+                .pushDown,
+                condition: configuration.isPressed
+            )
+            .buttonStyle(.glass)
+    }
+}
+
+struct ShineEffectButtonStyle: ButtonStyle {
+
+   @Binding var isEnabled: Bool
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .animation(.interactiveSpring, value: isEnabled)
+            .changeEffect(
+                .shine.delay(0.5),
+                value: isEnabled,
+                isEnabled: isEnabled
+            )
+
     }
 }

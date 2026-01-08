@@ -52,7 +52,6 @@ struct VICameraCaptureView: View {
             .allowsHitTesting(false)
 
             bottomContent()
-            //    .frame(width: .windowWidth * 0.3)
 
 
         }
@@ -61,12 +60,7 @@ struct VICameraCaptureView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .toolbar {
             topTrailingControls()
-
         }
-
-        .controlSize(.extraLarge)
-
-
     }
 }
 
@@ -76,29 +70,10 @@ extension VICameraCaptureView {
 
     @ViewBuilder
     func recordButton() -> some View {
-
-        Button {
-            //
-        } label: {
-            Label {
-                Text("Record")
-
-            } icon: {
-                Image(systemName: viewModel.isRecording ? "stop.circle.fill" : "record.circle")
-                    .font(.system(size: 24))
-                    .padding(4)
-                    .background(Color(.recordingRed), in: .circle, fillStyle: FillStyle(eoFill: true))
-
-
-                // .glassEffect(.regular.tint(.recordingRed), in: .circle)
-            }
-           // .offset(x: -8)
-
-        }
+        RecordButtonView(isRecording: $viewModel.isRecording)
 
         .keyboardShortcut("r", modifiers: [])
-        .buttonStyle(.plain)
-        .buttonSizing(.fitted)
+        //.buttonSizing(.fitted)
         .glassEffectUnion(id: 1, namespace: namespace2)
         .glassEffectTransition(.matchedGeometry)
 
@@ -230,7 +205,6 @@ extension VICameraCaptureView {
 
                 HStack {
 
-
                     Toggle(isOn: $isTimerEnabled) {
                         Label("Timer", systemImage: "timer")
                     }
@@ -250,30 +224,21 @@ extension VICameraCaptureView {
                         .labelsHidden()
                         .pickerStyle(.segmented)
 
-
                     }
-
                 }
-
                 .padding(8)
                 .glassEffect(.regular.interactive())
                 .glassEffectUnion(id: isTimerEnabled ? 2 : 1, namespace: namespace2)
                 .animation(.bouncy.delay(isTimerEnabled ? 0.2 : 0), value: isTimerEnabled)
                 .glassEffectTransition(.materialize)
-
-
                 Spacer()
-
             }
-
-
-
-
+            .controlSize(.extraLarge)
             .glassEffectTransition(.materialize)
-           // .animation(.spring(response: 0.35, dampingFraction: 0.85), value: isTimerEnabled)
+
         }
 
-        .padding(.bottom, DesignToken.bottomPadding / 2)
+        .padding(.bottom, (DesignToken.bottomPadding / 2) + 8)
         .animation(.bouncy, value: isTimerEnabled)
     }
 }

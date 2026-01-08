@@ -60,6 +60,10 @@ extension View {
         clipShape(RoundedCornerShape(radius: radius, corners: corners))
     }
 
+    func heartBeatAnimation() -> some View {
+        modifier(HeartBeatModifier())
+    }
+
     /// Applies the given transform if the given condition evaluates to `true`.
     /// - Parameters:
     ///   - condition: The condition to evaluate.
@@ -72,6 +76,20 @@ extension View {
         } else {
             self
         }
+    }
+
+    @inlinable func reverseMask<Mask: View>(
+        alignment: Alignment = .center,
+        @ViewBuilder _ mask: () -> Mask
+    ) -> some View {
+        self.mask(
+            ZStack {
+                Rectangle()
+
+                mask()
+                    .blendMode(.destinationOut)
+            }
+        )
     }
 
     /// Applies the given transform if the given condition evaluates to `true`.
@@ -92,6 +110,8 @@ extension View {
         }
     }
 
+  
+
     /// Changes the cursor appearance when hovering attached View
     /// - Parameters:
     ///   - active: onHover() value
@@ -105,11 +125,24 @@ extension View {
             NSCursor.pop()
         }
     }
+
+    func pressPushEffect() -> some View {
+        modifier(PushDownEffect())
+    }
 }
 
 
 extension ButtonStyle where Self == WelcomeButtonStyle {
+    static var welcome: WelcomeButtonStyle { get { .init() }}
 
-     static var welcome: WelcomeButtonStyle { get { .init() }}
+}
 
+extension ButtonStyle where Self == PushDownButtonStyle {
+    static var pushDown: PushDownButtonStyle { get { .init() }}
+}
+
+extension ButtonStyle where Self == ShineEffectButtonStyle {
+    static func shineEffect(isEnabled: Binding<Bool>) -> ShineEffectButtonStyle {
+        return ShineEffectButtonStyle(isEnabled: isEnabled)
+    }
 }
