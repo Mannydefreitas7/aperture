@@ -32,12 +32,25 @@ extension Color {
     }
 }
 
+
+extension ToggleStyle where Self == RecordToggleStyle {
+     static var recordButton: RecordToggleStyle { get { .init() } }
+}
+
 // MARK: - Image Extensions
 
 extension Image {
     public static let appIcon: Self = .init(
         nsImage: NSApplication.shared.applicationIconImage ?? NSApp.applicationIconImage
     )
+
+}
+
+extension Shape {
+
+    func record(isOn: Bool) -> some Shape {
+        return RecordShape(isRecording: isOn)
+    }
 
 }
 
@@ -136,9 +149,15 @@ extension ButtonStyle where Self == WelcomeButtonStyle {
 }
 
 extension ButtonStyle {
+    static var glassToolBar: GlassToolBarButtonStyle { get { .init() }}
     static func pushDown(glass: AnyGlassStyle?) -> PushDownButtonStyle {
         return PushDownButtonStyle(glass: glass)
     }
+    static var pushDown: PushDownButtonStyle { get { .init() }}
+}
+
+extension PrimitiveButtonStyle where Self == GlassToolBarButtonStyle {
+    static var glassToolBar: GlassToolBarButtonStyle { get { .init() }}
 }
 
 extension PrimitiveButtonStyle where Self == PushDownButtonStyle {
@@ -146,6 +165,7 @@ extension PrimitiveButtonStyle where Self == PushDownButtonStyle {
     static func pushDown(glass: AnyGlassStyle?) -> PushDownButtonStyle {
         return PushDownButtonStyle(glass: glass)
     }
+    static var pushDown: PushDownButtonStyle { get { .init() }}
 }
 
 extension ButtonStyle where Self == ShineEffectButtonStyle {

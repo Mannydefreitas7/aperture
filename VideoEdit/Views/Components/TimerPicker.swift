@@ -6,53 +6,44 @@
 //
 import SwiftUI
 
+extension Constants {
+
+    static let timer = "timer"
+
+}
+
 struct TimerPicker: View {
 
-    @Namespace var controlGroup: Namespace.RecorderTopBar
-
+    @Namespace var controlGroup
     @Binding var isTimerEnabled: Bool
     @Binding var timerSelection: TimeInterval.Option
-    @Binding var isEditing: Bool
 
     var body: some View {
 
-        GlassEffectContainer {
-            HStack {
-
+        HStack {
                 Toggle(isOn: $isTimerEnabled) {
-                    Label("Timer", systemImage: "timer")
+                    Label(Constants.timer.capitalized, systemImage: Constants.timer)
                         .font(.title2)
-
                 }
                 .labelStyle(.iconOnly)
-
-                .toggleStyle(.automatic)
+                .toggleStyle(.button)
+                .labelsHidden()
                 .buttonBorderShape(.circle)
-                .buttonStyle(.glass)
-
+                .buttonStyle(.accessoryBarAction)
+                .tint(Color(.labelColor))
 
                 if isTimerEnabled {
-                    Picker("Timer", selection: $timerSelection) {
+                    Picker(Constants.timer.capitalized, selection: $timerSelection) {
                         ForEach(TimeInterval.options) { option in
                             Text("\(option.rawValue)s").tag(option)
                         }
                     }
                     .labelsHidden()
                     .pickerStyle(.segmented)
-                    .buttonStyle(.glass)
-
-
                 }
             }
-
-            .glassEffect(.regular)
-            .glassEffectUnion(id: isTimerEnabled ? 2 : 1, namespace: namespace2)
-            .animation(.bouncy.delay(isTimerEnabled ? 0.2 : 0), value: isTimerEnabled)
-            .glassEffectTransition(.materialize)
-        }
-
+            
     }
-
 }
 
 

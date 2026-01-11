@@ -28,6 +28,63 @@ struct WelcomeButtonStyle: ButtonStyle {
 }
 
 
+struct GlassToolBarButtonStyle: PrimitiveButtonStyle {
+
+    @State private var isPressed: Bool = false
+    @State private var _isHovered: Bool = false
+    @Environment(\.controlSize) var controlSize
+
+
+    func makeBody(configuration: Configuration) -> some View {
+
+        Button(role: configuration.role) {
+            isPressed = true
+            configuration.trigger()
+            Task.perform(after: 0.1) { isPressed = false }
+        } label: {
+            configuration.label
+                .foregroundStyle(Color(.labelColor))
+                .onHover { isHovered in
+                    withAnimation {
+                        _isHovered = isHovered
+                    }
+                }
+        }
+        .buttonStyle(.accessoryBar)
+    }
+
+}
+
+
+struct RecordButtonStyle: PrimitiveButtonStyle {
+
+    @State private var isPressed: Bool = false
+    @State private var _isHovered: Bool = false
+    @Environment(\.controlSize) var controlSize
+
+
+    func makeBody(configuration: Configuration) -> some View {
+
+        Button(role: configuration.role) {
+            isPressed = true
+            configuration.trigger()
+            Task.perform(after: 0.1) { isPressed = false }
+        } label: {
+            configuration.label
+                .foregroundStyle(Color(.labelColor))
+                .onHover { isHovered in
+                    withAnimation {
+                        _isHovered = isHovered
+                    }
+                }
+        }
+        .buttonStyle(.accessoryBar)
+    }
+
+}
+
+
+
 enum AnyGlassStyle {
     case regular
     case prominent(Color)
@@ -36,9 +93,9 @@ enum AnyGlassStyle {
 
 struct PushDownButtonStyle: PrimitiveButtonStyle {
 
-    var glass: AnyGlassStyle?
+    var glass: AnyGlassStyle? = nil
     @State private var isPressed: Bool = false
-
+    @State private var _isHovered: Bool = false
     init(glass: AnyGlassStyle? = nil) {
         self.glass = glass
     }
@@ -51,6 +108,11 @@ struct PushDownButtonStyle: PrimitiveButtonStyle {
           Task.perform(after: 0.1) { isPressed = false }
         } label: {
             configuration.label
+                .onHover { isHovered in
+                    withAnimation {
+                        _isHovered = isHovered
+                    }
+                }
         }
         .conditionalEffect(
             .pushDown,
@@ -59,15 +121,19 @@ struct PushDownButtonStyle: PrimitiveButtonStyle {
         .if(glass != nil) { button in
             switch glass {
             case .regular:
-                    button.buttonStyle(.glass)
+                    button
+                        .buttonStyle(.glass)
+
             case .prominent(let style):
                     button
                         .buttonStyle(.glassProminent)
                         .tint(style)
 
             default:
-                button.buttonStyle(.automatic)
+                    button.buttonStyle(.accessoryBar)
             }
+        } else: { button in
+            button.buttonStyle(.accessoryBar)
         }
     }
 }

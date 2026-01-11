@@ -116,7 +116,6 @@
 		148AAC6E2F0793D00087D649 /* View+NSViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */; };
 		14972F432F0EC72A002CE41C /* View+ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F422F0EC72A002CE41C /* View+ViewModifier.swift */; };
 		14972F452F10EDFF002CE41C /* TimerPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F442F10EDFF002CE41C /* TimerPicker.swift */; };
-		14972F472F10F4BC002CE41C /* Namespace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F462F10F4AD002CE41C /* Namespace.swift */; };
 		14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A42F05974400065B49 /* SwiftBasicFormat */; };
 		14D9D6A72F05974400065B49 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A62F05974400065B49 /* SwiftCompilerPlugin */; };
 		14D9D6A92F05974400065B49 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A82F05974400065B49 /* SwiftDiagnostics */; };
@@ -124,6 +123,13 @@
 		14D9D6AD2F05974400065B49 /* SwiftIfConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6AC2F05974400065B49 /* SwiftIfConfig */; };
 		14D9D6B02F0717B400065B49 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9D6AF2F0717AF00065B49 /* Base.swift */; };
 		14D9D6B22F0718B400065B49 /* NamePrintable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9D6B12F0718AB00065B49 /* NamePrintable.swift */; };
+		14FFBDB12F128F9A00B96C92 /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB02F128F9A00B96C92 /* PlayerControlsView.swift */; };
+		14FFBDB32F12949800B96C92 /* PauseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB22F12949800B96C92 /* PauseButtonView.swift */; };
+		14FFBDB52F12992800B96C92 /* AudioInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB42F12992800B96C92 /* AudioInputView.swift */; };
+		14FFBDB72F12A4D200B96C92 /* VideoInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB62F12A4D200B96C92 /* VideoInputView.swift */; };
+		14FFBDB92F12DF0E00B96C92 /* Toggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB82F12DF0600B96C92 /* Toggle.swift */; };
+		14FFBDBB2F12E6B200B96C92 /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDBA2F12E6AF00B96C92 /* Shape.swift */; };
+		14FFBDBE2F13194A00B96C92 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 14FFBDBD2F13194A00B96C92 /* Shimmer */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -215,9 +221,14 @@
 		148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NSViewRepresentable.swift"; sourceTree = "<group>"; };
 		14972F422F0EC72A002CE41C /* View+ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ViewModifier.swift"; sourceTree = "<group>"; };
 		14972F442F10EDFF002CE41C /* TimerPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPicker.swift; sourceTree = "<group>"; };
-		14972F462F10F4AD002CE41C /* Namespace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Namespace.swift; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		14D9D6B12F0718AB00065B49 /* NamePrintable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePrintable.swift; sourceTree = "<group>"; };
+		14FFBDB02F128F9A00B96C92 /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
+		14FFBDB22F12949800B96C92 /* PauseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseButtonView.swift; sourceTree = "<group>"; };
+		14FFBDB42F12992800B96C92 /* AudioInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputView.swift; sourceTree = "<group>"; };
+		14FFBDB62F12A4D200B96C92 /* VideoInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoInputView.swift; sourceTree = "<group>"; };
+		14FFBDB82F12DF0600B96C92 /* Toggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toggle.swift; sourceTree = "<group>"; };
+		14FFBDBA2F12E6AF00B96C92 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
 		2000000000000001 /* VideoEditApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditApp.swift; sourceTree = "<group>"; };
 		2000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2000000000000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -250,6 +261,7 @@
 				146E4F172F0DA03700AA07CC /* Pow in Frameworks */,
 				146E4EFC2F0A7C0000AA07CC /* SwiftDiagnostics in Frameworks */,
 				146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */,
+				14FFBDBE2F13194A00B96C92 /* Shimmer in Frameworks */,
 				146E4EFE2F0A7C0000AA07CC /* SwiftIDEUtils in Frameworks */,
 				146E4F032F0A7C1400AA07CC /* WelcomeWindow in Frameworks */,
 				14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */,
@@ -290,6 +302,10 @@
 				1400C8D72F04C2A5001EF209 /* TimeInputField.swift */,
 				1400C8D82F04C2A5001EF209 /* ToolButton.swift */,
 				146E4F182F0DA45E00AA07CC /* RecordButton.swift */,
+				14FFBDB02F128F9A00B96C92 /* PlayerControlsView.swift */,
+				14FFBDB22F12949800B96C92 /* PauseButtonView.swift */,
+				14FFBDB42F12992800B96C92 /* AudioInputView.swift */,
+				14FFBDB62F12A4D200B96C92 /* VideoInputView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -395,6 +411,8 @@
 		144E65F92F0A537F00D044AD /* Styles */ = {
 			isa = PBXGroup;
 			children = (
+				14FFBDBA2F12E6AF00B96C92 /* Shape.swift */,
+				14FFBDB82F12DF0600B96C92 /* Toggle.swift */,
 				144E65FA2F0A538900D044AD /* Button.swift */,
 			);
 			path = Styles;
@@ -422,7 +440,6 @@
 		14D9D6AE2F0717A100065B49 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				14972F462F10F4AD002CE41C /* Namespace.swift */,
 				14D9D6B12F0718AB00065B49 /* NamePrintable.swift */,
 				14D9D6AF2F0717AF00065B49 /* Base.swift */,
 			);
@@ -539,6 +556,9 @@
 			buildRules = (
 			);
 			name = VideoEdit;
+			packageProductDependencies = (
+				14FFBDBD2F13194A00B96C92 /* Shimmer */,
+			);
 			productName = Claquette;
 			productReference = 3000000000000001 /* VideoEdit.app */;
 			productType = "com.apple.product-type.application";
@@ -577,6 +597,7 @@
 				146E4F072F0A7CC200AA07CC /* XCRemoteSwiftPackageReference "Onboarding" */,
 				146E4F0C2F0A8DE900AA07CC /* XCRemoteSwiftPackageReference "capcutsdk" */,
 				146E4F152F0DA03700AA07CC /* XCRemoteSwiftPackageReference "Pow" */,
+				14FFBDBC2F13194A00B96C92 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 5000000000000003 /* Products */;
@@ -619,8 +640,10 @@
 				1400C9392F04C472001EF209 /* ExportQuality+Model.swift in Sources */,
 				1400C93A2F04C472001EF209 /* RecordingError+Model.swift in Sources */,
 				1400C93C2F04C472001EF209 /* CameraPosition+Model.swift in Sources */,
+				14FFBDBB2F12E6B200B96C92 /* Shape.swift in Sources */,
 				146E4F102F0AA8B900AA07CC /* VICameraCaptureView.swift in Sources */,
 				1400C93D2F04C472001EF209 /* VideoEditorError+Model.swift in Sources */,
+				14FFBDB32F12949800B96C92 /* PauseButtonView.swift in Sources */,
 				1400C93E2F04C472001EF209 /* ClickEvent+Model.swift in Sources */,
 				1400C93F2F04C472001EF209 /* VideoDocument+Model.swift in Sources */,
 				1400C9412F04C472001EF209 /* ExportPreset+Model.swift in Sources */,
@@ -649,6 +672,8 @@
 				1400C8F92F04C2A5001EF209 /* QuickActionButton.swift in Sources */,
 				144E65EF2F09632900D044AD /* Bundle+Extensions.swift in Sources */,
 				1400C8FA2F04C2A5001EF209 /* ExportView.swift in Sources */,
+				14FFBDB52F12992800B96C92 /* AudioInputView.swift in Sources */,
+				14FFBDB12F128F9A00B96C92 /* PlayerControlsView.swift in Sources */,
 				1400C8FB2F04C2A5001EF209 /* ShortcutsSettingsView.swift in Sources */,
 				1400C8FC2F04C2A5001EF209 /* RecordingInProgressView.swift in Sources */,
 				1400C8FD2F04C2A5001EF209 /* AboutSettingsView.swift in Sources */,
@@ -657,7 +682,6 @@
 				148AAC602F0742800087D649 /* NamePrintable+Extensions.swift in Sources */,
 				1400C9002F04C2A5001EF209 /* RecordingView.swift in Sources */,
 				14D9D6B02F0717B400065B49 /* Base.swift in Sources */,
-				14972F472F10F4BC002CE41C /* Namespace.swift in Sources */,
 				14972F452F10EDFF002CE41C /* TimerPicker.swift in Sources */,
 				1400C9012F04C2A5001EF209 /* EditorToolbar.swift in Sources */,
 				144E65FB2F0A538C00D044AD /* Button.swift in Sources */,
@@ -672,6 +696,7 @@
 				146E4F1B2F0DE4F200AA07CC /* Button+ViewModifier.swift in Sources */,
 				144E66022F0A687100D044AD /* RectCorner+Model.swift in Sources */,
 				1400C9072F04C2A5001EF209 /* FormatButton.swift in Sources */,
+				14FFBDB72F12A4D200B96C92 /* VideoInputView.swift in Sources */,
 				1400C9082F04C2A5001EF209 /* CropOverlay.swift in Sources */,
 				148AAC6E2F0793D00087D649 /* View+NSViewRepresentable.swift in Sources */,
 				1400C9092F04C2A5001EF209 /* SettingsView.swift in Sources */,
@@ -696,6 +721,7 @@
 				1400C9162F04C2A5001EF209 /* CameraPreviewView.swift in Sources */,
 				1400C9172F04C2A5001EF209 /* GeneralSettingsView.swift in Sources */,
 				1400C9182F04C2A5001EF209 /* RecordingSetupView.swift in Sources */,
+				14FFBDB92F12DF0E00B96C92 /* Toggle.swift in Sources */,
 				1400C9192F04C2A5001EF209 /* ToolButton.swift in Sources */,
 				1000000000000010 /* MouseClickVisualizer.swift in Sources */,
 			);
@@ -1055,6 +1081,14 @@
 				minimumVersion = 602.0.0;
 			};
 		};
+		14FFBDBC2F13194A00B96C92 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1152,6 +1186,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 14D9D6A32F05974400065B49 /* XCRemoteSwiftPackageReference "swift-syntax" */;
 			productName = SwiftIfConfig;
+		};
+		14FFBDBD2F13194A00B96C92 /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 14FFBDBC2F13194A00B96C92 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

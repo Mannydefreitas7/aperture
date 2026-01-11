@@ -24,9 +24,7 @@ struct VICameraCaptureView: View {
 
     @State private var spacing: CGFloat = 8
     @State private var isTimerEnabled: Bool = false
-    @State private var timerSelection: TimerSelection = .threeSeconds
-
-    
+    @State private var timerSelection: TimeInterval.Option = .threeSeconds
 
     @Namespace private var namespace
     @Namespace private var namespace2
@@ -34,9 +32,11 @@ struct VICameraCaptureView: View {
     var body: some View {
 
         ZStack(alignment: .bottom) {
+            // MARK: Video preview
             VideoOutputView(captureSession: $viewModel.session, isMirror: $isMirrored)
                 .ignoresSafeArea(.all)
 
+            // MARK: Crop mask for selected ratio
             AspectMaskOverlay(
                 aspectPreset: aspectPreset,
                 showGuides: showSafeGuides,
@@ -45,22 +45,33 @@ struct VICameraCaptureView: View {
             )
             .allowsHitTesting(false)
 
-            bottomContent()
-
+            // MARK: Bottom bar content
+            BottomBar()
+                .padding(.bottom, DesignToken.bottomPadding / 2)
 
         }
         // Keep the window resizable but constrained to 16:9.
         .background(WindowAspectRatioLock(ratio: CGSize(width: 16, height: 9)))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .toolbar {
-            topTrailingControls()
-        }
+//        .toolbar {
+//            TimerPicker(isTimerEnabled: $isTimerEnabled, timerSelection: $timerSelection)
+//        }
+//        .toolbar {
+//            topTrailingControls()
+//        }
     }
 }
 
 
 
 extension VICameraCaptureView {
+
+    @ViewBuilder
+    func BottomBar() -> some View {
+        HStack {
+            PlayerControlsView(viewModel: viewModel.playerControlViewModel)
+        }
+    }
 
     @ViewBuilder
     func recordButton() -> some View {
@@ -90,7 +101,6 @@ extension VICameraCaptureView {
 
                     }
                     .labelStyle(.iconOnly)
-
                     .toggleStyle(.automatic)
                     .buttonBorderShape(.circle)
                     .buttonStyle(.glass)
@@ -98,7 +108,7 @@ extension VICameraCaptureView {
 
                     if isTimerEnabled {
                         Picker("Timer", selection: $timerSelection) {
-                            ForEach(TimerSelection.allCases) { option in
+                            ForEach(TimeInterval.options) { option in
                                 Text("\(option.rawValue)s").tag(option)
                             }
                         }
@@ -161,9 +171,7 @@ extension VICameraCaptureView {
                 }
             }
             .glassEffectTransition(.materialize)
-
         }
-
 
         ToolbarSpacer(.flexible)
 
@@ -175,16 +183,13 @@ extension VICameraCaptureView {
             )
             .help(Constants.mirrorHelp)
             .toggleStyle(.button)
-
         }
-
     }
 
     // Glass group namespace ids
     enum nameSpaceNames {
         case recordControls
         case mediaControls
-
     }
 
     @ViewBuilder
@@ -232,7 +237,7 @@ extension VICameraCaptureView {
         static let defaultBorderWidth: CGFloat = 1
         static let defaultBorderColor: NSColor = .secondaryLabelColor
         static let topPadding: CGFloat = 54
-        static let bottomPadding: CGFloat = 48
+        static let bottomPadding: CGFloat = 54
         static let dimmingAlpha: CGFloat = 0.5
 
         static let maskColor: Color = .recordingRed.opacity(0.1)
@@ -616,6 +621,8 @@ extension VICameraCaptureView {
         @Published var lastSavedURL: URL?
         @Published var lastThumbnail: NSImage?
         @Published var alert: UIAlerter?
+
+        @Published var playerControlViewModel: PlayerControlsView.ViewModel = .init()
 
         @Published private(set) var recordingDuration: TimeInterval = 0
         var recordingTimeString: String {
