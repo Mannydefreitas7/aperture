@@ -21,7 +21,6 @@ struct VICameraCaptureView: View {
     @AppStorage(Constants.showPlatformSafeStorageKey) private var showPlatformSafe: Bool = true
     @AppStorage(Constants.mirrorToggleID) private var isMirrored: Bool = true
 
-
     @State private var spacing: CGFloat = 8
     @State private var isTimerEnabled: Bool = false
     @State private var timerSelection: TimeInterval.Option = .threeSeconds
@@ -498,8 +497,6 @@ extension VICameraCaptureView {
                 let height = width / targetAspect
                 return CGSize(width: width, height: height)
             }
-
-
         }
     }
 
@@ -532,9 +529,6 @@ extension VICameraCaptureView {
             }
         }
     }
-
-
-
 
     enum ResolutionPreset: String, CaseIterable, Identifiable {
         case p720 = "720p"
@@ -594,7 +588,6 @@ extension VICameraCaptureView {
         private let captureQueue = DispatchQueue(label: "camera.capture.queue")
 
         private var isConfigured = false
-
         private var videoInput: AVCaptureDeviceInput?
         private var audioInput: AVCaptureDeviceInput?
 
@@ -612,7 +605,7 @@ extension VICameraCaptureView {
         }
 
         func addInputs() async {
-           _ = await manager.addAudioInput(session)
+            _ = await manager.addAudioInput(session)
             _ = await manager.addVideoInput(session)
         }
     }

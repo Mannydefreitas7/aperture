@@ -46,19 +46,6 @@ struct CameraOverlayView: View {
                         .animation(.spring(response: 0.3), value: position)
                 }
             }
-            .task {
-                await cameraManager.loadcameras()
-            }
-
-            .onAppear {
-
-            }
-            .onDisappear {
-                Task {
-                    await cameraManager.stopSession()
-                }
-             
-            }
         }
     }
 

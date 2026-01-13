@@ -14,15 +14,19 @@ struct CameraSettingsView: View {
         Form {
 
             Section {
-              //  Toggle("Show Camera Overlay", isOn: $isVisible)
 
                 VideoOutputView(
                     captureSession: $cameraViewModel.session,
                     isMirror: $cameraManager.isMirrored
                 )
 
-                if isVisible {
+                if !cameraViewModel.isLoading || isVisible {
 
+
+                    ProgressView()
+                        .progressViewStyle(.circular)
+
+                } else {
                     Picker("Camera", selection: $cameraManager.selectedCamera) {
                         ForEach(cameraManager.availableCameras, id: \.id) { camera in
                             Text(camera.name)
@@ -30,7 +34,6 @@ struct CameraSettingsView: View {
                         }
                     }
 
-                    Toggle("Mirror Camera", isOn: $cameraManager.isMirrored)
                 }
 
             } header: {
@@ -63,9 +66,7 @@ struct CameraSettingsView: View {
         }
         .formStyle(.automatic)
         .controlSize(.large)
-        .task {
-           await cameraViewModel.loadcameras()
-        }
+       // .task(cameraViewModel.loadCameras)
     }
 }
 
