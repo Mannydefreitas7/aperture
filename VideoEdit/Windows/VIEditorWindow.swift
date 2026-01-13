@@ -16,13 +16,10 @@ struct VIEditorWindow: Scene {
         WindowGroup("Editor", id: Constants.SceneID.editor.rawValue) {
             VICameraCaptureView()
 
-            //    .aspectRatio(16 / 9, contentMode: .fill)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .windowResizeAnchor(.bottomLeading)
                 .ignoresSafeArea(.all)
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
-
-
                 .environmentObject(appState)
         }
         .windowStyle(.titleBar)

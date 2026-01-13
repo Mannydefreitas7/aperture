@@ -8,18 +8,38 @@
 import SwiftUI
 
 struct AudioInputView: View {
+    @Binding var isOn: Bool
 
-    var action: () -> Void = { }
-
+    @State var isPresented: Bool = false
+    @State var volume: Double = 0
     var body: some View {
-        Button {
-            action()
-        } label: {
-            Label(UIString.label.rawValue, systemImage: UIString.icon.rawValue)
-                .font(.title2)
+        HStack {
+            Toggle(isOn: $isOn) {
+                Label("Device name", systemImage: isOn ? "microphone.fill" : "microphone.slash")
+                    .frame(minWidth: .medium)
+            }
+            .toggleStyle(.button)
+            .buttonBorderShape(.circle)
+            .labelStyle(.iconOnly)
+            .buttonStyle(.glass)
+            .animation(.bouncy, value: isOn)
+
+            if isOn {
+                Button {
+                    isPresented.toggle()
+                } label: {
+                    Text("Device name")
+                }
+                .labelStyle(.titleAndIcon)
+                .buttonStyle(.accessoryBar)
+            }
         }
-        .buttonBorderShape(.circle)
-        .buttonStyle(.glassToolBar)
+        .controlSize(.extraLarge)
+        .animation(.bouncy, value: isOn)
+        .popover(isPresented: $isPresented) {
+            VolumeHUD(volume: $volume)
+                .frame(minWidth: .popoverWidth)
+        }
     }
 }
 
@@ -31,5 +51,12 @@ extension AudioInputView {
 }
 
 #Preview {
-    AudioInputView()
+
+    @Previewable @State var isOn: Bool = false
+
+    ZStack {
+        AudioInputView(isOn: $isOn)
+    }
+    .frame(width: 600, height: 600)
+
 }

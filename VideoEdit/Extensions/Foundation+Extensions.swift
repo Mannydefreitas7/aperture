@@ -64,7 +64,11 @@ extension CGFloat {
 
     static var recordWidth: Self { 28 }
     static var recordHeight: Self { 28 }
-
+    static var popoverWidth: Self { 248 }
+    static var thumbnail: Self { 128 }
+    static var pillWidth: Self { 12 }
+    static var pillHeight: Self { 18 }
+    static var spacing: Self { 6 }
 
     static var windowWidth: Self {
 

@@ -52,7 +52,7 @@ struct RecordToggleStyle: ToggleStyle {
                 configuration.label
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
-                    .font(.title3)
+                    //.font(.title3)
                     .shimmering(
                         active: configuration.isOn,
                         animation: Shimmer.defaultAnimation.speed(1.5),

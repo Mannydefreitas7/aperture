@@ -3,31 +3,41 @@ import AVFoundation
 
 struct CameraSettingsView: View {
     @ObservedObject var cameraManager: CameraPreviewViewModel
-    @Binding var position: CameraPosition
-    @Binding var size: CameraSize
-    @Binding var shape: CameraShape
-    @Binding var isVisible: Bool
+    @AppStorage("cameraPosition") var position: CameraPosition = .bottomRight
+    @AppStorage("cameraSize") var size: CameraSize = .medium
+    @AppStorage("cameraShape") var shape: CameraShape = .circle
+    @AppStorage("cameraPreviewVisible") var isVisible: Bool = true
+
+    @StateObject var cameraViewModel: CameraPreviewViewModel = .init()
 
     var body: some View {
         Form {
-            Section("Camera") {
-                Toggle("Show Camera Overlay", isOn: $isVisible)
+
+            Section {
+              //  Toggle("Show Camera Overlay", isOn: $isVisible)
+
+                VideoOutputView(
+                    captureSession: $cameraViewModel.session,
+                    isMirror: $cameraManager.isMirrored
+                )
 
                 if isVisible {
+
                     Picker("Camera", selection: $cameraManager.selectedCamera) {
                         ForEach(cameraManager.availableCameras, id: \.id) { camera in
                             Text(camera.name)
                                 .tag(camera.id)
-
                         }
                     }
 
-
-
-
                     Toggle("Mirror Camera", isOn: $cameraManager.isMirrored)
                 }
+
+            } header: {
+                Text("Camera")
+                    .foregroundStyle(.foreground.secondary)
             }
+
 
             if isVisible {
                 Section("Appearance") {
@@ -51,6 +61,20 @@ struct CameraSettingsView: View {
                 }
             }
         }
-        .formStyle(.grouped)
+        .formStyle(.automatic)
+        .controlSize(.large)
+        .task {
+           await cameraViewModel.loadcameras()
+        }
     }
+}
+
+#Preview {
+
+    @Previewable @StateObject var cameraManager: CameraPreviewViewModel = .init()
+
+    CameraSettingsView(cameraManager: cameraManager)
+        .padding()
+        .frame(width: 600, height: 400)
+
 }

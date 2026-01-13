@@ -11,21 +11,25 @@ struct VideoInputView: View {
 
     var action: () -> Void = { }
 
+    @State private var isPresented: Bool = false
     var body: some View {
         Button {
-            action()
+            isPresented.toggle()
         } label: {
-            Label(UIString.label.rawValue, systemImage: UIString.icon.rawValue)
-                .font(.title2)
+            Label(UIString.label.rawValue, systemImage: UIString.icon.rawValue).font(.body)
+                .padding(.vertical, .small)
         }
-        .buttonBorderShape(.circle)
         .buttonStyle(.glassToolBar)
+        .popover(isPresented: $isPresented) {
+            Text("Content")
+                .padding()
+        }
     }
 }
 
 extension VideoInputView {
     enum UIString: String {
-        case label = "On"
+        case label = "S3 Camera HD"
         case icon = "web.camera"
     }
 }

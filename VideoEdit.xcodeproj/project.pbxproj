@@ -123,6 +123,8 @@
 		14D9D6AD2F05974400065B49 /* SwiftIfConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6AC2F05974400065B49 /* SwiftIfConfig */; };
 		14D9D6B02F0717B400065B49 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9D6AF2F0717AF00065B49 /* Base.swift */; };
 		14D9D6B22F0718B400065B49 /* NamePrintable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9D6B12F0718AB00065B49 /* NamePrintable.swift */; };
+		14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */; };
+		14FC9EC62F156D6A0053C019 /* EditorSettingsModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC52F156D6A0053C019 /* EditorSettingsModal.swift */; };
 		14FFBDB12F128F9A00B96C92 /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB02F128F9A00B96C92 /* PlayerControlsView.swift */; };
 		14FFBDB32F12949800B96C92 /* PauseButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB22F12949800B96C92 /* PauseButtonView.swift */; };
 		14FFBDB52F12992800B96C92 /* AudioInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FFBDB42F12992800B96C92 /* AudioInputView.swift */; };
@@ -223,6 +225,8 @@
 		14972F442F10EDFF002CE41C /* TimerPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPicker.swift; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		14D9D6B12F0718AB00065B49 /* NamePrintable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePrintable.swift; sourceTree = "<group>"; };
+		14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
+		14FC9EC52F156D6A0053C019 /* EditorSettingsModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSettingsModal.swift; sourceTree = "<group>"; };
 		14FFBDB02F128F9A00B96C92 /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
 		14FFBDB22F12949800B96C92 /* PauseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseButtonView.swift; sourceTree = "<group>"; };
 		14FFBDB42F12992800B96C92 /* AudioInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputView.swift; sourceTree = "<group>"; };
@@ -285,6 +289,7 @@
 		1400C8D92F04C2A5001EF209 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */,
 				14972F442F10EDFF002CE41C /* TimerPicker.swift */,
 				144E65FC2F0A57C600D044AD /* WelcomeButton.swift */,
 				144E65EA2F09624800D044AD /* WelcomeSubtitleView.swift */,
@@ -306,6 +311,7 @@
 				14FFBDB22F12949800B96C92 /* PauseButtonView.swift */,
 				14FFBDB42F12992800B96C92 /* AudioInputView.swift */,
 				14FFBDB62F12A4D200B96C92 /* VideoInputView.swift */,
+				14FC9EC52F156D6A0053C019 /* EditorSettingsModal.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -635,6 +641,7 @@
 				146E4F122F0B5DA900AA07CC /* CameraCaptureView.swift in Sources */,
 				1400C9362F04C472001EF209 /* RecordingQuality+Model.swift in Sources */,
 				1400C9372F04C472001EF209 /* CameraSize+Model.swift in Sources */,
+				14FC9EC62F156D6A0053C019 /* EditorSettingsModal.swift in Sources */,
 				146E4F0B2F0A830000AA07CC /* VIRecordingView.swift in Sources */,
 				1400C9382F04C472001EF209 /* GIFExportError+Model.swift in Sources */,
 				1400C9392F04C472001EF209 /* ExportQuality+Model.swift in Sources */,
@@ -663,6 +670,7 @@
 				144E65E92F0961ED00D044AD /* OpenFileOrFolderButton.swift in Sources */,
 				1400C94B2F04C472001EF209 /* ExportFormat+Model.swift in Sources */,
 				1000000000000001 /* VideoEditApp.swift in Sources */,
+				14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */,
 				1000000000000002 /* ContentView.swift in Sources */,
 				1000000000000005 /* ScreenRecorder.swift in Sources */,
 				1000000000000006 /* VideoEditor.swift in Sources */,

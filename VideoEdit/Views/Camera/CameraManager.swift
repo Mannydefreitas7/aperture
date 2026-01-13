@@ -75,7 +75,7 @@ actor VCDeviceCameraManager {
 public final class CameraPreviewViewModel: ObservableObject {
     @Published var session = AVCaptureSession()
     private var videoInput: AVCaptureDeviceInput?
-    private let cameraManager = VCDeviceCameraManager()
+    private let cameraManager: Manager = .init()
     var cancellables: Set<AnyCancellable> = []
 
     @Published var isRunning = false
@@ -84,11 +84,32 @@ public final class CameraPreviewViewModel: ObservableObject {
     @Published var isMirrored = true
     @Published var isConnected: Bool = false
     @Published var errorMessage: String? = nil
-    @Published var currentSession: AVCaptureSession? = nil
+
+    // One serial queue for session ops + sample callbacks => no races.
+    private let captureQueue = DispatchQueue(label: "camera.capture.queue")
+
+    private var isConfigured = false
+
+    private var audioInput: AVCaptureDeviceInput?
+
+    private let videoOutput = AVCaptureVideoDataOutput()
+    private let audioOutput = AVCaptureAudioDataOutput()
+
+
+
+    func addInputs() async {
+      _ = await cameraManager.addAudioInput(session)
+       _ = await cameraManager.addVideoInput(session)
+    }
 
     init() {
 
-        $currentSession
+
+        if !session.isRunning {
+            session.startRunning()
+        }
+
+        $session
             .compactMap { $0 }
             .map { $0.isRunning }
             .assign(to: \.isRunning, on: self)
@@ -115,14 +136,33 @@ public final class CameraPreviewViewModel: ObservableObject {
 
 
     func loadcameras() async {
-        availableCameras = await cameraManager.loadAvailableCameras()
+        let cameras = Future { [weak self] in
+            return await self?.cameraManager.loadAvailableCameras()
+        }
+
+        cameras
+            .compactMap { $0 }
+            .map { $0.map { device in
+                CameraInfo(
+                    id: device.uniqueID,
+                    name: device.localizedName,
+                    position: device.position,
+                    deviceType: device.deviceType,
+                    device: device
+                )
+            }}
+            .assign(to: \.availableCameras, on: self)
+            .store(in: &cancellables)
+
         print("Available Cameras: \(availableCameras)")
     }
 
 
     func startSession(_ device: CameraInfo? = nil) async {
         do {
-            videoInput = try await cameraManager.start(session, with: device)
+            videoInput =
+            try await cameraManager.start(session, with: device)
+            await addInputs()
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -136,9 +176,8 @@ public final class CameraPreviewViewModel: ObservableObject {
 
     func selectCamera(_ device: CameraInfo) async {
         selectedCamera = device
-        guard let currentSession else { return }
 
-        if currentSession.isRunning {
+        if session.isRunning {
             await cameraManager.stop(session)
         }
 

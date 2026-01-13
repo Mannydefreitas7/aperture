@@ -15,7 +15,7 @@ struct PlayerControlsView: View {
 
     var body: some View {
         GlassEffectContainer(spacing: .zero) {
-            HStack(alignment: .center, spacing: .small) {
+            HStack(alignment: .center, spacing: .medium) {
 
                     // MARK: Record button
                     RecordButton()
@@ -31,7 +31,7 @@ struct PlayerControlsView: View {
                     if !viewModel.isRecording {
                         // MARK: Timer Control
                         TimerControl()
-                            //.padding(.vertical, 8)
+           
                             .padding(.horizontal, viewModel.isTimerEnabled ? .small : .zero)
                             .frame(height: .minHeight)
                             .glassEffect()
@@ -56,6 +56,9 @@ struct PlayerControlsView: View {
                     // MARK: Video Input
                     VideoInput()
 
+                    // MARK: Settings Input
+                    SettingsButton()
+
                 }
                // .padding(.vertical, 6)
                 .padding(.trailing, .small)
@@ -66,6 +69,8 @@ struct PlayerControlsView: View {
                     id: viewModel.isTimerEnabled ? ControlGroup.options : ControlGroup.all,
                     namespace: controlGroup
                 )
+
+
 
             }
             .animation(.bouncy, value: viewModel.isTimerEnabled)
@@ -94,6 +99,7 @@ extension PlayerControlsView {
         case record
         case options
         case timer
+        case settings
     }
 
 
@@ -102,6 +108,8 @@ extension PlayerControlsView {
         @Published var isRecording: Bool = false
         @Published var isTimerEnabled: Bool = false
         @Published var timerSelection: TimeInterval.Option = .threeSeconds
+        @Published var isOn: Bool = false
+        @Published var isSettingsPresented: Bool = false
 
         var spacing: CGFloat {
             isTimerEnabled || isRecording ? 8 : 0
@@ -120,7 +128,6 @@ extension PlayerControlsView {
                 condition: viewModel.isRecording
             )
             .buttonStyle(.pushDown(glass: .regular))
-
     }
 
     @ViewBuilder
@@ -137,19 +144,44 @@ extension PlayerControlsView {
 
     @ViewBuilder
     func AudioInput() -> some View {
-        AudioInputView {
-            //
-        }
-
+        AudioInputView(isOn: $viewModel.isOn)
     }
 
     @ViewBuilder
     func VideoInput() -> some View {
+
         VideoInputView {
             //
         }
     }
+
+    @ViewBuilder
+    func SettingsButton() -> some View {
+        Button {
+            //
+            viewModel.isSettingsPresented.toggle()
+        } label: {
+            Label("Settings", systemImage: "gearshape")
+                .font(.title2)
+                .labelStyle(.iconOnly)
+        }
+        .buttonBorderShape(.circle)
+        .buttonStyle(.glassToolBar)
+        .sheet(isPresented: $viewModel.isSettingsPresented) {
+            SettingsModal()
+                .presentedWindowToolbarStyle(.unified)
+                .frame(width: 400, height: 300)
+        }
+    }
+
+    @ViewBuilder
+    func SettingsModal() -> some View {
+        EditorSettingsModal()
+
+    }
 }
+
+
 
 #Preview {
     PlayerControlsView(viewModel: .init())
