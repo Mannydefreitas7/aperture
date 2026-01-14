@@ -1,5 +1,5 @@
 {
-  "originHash" : "0ca2bb193c6372d5f7f8ab66f34d73409ba90908cfc70250eac1913e4bd00264",
+  "originHash" : "3ac6b3aabf02a1d7c85cf30f76dc449b777f2033b0c8e2ee47f2e369e885d855",
   "pins" : [
     {
       "identity" : "capcutsdk",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "ff6188edb948e29c2e7053f6b3c54caf16cf9d05",
         "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "engine",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nathantannar4/Engine",
+      "state" : {
+        "revision" : "d4feaf0d8bf9c49cecc0617d8ed0706417792f86",
+        "version" : "2.4.0"
       }
     },
     {

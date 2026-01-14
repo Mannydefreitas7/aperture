@@ -150,6 +150,9 @@ extension ButtonStyle where Self == WelcomeButtonStyle {
 
 extension ButtonStyle {
     static var glassToolBar: GlassToolBarButtonStyle { get { .init() }}
+    static func glassToolBar(_ glass: AnyGlassStyle) -> GlassToolBarButtonStyle {
+        return GlassToolBarButtonStyle(glass: glass)
+    }
     static func pushDown(glass: AnyGlassStyle?) -> PushDownButtonStyle {
         return PushDownButtonStyle(glass: glass)
     }
@@ -158,6 +161,9 @@ extension ButtonStyle {
 
 extension PrimitiveButtonStyle where Self == GlassToolBarButtonStyle {
     static var glassToolBar: GlassToolBarButtonStyle { get { .init() }}
+    static func glassToolBar(_ glass: AnyGlassStyle) -> GlassToolBarButtonStyle {
+        return GlassToolBarButtonStyle(glass: glass)
+    }
 }
 
 extension PrimitiveButtonStyle where Self == PushDownButtonStyle {

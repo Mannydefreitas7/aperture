@@ -10,7 +10,6 @@ import AVFoundation
 import AppKit
 import Combine
 
-
 struct VICameraCaptureView: View {
 
     @StateObject private var viewModel: ViewModel = .init()
@@ -44,19 +43,22 @@ struct VICameraCaptureView: View {
                     showMask: showAspectMask,
                     showPlatformSafe: showPlatformSafe
                 )
+                .environmentObject(viewModel)
+                .frame(maxWidth: .windowWidth, maxHeight: .infinity)
                 .allowsHitTesting(false)
 
                 // MARK: Bottom bar content
                 BottomBar()
-                    .padding(.bottom, DesignToken.bottomPadding / 2)
-
             }
+            .environmentObject(viewModel)
         }
 
         // Keep the window resizable but constrained to 16:9.
         .background(WindowAspectRatioLock(ratio: CGSize(width: 16, height: 9)))
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
     }
+
 }
 
 
@@ -65,8 +67,15 @@ extension VICameraCaptureView {
 
     @ViewBuilder
     func BottomBar() -> some View {
-        HStack {
+        LazyHStack(alignment: .bottom) {
             PlayerControlsView(viewModel: viewModel.playerControlViewModel)
+        }
+        .padding(.bottom, DesignToken.bottomPadding / 2)
+        .inspector(isPresented: $viewModel.isSettingsPresented) {
+            EditorSettingsView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color(.underPageBackgroundColor))
+                .inspectorColumnWidth(.columnWidth(spacing: .threeOfTwelve))
         }
     }
 
@@ -112,8 +121,6 @@ extension VICameraCaptureView {
                         .labelsHidden()
                         .pickerStyle(.segmented)
                         .buttonStyle(.glass)
-
-
                     }
                 }
 
@@ -191,9 +198,11 @@ extension VICameraCaptureView {
 
     @ViewBuilder
     func bottomContent() -> some View {
-        GlassEffectContainer {
-            HStack(alignment: .center, spacing: 8) {
-                recordButton()
+        LazyVStack(alignment: .center) {
+            Spacer()
+            GlassEffectContainer {
+                HStack(alignment: .center, spacing: 8) {
+                    recordButton()
                     Button {
                         //
                     } label: {
@@ -218,11 +227,13 @@ extension VICameraCaptureView {
                     .animation(.bouncy.delay(isTimerEnabled ? 0.2 : 0), value: isTimerEnabled)
                     .glassEffectTransition(.materialize)
 
+                }
+                //            .controlSize(.extraLarge)
             }
-//            .controlSize(.extraLarge)
+            .padding(.bottom, (DesignToken.bottomPadding / 2) + 8)
+            .animation(.bouncy, value: isTimerEnabled)
         }
-        .padding(.bottom, (DesignToken.bottomPadding / 2) + 8)
-        .animation(.bouncy, value: isTimerEnabled)
+
     }
 }
 
@@ -337,6 +348,9 @@ extension VICameraCaptureView {
     /// Visual overlay showing the selected aspect ratio as a centered mask.
     /// The window remains freely resizable; this is purely a guide.
     struct AspectMaskOverlay: View {
+
+        @EnvironmentObject var editorViewModel: ViewModel
+
         var aspectPreset: AspectPreset = .youtube
         var showGuides: Bool = false
         var showMask: Bool = false
@@ -557,6 +571,8 @@ extension VICameraCaptureView {
     @MainActor
     class ViewModel: ObservableObject {
         private var manager: Manager = .init()
+        private var cancellables: Set<AnyCancellable> = []
+
         @Published var session: AVCaptureSession = .init()
         @Published var mode: Mode = .camera
 
@@ -564,6 +580,7 @@ extension VICameraCaptureView {
         @Published var selectedVideoDeviceID: String = ""
         @Published var selectedResolution: ResolutionPreset = .p1080
         @Published var includeAudio: Bool = true
+        @Published var isSettingsPresented: Bool = false
 
         @Published var isRunning: Bool = false
         @Published var isRecording: Bool = false
@@ -602,6 +619,11 @@ extension VICameraCaptureView {
             if !session.isRunning {
                 session.startRunning()
             }
+
+            playerControlViewModel.$isSettingsPresented
+                .map { $0 }
+                .assign(to: \.isSettingsPresented, on: self)
+                .store(in: &cancellables)
         }
 
         func addInputs() async {

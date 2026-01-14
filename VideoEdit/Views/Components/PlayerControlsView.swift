@@ -21,7 +21,7 @@ struct PlayerControlsView: View {
                     RecordButton()
                         .glassEffect(
                             viewModel.isRecording ? .regular
-                                .tint(.recordingRed) : .regular
+                                .tint(.recordingRed) : .regular.tint(Color(.windowBackgroundColor))
                         )
                         .glassEffectUnion(
                             id: ControlGroup.record,
@@ -34,7 +34,7 @@ struct PlayerControlsView: View {
            
                             .padding(.horizontal, viewModel.isTimerEnabled ? .small : .zero)
                             .frame(height: .minHeight)
-                            .glassEffect()
+                            .glassEffect(.regular)
                             .glassEffectUnion(
                                 id: viewModel.isTimerEnabled ? ControlGroup.timer : ControlGroup.all,
                                 namespace: controlGroup
@@ -57,27 +57,23 @@ struct PlayerControlsView: View {
                     VideoInput()
 
                     // MARK: Settings Input
-                    SettingsButton()
+                    SettingsButtonView()
 
                 }
                // .padding(.vertical, 6)
                 .padding(.trailing, .small)
                 .padding(.leading, viewModel.isTimerEnabled || viewModel.isRecording ? .small : .zero)
                 .frame(height: .minHeight)
-                .glassEffect()
+                .glassEffect(.regular)
                 .glassEffectUnion(
                     id: viewModel.isTimerEnabled ? ControlGroup.options : ControlGroup.all,
                     namespace: controlGroup
                 )
-
-
-
             }
             .animation(.bouncy, value: viewModel.isTimerEnabled)
             .glassEffectTransition(.materialize)
             .controlSize(.large)
         }
-
     }
 }
 
@@ -156,28 +152,8 @@ extension PlayerControlsView {
     }
 
     @ViewBuilder
-    func SettingsButton() -> some View {
-        Button {
-            //
-            viewModel.isSettingsPresented.toggle()
-        } label: {
-            Label("Settings", systemImage: "gearshape")
-                .font(.title2)
-                .labelStyle(.iconOnly)
-        }
-        .buttonBorderShape(.circle)
-        .buttonStyle(.glassToolBar)
-        .sheet(isPresented: $viewModel.isSettingsPresented) {
-            SettingsModal()
-                .presentedWindowToolbarStyle(.unified)
-                .frame(width: .windowWidth * 0.6, height: 360)
-        }
-    }
-
-    @ViewBuilder
-    func SettingsModal() -> some View {
-        EditorSettingsModal()
-
+    func SettingsButtonView() -> some View {
+        SettingsButton(isOn: $viewModel.isSettingsPresented)
     }
 }
 

@@ -7,57 +7,57 @@
 
 import SwiftUI
 
-struct EditorSettingsModal: View {
+struct EditorSettingsView: View {
 
     @Environment(\.dismiss) var dismiss
     @StateObject var cameraManager: CameraPreviewViewModel = .init()
     var body: some View {
-        NavigationStack {
-            //VStack {
 
-                TabView {
+            VStack {
 
-                    Tab("Video", systemImage: "web.camera") {
-                        CameraSettingsView(cameraManager: cameraManager)
-                            .navigationSubtitle("Video")
-                    }
+                Text("Test")
+                   
 
-                    Tab("Audio", systemImage: "microphone") {
-                        Text("Settings")
-                            .navigationSubtitle("Audio")
-                    }
-                }
-                .tabViewStyle(.grouped)
-          //  }
-
-            .toolbar {
-
-                ToolbarItem {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Label("Close", systemImage: "xmark.circle.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .font(.title)
-                            .labelStyle(.iconOnly)
-                    }
-                    .buttonStyle(.borderless)
-                    .buttonBorderShape(.circle)
-                }
-                .sharedBackgroundVisibility(.hidden)
+//                TabView {
+//
+//                    Tab("Video", systemImage: "web.camera") {
+//                        CameraSettingsView(cameraManager: cameraManager)
+//
+//                    }
+//
+//                    Tab("Audio", systemImage: "microphone") {
+//                        Text("Settings")
+//
+//                    }
+//                }
+//                .tabViewStyle(.tabBarOnly)
             }
-            .toolbarTitleDisplayMode(.automatic)
-            .presentedWindowToolbarStyle(.automatic)
-            .navigationTitle("Settings")
+            .padding()
 
-        }
 
+//            .toolbar {
+//
+//                ToolbarItem {
+//                    Button {
+//                        dismiss()
+//                    } label: {
+//                        Label("Close", systemImage: "xmark.circle.fill")
+//                            .symbolRenderingMode(.hierarchical)
+//                            .font(.title)
+//                            .labelStyle(.iconOnly)
+//                    }
+//                    .buttonStyle(.borderless)
+//                    .buttonBorderShape(.circle)
+//                }
+//
+//            
+//        }
     }
 }
 
 #Preview {
 
-        EditorSettingsModal()
+        EditorSettingsView()
         .frame(width: 600, height: 300)
 
 }

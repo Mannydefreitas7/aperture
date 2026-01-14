@@ -57,6 +57,34 @@ extension CGSize {
 
 }
 
+// MARK: - Int
+
+extension Double {
+
+    static var columnWidth: Double {
+        let gridColumns: Double = 12
+        return Double(CGFloat.windowWidth) / gridColumns
+    }
+
+    enum Spacing: Int {
+
+        case oneOfTwelve = 1
+        case twoOfTwelve = 2
+        case threeOfTwelve = 3
+        case fourOfTwelve = 4
+        case fiveOfTwelve = 5
+        case sixOfTwelve = 6
+        case sevenOfTwelve = 7
+        case eightOfTwelve = 8
+        case nineOfTwelve = 9
+        case tenOfTwelve = 10
+        case elevenOfTwelve = 11
+        case twelveOfTwelve = 12
+    }
+
+
+}
+
 // MARK: - CGFloat
 
 extension CGFloat {
@@ -69,6 +97,12 @@ extension CGFloat {
     static var pillWidth: Self { 12 }
     static var pillHeight: Self { 18 }
     static var spacing: Self { 6 }
+
+    static func columnWidth(spacing: Double.Spacing) -> CGFloat {
+        let totalColumns: CGFloat = 12
+        let columnWidth = CGFloat.windowWidth / totalColumns
+        return columnWidth * CGFloat(spacing.rawValue)
+    }
 
     static var windowWidth: Self {
 
@@ -182,3 +216,4 @@ extension URL {
 }
 
 extension NSObject: NamePrintable {}
+

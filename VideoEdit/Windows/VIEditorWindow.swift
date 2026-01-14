@@ -21,8 +21,9 @@ struct VIEditorWindow: Scene {
                 .ignoresSafeArea(.all)
                 .toolbarBackgroundVisibility(.hidden, for: .windowToolbar)
                 .environmentObject(appState)
+                
         }
-        .windowStyle(.titleBar)
+        .windowStyle(.hiddenTitleBar)
         .windowToolbarStyle(.unified)
         .windowResizability(.contentSize)
     }

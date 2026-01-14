@@ -8,11 +8,17 @@ struct ClaquetteApp: App {
     @StateObject private var appState = AppState()
     @AppStorage(.onboardingKey) var showOnboarding: Bool = true
 
+  
     var body: some Scene {
 
-        VIWelcomeWindow()
+//        VIWelcomeWindow()
+//
+//        VIEditorWindow()
 
-        VIEditorWindow()
+
+        ScreenOverlayWindow()
+            .windowIdealSize(.maximum)
+            .defaultLaunchBehavior(.presented)
 
 
 //

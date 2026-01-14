@@ -30,9 +30,13 @@ struct WelcomeButtonStyle: ButtonStyle {
 
 struct GlassToolBarButtonStyle: PrimitiveButtonStyle {
 
+    var glass: AnyGlassStyle? = nil
     @State private var isPressed: Bool = false
     @State private var _isHovered: Bool = false
-    @Environment(\.controlSize) var controlSize
+    init(glass: AnyGlassStyle? = nil) {
+        self.glass = glass
+    }
+    @Environment(\.controlSize) private var controlSize
 
 
     func makeBody(configuration: Configuration) -> some View {
@@ -50,7 +54,24 @@ struct GlassToolBarButtonStyle: PrimitiveButtonStyle {
                     }
                 }
         }
-        .buttonStyle(.accessoryBar)
+        .if(glass != nil) { button in
+            switch glass {
+                case .regular:
+                    button
+                        .buttonStyle(.glass)
+
+                case .prominent(let style):
+                    button
+                        .buttonStyle(.glassProminent)
+                        .tint(style)
+                case .identity:
+                    button.buttonStyle(.accessoryBar)
+                default:
+                    button.buttonStyle(.accessoryBar)
+            }
+        } else: { button in
+            button.buttonStyle(.accessoryBar)
+        }
     }
 
 }
@@ -88,6 +109,8 @@ struct RecordButtonStyle: PrimitiveButtonStyle {
 enum AnyGlassStyle {
     case regular
     case prominent(Color)
+    case identity
+    case none
 }
 
 

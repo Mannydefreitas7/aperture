@@ -12,6 +12,7 @@ class Constants {
         case main = "main"
         case settings = "settings"
         case welcome = "welcome"
+        case screenRecording = "screen-recording"
     }
 
     enum SceneID: String, CaseIterable, Hashable {
