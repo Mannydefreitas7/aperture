@@ -71,10 +71,13 @@ class Constants {
     static let tiktokPreset = "TikTok"
     static let instagramPreset = "Instagram"
 
-    static let aspectPresetStorageKey = "VICameraCaptureView.aspectPreset"
-    static let showAspectMaskStorageKey = "VICameraCaptureView.showAspectMask"
-    static let showSafeGuidesStorageKey = "VICameraCaptureView.showSafeGuides"
-    static let showPlatformSafeStorageKey = "VICameraCaptureView.showPlatformSafe"
+    enum StorageKey: String {
+        case aspectPreset = "aspect_preset"
+        case showAspectMask = "show_aspect_mask"
+        case showSafeGuides = "show_safe_guides"
+        case showPlatformGuides = "show_platform_safe"
+        case isMirrored = "is_mirrored"
+    }
 
     static let screen_capture_security_key: String = "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"
 

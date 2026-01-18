@@ -12,7 +12,6 @@ struct PlayerControlsView: View {
     @Namespace var controlGroup
     @ObservedObject var viewModel: ViewModel
 
-
     var body: some View {
         VStack {
 
@@ -27,9 +26,12 @@ struct PlayerControlsView: View {
                     if !viewModel.isRecording {
                         // MARK: Timer Control
                         TimerControl()
-                            .padding(viewModel.isTimerEnabled ? .horizontal : .leading, .small)
+                            .padding(
+                                viewModel.isTimerEnabled || viewModel.eitherMediaDeviceEnabled ? .horizontal : .leading,
+                                .small
+                            )
                             .frame(height: .minHeight)
-                            .glassEffect(.clear)
+                            .glassEffect()
                             .glassEffectUnion(
                                 id: viewModel.isTimerEnabled ? ControlGroup.timer : ControlGroup.all,
                                 namespace: controlGroup
@@ -41,11 +43,11 @@ struct PlayerControlsView: View {
                         PauseButton()
                             .padding(.horizontal, .small)
                             .frame(height: .minHeight)
-                            .glassEffect(.clear)
+                            .glassEffect()
 
                     }
 
-                    HStack(spacing: .zero) {
+                    HStack(spacing: .small) {
 
                         // MARK: Audio Input
                         AudioInput()
@@ -55,11 +57,11 @@ struct PlayerControlsView: View {
 
                     }
                     .padding(.trailing, .small)
-                    .padding(.leading, viewModel.isTimerEnabled ? .small : .zero)
+                    .padding(.leading, viewModel.spacing)
                     .frame(height: .minHeight)
-                    .glassEffect(.clear)
+                    .glassEffect()
                     .glassEffectUnion(
-                        id: viewModel.isTimerEnabled ? ControlGroup.options : ControlGroup.all,
+                        id: viewModel.eitherMediaDeviceEnabled ? ControlGroup.options : ControlGroup.all,
                         namespace: controlGroup
                     )
 
@@ -67,11 +69,11 @@ struct PlayerControlsView: View {
                     SettingsButtonView()
                         .padding(.horizontal, .small)
                         .frame(height: .minHeight)
-                        .glassEffect(.clear)
+                        .glassEffect()
                         //
                 }
-                .animation(.bouncy, value: viewModel.isTimerEnabled)
-                .glassEffectTransition(.materialize)
+                .animation(.bouncy, value: viewModel.toggleAnimation)
+                .glassEffectTransition(.matchedGeometry)
                 .controlSize(.large)
 
             }
@@ -105,11 +107,30 @@ extension PlayerControlsView {
         @Published var isRecording: Bool = false
         @Published var isTimerEnabled: Bool = false
         @Published var timerSelection: TimeInterval.Option = .threeSeconds
-        @Published var isOn: Bool = false
+        @Published var isMicrophoneEnabled: Bool = false
+        @Published var isVideoEnabled: Bool = false
         @Published var isSettingsPresented: Bool = false
+        @Published var selectedCamera: CameraInfo?
+        @Published var selectedMicrophone: MicrophoneInfo?
 
         var spacing: CGFloat {
-            isTimerEnabled || isRecording ? 8 : 0
+            isTimerEnabled || isRecording || eitherMediaDeviceEnabled ? .small : .zero
+        }
+
+        var bothMediaDevicesEnabled: Bool {
+            isVideoEnabled && isMicrophoneEnabled
+        }
+
+        var eitherMediaDeviceEnabled: Bool {
+            isVideoEnabled || isMicrophoneEnabled
+        }
+
+        var toggleAnimation: Bool {
+            isRecording || isTimerEnabled || eitherMediaDeviceEnabled
+        }
+
+        var cameraName: String {
+            return selectedCamera?.name ?? "None selected"
         }
     }
 }
@@ -144,7 +165,6 @@ extension PlayerControlsView {
                         .resizable()
                         .foregroundStyle(.recordingRed.gradient)
                         .scaleEffect(viewModel.isRecording ? 0.5 : 0.8)
-
                 }
                 .frame(width: .recordWidth * 2, height: .recordWidth * 2)
 
@@ -152,7 +172,6 @@ extension PlayerControlsView {
             .buttonStyle(.borderless)
             .buttonBorderShape(.circle)
         }
-
 
     @ViewBuilder
     func PauseButton() -> some View {
@@ -168,13 +187,13 @@ extension PlayerControlsView {
 
     @ViewBuilder
     func AudioInput() -> some View {
-        AudioInputView(isOn: $viewModel.isOn)
+        AudioInputView(isOn: $viewModel.isMicrophoneEnabled)
     }
 
     @ViewBuilder
     func VideoInput() -> some View {
 
-        VideoInputView {
+        VideoInputView(label: viewModel.cameraName) {
             //
         }
     }

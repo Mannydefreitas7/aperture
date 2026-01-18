@@ -236,5 +236,9 @@ extension String {
         return id.rawValue
     }
 
+    static func storageKey(_ id: Constants.StorageKey) -> Self {
+        return id.rawValue
+    }
+
 }
 

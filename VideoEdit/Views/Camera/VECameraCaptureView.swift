@@ -13,17 +13,15 @@ import Combine
 struct VECameraCaptureView: View {
 
     @StateObject private var viewModel: ViewModel = .init()
-    @AppStorage(Constants.aspectPresetStorageKey)
-    private var aspectPreset: AspectPreset = .youtube
-    @AppStorage(Constants.showAspectMaskStorageKey) private var showAspectMask: Bool = true
-    @AppStorage(Constants.showSafeGuidesStorageKey) private var showSafeGuides: Bool = true
-    @AppStorage(Constants.showPlatformSafeStorageKey) private var showPlatformSafe: Bool = true
-    @AppStorage(Constants.mirrorToggleID) private var isMirrored: Bool = true
+    @AppStorage(.storageKey(.aspectPreset)) private var aspectPreset: AspectPreset = .youtube
+    @AppStorage(.storageKey(.showAspectMask)) private var showAspectMask: Bool = true
+    @AppStorage(.storageKey(.showSafeGuides)) private var showSafeGuides: Bool = true
+    @AppStorage(.storageKey(.showPlatformGuides)) private var showPlatformSafe: Bool = true
+    @AppStorage(.storageKey(.isMirrored)) private var isMirrored: Bool = true
 
     @State private var spacing: CGFloat = 8
     @State private var isTimerEnabled: Bool = false
     @State private var timerSelection: TimeInterval.Option = .threeSeconds
-
 
     @Namespace private var namespace
     @Namespace private var namespace2
@@ -74,14 +72,6 @@ extension VECameraCaptureView {
                     .background(Color(.underPageBackgroundColor))
                     .inspectorColumnWidth(.columnWidth(spacing: .threeOfTwelve))
             }
-    }
-
-    @ViewBuilder
-    func recordButton() -> some View {
-        RecordButtonView(isRecording: $viewModel.isRecording)
-        .keyboardShortcut("r", modifiers: [])
-        .glassEffectUnion(id: viewModel.isRecording ? 3 : 1, namespace: namespace2)
-        .glassEffectTransition(.materialize)
     }
 
     @ViewBuilder
@@ -193,44 +183,6 @@ extension VECameraCaptureView {
         case mediaControls
     }
 
-    @ViewBuilder
-    func bottomContent() -> some View {
-        LazyVStack(alignment: .center) {
-            Spacer()
-            GlassEffectContainer {
-                HStack(alignment: .center, spacing: 8) {
-                    recordButton()
-                    Button {
-                        //
-                    } label: {
-                        Label("Pause", systemImage: "pause.circle")
-                            .font(.title2)
-                    }
-                    .labelStyle(.iconOnly)
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.glass)
-                    .glassEffectUnion(id: 4, namespace: namespace2)
-
-                    Button {
-                        //
-                    } label: {
-                        Label("On", systemImage: "microphone")
-                            .font(.title2)
-                    }
-                    .labelStyle(.iconOnly)
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.glass)
-                    .glassEffectUnion(id: 4, namespace: namespace2)
-                    .animation(.bouncy.delay(isTimerEnabled ? 0.2 : 0), value: isTimerEnabled)
-                    .glassEffectTransition(.materialize)
-
-                }
-            }
-            .padding(.bottom, (DesignToken.bottomPadding / 2) + 8)
-            .animation(.bouncy, value: isTimerEnabled)
-        }
-
-    }
 }
 
 
@@ -282,7 +234,6 @@ extension VECameraCaptureView {
             }
         }
     }
-
 
     enum AspectPreset: String, CaseIterable, Identifiable {
         /// Locks the hosting NSWindow to a fixed content aspect ratio while still allowing resize.
@@ -366,7 +317,6 @@ extension VECameraCaptureView {
                 )
 
                 let target = fittedSize(container: paddedContainer, ratio: aspectPreset.ratio)
-
                 // Centered target rect inside the padded container.
                 let originX = (container.width - target.width) / 2
                 let originY = topPadding + (paddedContainer.height - target.height) / 2
@@ -379,7 +329,11 @@ extension VECameraCaptureView {
                             innerRect: CGRect(x: originX, y: originY, width: target.width, height: target.height),
                             cornerRadius: cornerRadius
                         )
-                        .fill(.ultraThinMaterial, style: FillStyle(eoFill: true))
+                        .fill(
+                            .thickMaterial,
+                            style: FillStyle(eoFill: true)
+                        )
+
 
                         if showPlatformSafe, let avoid = aspectPreset.platformAvoidance {
                             // Top avoid area
@@ -390,7 +344,6 @@ extension VECameraCaptureView {
                                 .fill(DesignToken.maskColor)
                                 .frame(width: target.width, height: target.height * avoid.top)
                                 .position(x: originX + target.width / 2, y: originY + (target.height * avoid.top) / 2)
-
                             }
 
                             // Bottom avoid area
@@ -401,7 +354,6 @@ extension VECameraCaptureView {
                                 .fill(DesignToken.maskColor)
                                 .frame(width: target.width, height: target.height * avoid.bottom)
                                 .position(x: originX + target.width / 2, y: originY + target.height - (target.height * avoid.bottom) / 2)
-
                             }
 
                             // Left avoid area
@@ -412,7 +364,6 @@ extension VECameraCaptureView {
                                 .fill(DesignToken.maskColor)
                                 .frame(width: target.width * avoid.left, height: target.height)
                                 .position(x: originX + (target.width * avoid.left) / 2, y: originY + target.height / 2)
-
                             }
 
                             // Right avoid area
@@ -423,7 +374,6 @@ extension VECameraCaptureView {
                                 .fill(DesignToken.maskColor)
                                 .frame(width: target.width * avoid.right, height: target.height)
                                 .position(x: originX + target.width - (target.width * avoid.right) / 2, y: originY + target.height / 2)
-
                             }
                         }
 
@@ -443,8 +393,6 @@ extension VECameraCaptureView {
                             .stroke(.ultraThickMaterial, style: StrokeStyle(lineWidth: 2, dash: [6, 6]))
                             .frame(width: target.width - (insetX * 2), height: target.height - (insetY * 2))
                             .position(x: originX + target.width / 2, y: originY + target.height / 2)
-
-                        //
 
                         // Crosshair guides.
                         Path { p in
@@ -569,6 +517,7 @@ extension VECameraCaptureView {
     @MainActor
     class ViewModel: ObservableObject {
         private var manager: Manager = .init()
+        pr
         private var cancellables: Set<AnyCancellable> = []
 
         @Published var session: AVCaptureSession = .init()
@@ -589,8 +538,8 @@ extension VECameraCaptureView {
         @Published var colunmVisibility: NavigationSplitViewVisibility = .doubleColumn
 
         @Published var playerControlViewModel: PlayerControlsView.ViewModel = .init()
-
         @Published private(set) var recordingDuration: TimeInterval = 0
+
         var recordingTimeString: String {
             let total = Int(recordingDuration.rounded(.down))
             let h = total / 3600
@@ -612,6 +561,8 @@ extension VECameraCaptureView {
         init() {
             Task {
                 await addInputs()
+                // Load the available devices
+                videoDevices = await manager.availableCameras()
             }
 
             if !session.isRunning {
@@ -625,7 +576,7 @@ extension VECameraCaptureView {
         }
 
         func addInputs() async {
-            _ = await manager.addAudioInput(session)
+            _ = await DeviceManager.addAudioInput(session)
             _ = await manager.addVideoInput(session)
         }
     }
@@ -635,7 +586,6 @@ extension VECameraCaptureView {
 class PlayerView: NSView {
     var previewLayer: AVCaptureVideoPreviewLayer?
     private var dbags = [AnyCancellable]()
-
 
     init(captureSession: AVCaptureSession) {
         previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -689,15 +639,17 @@ struct VideoOutputView: NSViewRepresentable {
 
 actor Manager {
 
-    func loadAvailableCameras() -> [AVCaptureDevice] {
+    func availableCameras() -> [AVCaptureDevice] {
         return AVCaptureDevice
-            .DiscoverySession(
-                deviceTypes: [.builtInWideAngleCamera, .external],
-                mediaType: .video,
-                position: .unspecified
-            )
-            .devices
+                .DiscoverySession(
+                    deviceTypes: [.builtInWideAngleCamera, .external],
+                    mediaType: .video,
+                    position: .unspecified
+                )
+                .devices
     }
+
+
 
     func start(_ session: AVCaptureSession, with selectedCamera: CameraInfo?) throws -> AVCaptureDeviceInput {
         guard !session.isRunning else {

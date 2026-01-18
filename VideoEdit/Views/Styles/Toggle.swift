@@ -11,6 +11,8 @@ import Engine
 
 struct SecondaryToggleStyle: ToggleStyle {
 
+    @Environment(\.labelReservedIconWidth) var labelReservedIconWidth
+
     func makeBody(configuration: Configuration) -> some View {
         let style: AnyButtonStyle = configuration.isOn ? .init(.glassProminent) : .init(.glassToolBar)
         Button {
@@ -19,11 +21,13 @@ struct SecondaryToggleStyle: ToggleStyle {
             }
         } label: {
             configuration.label
+                .labelStyle(.iconOnly)
         }
-        .labelStyle(.iconOnly)
         .buttonBorderShape(.circle)
         .buttonStyle(style)
-        .tint(.white)
+        .if(configuration.isOn) {
+            $0.tint(.white)
+        }
 
     }
 }

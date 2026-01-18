@@ -4,13 +4,6 @@ import Combine
 import CombineAsync
 
 
-struct CameraInfo: Identifiable, Hashable {
-    let id: String
-    let name: String
-    let position: AVCaptureDevice.Position
-    let deviceType: AVCaptureDevice.DeviceType
-    let device: AVCaptureDevice
-}
 
 actor VCDeviceCameraManager {
 
@@ -142,7 +135,7 @@ public final class CameraPreviewViewModel: ObservableObject {
     }
 
     @Sendable func loadCameras() async -> Void {
-        let cameras = await cameraManager.loadAvailableCameras()
+        let cameras = await cameraManager.availableCameras()
         availableCameras = cameras.map {
             CameraInfo(
                 id: $0.uniqueID,

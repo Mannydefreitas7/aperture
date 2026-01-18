@@ -6,24 +6,31 @@
 //
 
 import SwiftUI
+import SFSafeSymbols
 
 struct VideoInputView: View {
 
-    var action: () -> Void = { }
-
+    var label: String
+    var action: () -> Void
     @State private var isPresented: Bool = false
+
     var body: some View {
-        Button {
-            isPresented.toggle()
-        } label: {
-            Label(UIString.label.rawValue, systemImage: UIString.icon.rawValue)
-                .font(.title2)
-        }
-        
-        .buttonStyle(.glassToolBar)
-        .popover(isPresented: $isPresented) {
-            Text("Content")
-                .padding()
+        HStack(spacing: .small / 2) {
+            Toggle(isOn: $isPresented) {
+                Image(systemSymbol: .webCamera)
+                    .font(.title2)
+            }
+            .toggleStyle(.secondary)
+            .animation(.bouncy, value: isPresented)
+
+            if isPresented {
+                Button {
+                    action()
+                } label: {
+                    Text(label)
+                }
+                .buttonStyle(.accessoryBar)
+            }
         }
     }
 }
@@ -36,5 +43,7 @@ extension VideoInputView {
 }
 
 #Preview {
-    VideoInputView()
+    VideoInputView(label: "Test") {
+        //
+    }
 }

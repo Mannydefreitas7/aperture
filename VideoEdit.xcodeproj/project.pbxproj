@@ -91,6 +91,9 @@
 		146CAEC22F1966880021CE3A /* FloatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAEC12F1966880021CE3A /* FloatingPanel.swift */; };
 		146CAEC52F1AD6E60021CE3A /* General+Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAEC42F1AD6E60021CE3A /* General+Command.swift */; };
 		146CAEC72F1ADB020021CE3A /* Video+Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAEC62F1ADAF40021CE3A /* Video+Command.swift */; };
+		146CAEC92F1C7EAE0021CE3A /* CameraInfo+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAEC82F1C7EAE0021CE3A /* CameraInfo+Model.swift */; };
+		146CAECB2F1C7EF40021CE3A /* MicrophoneInfo+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAECA2F1C7EEF0021CE3A /* MicrophoneInfo+Model.swift */; };
+		146CAECE2F1C80C40021CE3A /* Device+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAECD2F1C80B30021CE3A /* Device+Actor.swift */; };
 		146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EF72F0A7C0000AA07CC /* SwiftBasicFormat */; };
 		146E4EFA2F0A7C0000AA07CC /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EF92F0A7C0000AA07CC /* SwiftCompilerPlugin */; };
 		146E4EFC2F0A7C0000AA07CC /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EFB2F0A7C0000AA07CC /* SwiftDiagnostics */; };
@@ -220,6 +223,9 @@
 		146CAEC12F1966880021CE3A /* FloatingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanel.swift; sourceTree = "<group>"; };
 		146CAEC42F1AD6E60021CE3A /* General+Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "General+Command.swift"; sourceTree = "<group>"; };
 		146CAEC62F1ADAF40021CE3A /* Video+Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Video+Command.swift"; sourceTree = "<group>"; };
+		146CAEC82F1C7EAE0021CE3A /* CameraInfo+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraInfo+Model.swift"; sourceTree = "<group>"; };
+		146CAECA2F1C7EEF0021CE3A /* MicrophoneInfo+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicrophoneInfo+Model.swift"; sourceTree = "<group>"; };
+		146CAECD2F1C80B30021CE3A /* Device+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Device+Actor.swift"; sourceTree = "<group>"; };
 		146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIRecordingView.swift; sourceTree = "<group>"; };
 		146E4F0F2F0AA8B900AA07CC /* VECameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VECameraCaptureView.swift; sourceTree = "<group>"; };
 		146E4F112F0B5DA900AA07CC /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
@@ -470,6 +476,14 @@
 			path = Commands;
 			sourceTree = "<group>";
 		};
+		146CAECC2F1C80A10021CE3A /* Actors */ = {
+			isa = PBXGroup;
+			children = (
+				146CAECD2F1C80B30021CE3A /* Device+Actor.swift */,
+			);
+			path = Actors;
+			sourceTree = "<group>";
+		};
 		148AAC642F0784CF0087D649 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
@@ -523,6 +537,7 @@
 		5000000000000002 /* VideoEdit */ = {
 			isa = PBXGroup;
 			children = (
+				146CAECC2F1C80A10021CE3A /* Actors */,
 				146CAEC32F1AD69D0021CE3A /* Commands */,
 				144E65F42F0966A100D044AD /* Controllers */,
 				148AAC642F0784CF0087D649 /* Windows */,
@@ -552,6 +567,8 @@
 		5000000000000005 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				146CAECA2F1C7EEF0021CE3A /* MicrophoneInfo+Model.swift */,
+				146CAEC82F1C7EAE0021CE3A /* CameraInfo+Model.swift */,
 				1400C91A2F04C472001EF209 /* AspectRatio+Model.swift */,
 				1400C91B2F04C472001EF209 /* CameraPosition+Model.swift */,
 				1400C91C2F04C472001EF209 /* CameraShape+Model.swift */,
@@ -713,6 +730,7 @@
 				1400C9432F04C472001EF209 /* AspectRatio+Model.swift in Sources */,
 				144E66042F0A6C0D00D044AD /* Recording+Window.swift in Sources */,
 				144E66002F0A583500D044AD /* FocusRingModifier.swift in Sources */,
+				146CAECB2F1C7EF40021CE3A /* MicrophoneInfo+Model.swift in Sources */,
 				1400C9442F04C472001EF209 /* RoundedCornerShape+Model.swift in Sources */,
 				146CAEC22F1966880021CE3A /* FloatingPanel.swift in Sources */,
 				1400C9452F04C472001EF209 /* VideoCodec+Model.swift in Sources */,
@@ -744,9 +762,11 @@
 				1400C8FD2F04C2A5001EF209 /* AboutSettingsView.swift in Sources */,
 				1400C8FE2F04C2A5001EF209 /* VideoInfoSection.swift in Sources */,
 				14FC9ED12F16F6970053C019 /* Picker.swift in Sources */,
+				146CAEC92F1C7EAE0021CE3A /* CameraInfo+Model.swift in Sources */,
 				1400C8FF2F04C2A5001EF209 /* SidebarContent.swift in Sources */,
 				148AAC602F0742800087D649 /* NamePrintable+Extensions.swift in Sources */,
 				1400C9002F04C2A5001EF209 /* RecordingView.swift in Sources */,
+				146CAECE2F1C80C40021CE3A /* Device+Actor.swift in Sources */,
 				14D9D6B02F0717B400065B49 /* Base.swift in Sources */,
 				14972F452F10EDFF002CE41C /* TimerPicker.swift in Sources */,
 				1400C9012F04C2A5001EF209 /* EditorToolbar.swift in Sources */,

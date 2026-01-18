@@ -6,24 +6,23 @@
 //
 
 import SwiftUI
+import SFSafeSymbols
 
 struct AudioInputView: View {
-    @Binding var isOn: Bool
 
-    @State var isPresented: Bool = false
-    @State var volume: Double = 0
+    var label: String
+    @Binding private var isOn: Bool
+
+    @State private var isPresented: Bool = false
+    @State private var volume: Double = 0
 
     var body: some View {
-        HStack {
+        HStack(spacing: .small / 2) {
             Toggle(isOn: $isOn) {
-                Label("Device name", systemImage: isOn ? "microphone.fill" : "microphone.slash")
+                Image(systemSymbol: isOn ? .microphoneFill : .microphoneSlash)
                     .font(.title2)
             }
-            .buttonStyle(.glassToolBar)
-            .buttonBorderShape(.circle)
-            .toggleStyle(.button)
-            .labelStyle(.iconOnly)
-
+            .toggleStyle(.secondary)
 
             if isOn {
                 Button {
@@ -31,7 +30,7 @@ struct AudioInputView: View {
                         isPresented.toggle()
                     }
                 } label: {
-                    Text("Device name")
+                    Text(label)
                 }
                 .labelStyle(.titleAndIcon)
                 .buttonStyle(.glassToolBar)
