@@ -187,7 +187,7 @@ extension PlayerControlsView {
 
     @ViewBuilder
     func AudioInput() -> some View {
-        AudioInputView(isOn: $viewModel.isMicrophoneEnabled)
+        AudioInputView(label: "", isOn: $viewModel.isMicrophoneEnabled)
     }
 
     @ViewBuilder

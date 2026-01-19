@@ -218,6 +218,14 @@ extension URL {
 extension NSObject: NamePrintable {}
 
 extension String {
+    typealias RawValue = Self
+    enum DispatchQueueKey: String {
+        case windowCoordinator = "io.philagora.windowcoordinator.queue"
+        case captureSession = "io.philagora.captureSession.queue"
+        case captureVideoOutput = "io.philagora.captureVideoOutput.queue"
+        case captureAudioOutput = "io.philagora.captureAudioOutput.queue"
+        case videoExport = "io.philagora.videoExport.queue"
+    }
 
     /// Returns the raw string identifier for a given application window.
     ///
@@ -237,6 +245,14 @@ extension String {
     }
 
     static func storageKey(_ id: Constants.StorageKey) -> Self {
+        return id.rawValue
+    }
+
+    static func userDefaultsKey(_ id: Constants.StorageKey) -> Self {
+        return id.rawValue
+    }
+
+    static func dispatchQueueKey(_ id: DispatchQueueKey) -> Self {
         return id.rawValue
     }
 

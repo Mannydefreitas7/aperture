@@ -11,7 +11,7 @@ import SFSafeSymbols
 struct AudioInputView: View {
 
     var label: String
-    @Binding private var isOn: Bool
+    @Binding var isOn: Bool
 
     @State private var isPresented: Bool = false
     @State private var volume: Double = 0
@@ -43,19 +43,12 @@ struct AudioInputView: View {
     }
 }
 
-extension AudioInputView {
-    enum UIString: String {
-        case label = "On"
-        case icon = "microphone"
-    }
-}
-
 #Preview {
 
     @Previewable @State var isOn: Bool = false
 
     ZStack {
-        AudioInputView(isOn: $isOn)
+        AudioInputView(label: "", isOn: $isOn)
     }
     .frame(width: 600, height: 600)
 

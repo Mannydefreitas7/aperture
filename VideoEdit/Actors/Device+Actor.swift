@@ -60,18 +60,24 @@ public actor DeviceManager {
     }
 
     /// Sets the video or audio device input
-    func setInput(for device: AVCaptureDevice) throws {
-
+    func setInput(for device: AVCaptureDevice) throws -> AVCaptureDeviceInput {
+        let input = try AVCaptureDeviceInput(device: device)
         if device.hasMediaType(.video) {
-            currentVideoInput = try AVCaptureDeviceInput(device: device)
-            return
+            currentVideoInput = input
+            return input
         }
 
-        currentAudioInput = try AVCaptureDeviceInput(device: device)
-
+        currentAudioInput = input
+        return input
     }
 
-    ///
+    /// Checks and add input to session
+    func addInputToSession(_ input: AVCaptureDeviceInput) throws {
+        guard currentSession.canAddInput(input) else {
+            throw NSError(domain: String(describing: self), code: AVError.sessionConfigurationChanged.rawValue)
+        }
+        currentSession.addInput(input)
+    }
 
     ///
     func start(with devices: [AVCaptureDevice] = [], force: Bool = false) async throws {
@@ -91,26 +97,22 @@ public actor DeviceManager {
         }
 
 
-
-
-
         // Check if devices are passed in.
         if !devices.isEmpty {
             for device in devices {
-                try setInput(for: device)
+                let input = try setInput(for: device)
+                // Check if session can add input.
+                try addInputToSession(input)
             }
         }
 
         // Otherwise use system default.
-        try setInput(for: defaultVideoDevice)
-
-
-
-        // Check if session can add input.
-        guard currentSession.canAddInput(input) else {
-            throw NSError(domain: String(describing: self), code: AVError.sessionNotRunning.rawValue)
+        guard let defaultVideoDevice else {
+            throw NSError(domain: String(describing: self), code: AVError.sessionConfigurationChanged.rawValue)
         }
-
+       let input = try setInput(for: defaultVideoDevice)
+        // Check if session can add input.
+        try addInputToSession(input)
 
     }
 

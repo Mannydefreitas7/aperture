@@ -517,7 +517,6 @@ extension VECameraCaptureView {
     @MainActor
     class ViewModel: ObservableObject {
         private var manager: Manager = .init()
-        pr
         private var cancellables: Set<AnyCancellable> = []
 
         @Published var session: AVCaptureSession = .init()
@@ -576,7 +575,7 @@ extension VECameraCaptureView {
         }
 
         func addInputs() async {
-            _ = await DeviceManager.addAudioInput(session)
+            _ = await manager.addAudioInput(session)
             _ = await manager.addVideoInput(session)
         }
     }
