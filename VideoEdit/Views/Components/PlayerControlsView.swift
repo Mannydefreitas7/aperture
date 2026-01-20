@@ -11,29 +11,30 @@ struct PlayerControlsView: View {
 
     @Namespace var controlGroup
     @ObservedObject var viewModel: ViewModel
+    @EnvironmentObject var captureViewModel: CaptureViewModel
 
     var body: some View {
+
         VStack {
+            if captureViewModel.showRecordingButton {
+                // MARK: - Record button
+                RecordCircleButton()
+                    .padding(.bottom, .small)
 
-            // MARK: - Record button
-            RecordCircleButton()
-                .padding(.bottom, .small)
+            }
 
-            GlassEffectContainer(spacing: .small) {
+        GlassEffectContainer(spacing: .zero) {
 
-                HStack(alignment: .center, spacing: .small) {
+                HStack(alignment: .bottom, spacing: .small) {
 
                     if !viewModel.isRecording {
                         // MARK: Timer Control
                         TimerControl()
-                            .padding(
-                                viewModel.isTimerEnabled || viewModel.eitherMediaDeviceEnabled ? .horizontal : .leading,
-                                .small
-                            )
+                            .padding(.horizontal, .small)
                             .frame(height: .minHeight)
                             .glassEffect()
-                            .glassEffectUnion(
-                                id: viewModel.isTimerEnabled ? ControlGroup.timer : ControlGroup.all,
+                            .toolEffectUnion(
+                                id: .timer,
                                 namespace: controlGroup
                             )
                     }
@@ -44,38 +45,30 @@ struct PlayerControlsView: View {
                             .padding(.horizontal, .small)
                             .frame(height: .minHeight)
                             .glassEffect()
-
                     }
 
-                    HStack(spacing: .small) {
+                    // MARK: Audio Input
+                    AudioInput()
 
-                        // MARK: Audio Input
-                        AudioInput()
-
-                        // MARK: Video Input
-                        VideoInput()
-
-                    }
-                    .padding(.trailing, .small)
-                    .padding(.leading, viewModel.spacing)
-                    .frame(height: .minHeight)
-                    .glassEffect()
-                    .glassEffectUnion(
-                        id: viewModel.eitherMediaDeviceEnabled ? ControlGroup.options : ControlGroup.all,
-                        namespace: controlGroup
-                    )
+                    // MARK: Video Input
+                    VideoInput()
+                        .padding(.horizontal, .small)
+                        .frame(height: .minHeight)
+                        .glassEffect(.regular)
+                        .toolEffectUnion(
+                            id: viewModel.isVideoEnabled ? .video : .options,
+                            namespace: controlGroup
+                        )
 
                     // MARK: Settings Input
                     SettingsButtonView()
                         .padding(.horizontal, .small)
                         .frame(height: .minHeight)
                         .glassEffect()
-                        //
                 }
                 .animation(.bouncy, value: viewModel.toggleAnimation)
                 .glassEffectTransition(.matchedGeometry)
                 .controlSize(.large)
-
             }
         }
     }
@@ -92,14 +85,6 @@ extension CGFloat {
 }
 
 extension PlayerControlsView {
-
-    enum ControlGroup: Hashable {
-        case all
-        case record
-        case options
-        case timer
-        case settings
-    }
 
 
     @MainActor
@@ -187,13 +172,16 @@ extension PlayerControlsView {
 
     @ViewBuilder
     func AudioInput() -> some View {
-        AudioInputView(label: "", isOn: $viewModel.isMicrophoneEnabled)
+        AudioInputView(
+            label: captureViewModel.selectedAudioDevice.name,
+            controlGroup: controlGroup, viewModel: $captureViewModel.audioViewModel
+        )
     }
 
     @ViewBuilder
     func VideoInput() -> some View {
 
-        VideoInputView(label: viewModel.cameraName) {
+        VideoInputView(isOn: $viewModel.isVideoEnabled, label: captureViewModel.selectedVideoDevice.name) {
             //
         }
     }

@@ -33,11 +33,10 @@ struct TimerPicker: View {
                             Text("\(option.rawValue)s").tag(option)
                         }
                     }
-                    .labelsHidden()
                     .pickerStyle(.segmented)
+                    .labelsHidden()
                 }
             }
-        .padding(.horizontal, .zero)
     }
 }
 

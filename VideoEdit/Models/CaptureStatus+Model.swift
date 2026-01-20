@@ -11,7 +11,7 @@ enum CaptureStatus: Equatable {
     case configuring
     case running
     case stopped
-    case interrupted(reason: String)
+    case interrupted(reason: AVError.Code)
     case unauthorized
     case failed(message: String)
 }

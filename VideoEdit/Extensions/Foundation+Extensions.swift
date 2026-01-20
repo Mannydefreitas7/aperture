@@ -92,7 +92,7 @@ extension CGFloat {
 
     static var recordWidth: Self { 28 }
     static var recordHeight: Self { 28 }
-    static var popoverWidth: Self { 248 }
+    static var popoverWidth: Self { 280 }
     static var thumbnail: Self { 128 }
     static var pillWidth: Self { 12 }
     static var pillHeight: Self { 18 }
@@ -219,6 +219,9 @@ extension NSObject: NamePrintable {}
 
 extension String {
     typealias RawValue = Self
+
+
+
     enum DispatchQueueKey: String {
         case windowCoordinator = "io.philagora.windowcoordinator.queue"
         case captureSession = "io.philagora.captureSession.queue"
@@ -256,5 +259,19 @@ extension String {
         return id.rawValue
     }
 
+    static func controlGroup(_ id: ToolGroup) -> some Hashable {
+        return id.rawValue
+    }
+
 }
 
+
+enum ToolGroup: String, Hashable, Sendable {
+    case all
+    case record
+    case video
+    case audio
+    case options
+    case timer
+    case settings
+}

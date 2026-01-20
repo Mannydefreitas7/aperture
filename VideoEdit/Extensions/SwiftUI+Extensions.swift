@@ -147,6 +147,10 @@ extension View {
         modifier(PushDownEffect())
     }
 
+    func toolEffectUnion(id: ToolGroup, namespace: Namespace.ID) -> some View {
+        self.glassEffectUnion(id: id, namespace: namespace)
+    }
+
     
 }
 

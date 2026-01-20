@@ -6,63 +6,79 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 // MARK: - Public Component
 
-struct VolumeHUD: View {
+struct VolumeHUD<Content: View>: View {
     @Binding var volume: Double
-    var connectedDevice: String = "Xchyle’s Airpods"
+    var connectedDevice: DeviceInfo?
+    var content: () -> Content
 
     private var percentText: String { "\(Int((volume * 100).rounded()))%" }
     private let imageWidth: CGFloat = .thumbnail / 2
-    private let segmentedPill: CGFloat = 18
+    private let segmentedPill: CGFloat = .small * 3
+
 
 
     var body: some View {
 
-            VStack(spacing: .medium) {
+            LazyVStack(spacing: .medium) {
 
-                HStack(alignment: .center, spacing: .large) {
-                    Image("mic")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: imageWidth)
+                HStack(alignment: .center, spacing: .medium) {
+                    VStack {
+                        Image("mic")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: imageWidth)
+
+                        Spacer()
+
+                        content()
+                    }
 
                     VStack(alignment: .leading) {
-                        Text("Name long")
-                            .font(.title3)
-                        Text("Description long")
-                            .font(.subheadline)
+                        HStack(alignment: .top) {
+                            VStack(alignment: .leading) {
+                                Text("Device")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+
+                                Text(connectedDevice?.name.capitalized ?? "Unknown")
+                                    .font(.headline)
+                                    .bold()
+                            }
+
+                            Spacer()
+
+                            Button("Change", systemImage: "microphone.badge.ellipsis") {
+                                //
+                            }
+                            .buttonStyle(.accessoryBarAction)
+                            .offset(x: (.small))
+                        }
 
                         VStack(alignment: .leading, spacing: .small) {
 
-                            let _width: CGFloat = .popoverWidth
-                            let segments = _width / segmentedPill
+                            let pillWidthSpace: CGFloat = .pillWidth + .small
+                            let segments = .popoverWidth / pillWidthSpace
 
                             SegmentedPillBar(
                                 value: volume,
                                 segments: Int(segments)
                             )
-                            Slider(value: $volume, in: 0...1)
-                                .frame(width: .popoverWidth)
-                                .padding(.top, .small)
+                            HStack {
+                                Image(systemName: volume >= 1 ? "volume.\(volume).fill" : "volume.fill")
+                                Slider(value: $volume, in: 0...3)
+                            }
+
+                                .padding(.top, .small / 2)
+                                .controlSize(.mini)
                         }
                     }
                 }
-
-                Menu {
-                    Text("Mic 1")
-                    Text("Mic 1")
-                    Text("Mic 1")
-                    Text("Mic 1")
-                } label: {
-                    Label(connectedDevice, systemImage: "microphone.badge.ellipsis")
-                        .font(.title3)
-                }
-                .menuStyle(.button)
-                .controlSize(.extraLarge)
             }
-            .padding(segmentedPill * 1.5)
+            .frame(width: .popoverWidth)
 
 
     }
@@ -79,9 +95,9 @@ struct VolumeHUD: View {
 struct SegmentedPillBar: View {
     var value: Double
     var segments: Int
-    var pillWidth: CGFloat = 12
+    var pillWidth: CGFloat = .pillWidth
     var pillHeight: CGFloat = 18
-    var spacing: CGFloat = 6
+    var spacing: CGFloat = .spacing
 
     private var activeCount: Int {
         Int((value * Double(segments)).rounded(.toNearestOrAwayFromZero))
@@ -115,21 +131,19 @@ struct SegmentedPillBar: View {
     }
 }
 
-// MARK: - Preview
-
-struct VolumeHUD_Previews: PreviewProvider {
-    struct Demo: View {
-        @State private var volume = 0.70
-        var body: some View {
-           // VStack(spacing: 24) {
-                VolumeHUD(volume: $volume, connectedDevice: "Xchyle’s Airpods")
-            //}
-        }
-    }
-
-    static var previews: some View {
-        Demo()
-            .frame(width: .popoverWidth)
-            .previewLayout(.sizeThatFits)
-    }
-}
+//// MARK: - Preview
+//
+//struct VolumeHUD_Previews: PreviewProvider {
+//    struct Demo: View {
+//        @State private var volume = 0.70
+//        var body: some View {
+//            VolumeHUD(volume: $volume, connectedDevice: <#T##DeviceInfo#>)
+//        }
+//    }
+//
+//    static var previews: some View {
+//        Demo()
+//            .frame(width: .popoverWidth)
+//            .previewLayout(.sizeThatFits)
+//    }
+//}

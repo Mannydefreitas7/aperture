@@ -125,6 +125,7 @@
 		148AAC6A2F078B610087D649 /* ScreenRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC692F078B610087D649 /* ScreenRecorderView.swift */; };
 		148AAC6C2F0793A80087D649 /* View+Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6B2F07939E0087D649 /* View+Modifiers.swift */; };
 		148AAC6E2F0793D00087D649 /* View+NSViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */; };
+		148B59452F1E9D3100F840BF /* AppState+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148B59442F1E9D1D00F840BF /* AppState+Extensions.swift */; };
 		14972F432F0EC72A002CE41C /* View+ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F422F0EC72A002CE41C /* View+ViewModifier.swift */; };
 		14972F452F10EDFF002CE41C /* TimerPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F442F10EDFF002CE41C /* TimerPicker.swift */; };
 		14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A42F05974400065B49 /* SwiftBasicFormat */; };
@@ -250,6 +251,7 @@
 		148AAC692F078B610087D649 /* ScreenRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorderView.swift; sourceTree = "<group>"; };
 		148AAC6B2F07939E0087D649 /* View+Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Modifiers.swift"; sourceTree = "<group>"; };
 		148AAC6D2F0793C00087D649 /* View+NSViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+NSViewRepresentable.swift"; sourceTree = "<group>"; };
+		148B59442F1E9D1D00F840BF /* AppState+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+Extensions.swift"; sourceTree = "<group>"; };
 		14972F422F0EC72A002CE41C /* View+ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ViewModifier.swift"; sourceTree = "<group>"; };
 		14972F442F10EDFF002CE41C /* TimerPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPicker.swift; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
@@ -523,6 +525,7 @@
 		14D9D6B32F07191000065B49 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				148B59442F1E9D1D00F840BF /* AppState+Extensions.swift */,
 				144E65F02F09639F00D044AD /* AppKit+Extensions.swift */,
 				148AAC5F2F0742700087D649 /* NamePrintable+Extensions.swift */,
 				148AAC532F073A300087D649 /* AVFoundation+Extensions.swift */,
@@ -754,6 +757,7 @@
 				144E66002F0A583500D044AD /* FocusRingModifier.swift in Sources */,
 				146CAECB2F1C7EF40021CE3A /* MicrophoneInfo+Model.swift in Sources */,
 				1400C9442F04C472001EF209 /* RoundedCornerShape+Model.swift in Sources */,
+				148B59452F1E9D3100F840BF /* AppState+Extensions.swift in Sources */,
 				146CAEC22F1966880021CE3A /* FloatingPanel.swift in Sources */,
 				1400C9452F04C472001EF209 /* VideoCodec+Model.swift in Sources */,
 				1400C9462F04C472001EF209 /* ExportSettings+Model.swift in Sources */,

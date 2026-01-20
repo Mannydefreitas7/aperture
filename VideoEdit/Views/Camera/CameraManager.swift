@@ -7,7 +7,6 @@ import CombineAsync
 
 actor VCDeviceCameraManager {
 
-
     func loadAvailableCameras() -> [CameraInfo] {
         let discoverySession = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInWideAngleCamera, .external],
@@ -24,7 +23,7 @@ actor VCDeviceCameraManager {
                     device: device
                 )
             }
-    }
+        }
 
 
     func start(_ session: AVCaptureSession, with selectedCamera: CameraInfo?) async throws -> AVCaptureDeviceInput {

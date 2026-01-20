@@ -12,6 +12,8 @@ import Combine
 
 struct VECameraCaptureView: View {
 
+    @ObservedObject var captureViewModel: CaptureViewModel
+
     @StateObject private var viewModel: ViewModel = .init()
     @AppStorage(.storageKey(.aspectPreset)) private var aspectPreset: AspectPreset = .youtube
     @AppStorage(.storageKey(.showAspectMask)) private var showAspectMask: Bool = true
@@ -33,7 +35,7 @@ struct VECameraCaptureView: View {
         NavigationStack  {
             ZStack(alignment: .bottom) {
                 // MARK: Video preview
-                VideoOutputView(captureSession: $viewModel.session, isMirror: $isMirrored)
+                VideoOutputView(captureSession: $captureViewModel.session, isMirror: $isMirrored)
                     .ignoresSafeArea(.all)
 
                 // MARK: Crop mask for selected ratio
@@ -51,6 +53,7 @@ struct VECameraCaptureView: View {
                 BottomBar()
             }
             .environmentObject(viewModel)
+            .environmentObject(captureViewModel)
         }
         // Keep the window resizable but constrained to 16:9.
         .background(WindowAspectRatioLock(ratio: ratioSize))
@@ -699,5 +702,6 @@ actor Manager {
 
 
 #Preview {
-    VECameraCaptureView()
+    @Previewable @StateObject var captureVM: CaptureViewModel = .init()
+    VECameraCaptureView(captureViewModel: captureVM)
 }

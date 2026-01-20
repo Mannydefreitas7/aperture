@@ -107,12 +107,12 @@ actor CaptureEngine {
                 }
             }
 
-            if let audioDevice {
-                let input = try AVCaptureDeviceInput(device: audioDevice)
-                if self.session.canAddInput(input) {
-                    self.session.addInput(input)
-                    self.audioInput = input
-                    self.selectedAudioID = audioDevice.uniqueID
+            // System mic (default audio device)
+            if let defaultMic = AVCaptureDevice.default(for: .audio) {
+                let micInput = try AVCaptureDeviceInput(device: defaultMic)
+                if self.session.canAddInput(micInput) {
+                    self.session.addInput(micInput)
+                    self.audioInput = micInput
                 }
             }
         }

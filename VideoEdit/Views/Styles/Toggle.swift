@@ -28,7 +28,6 @@ struct SecondaryToggleStyle: ToggleStyle {
         .if(configuration.isOn) {
             $0.tint(.white)
         }
-
     }
 }
 
