@@ -10,24 +10,26 @@ import Combine
 
 struct VideoOutputView: NSViewRepresentable {
     typealias NSViewType = PlayerView
+    private let source: PreviewSource
+    private var captureSession: AVCaptureSession
 
-    var captureSession: AVCaptureSession
-    
     @Preference(\.isMirrored) private var isMirror
 
-    func makeNSView(context: Context) -> PlayerView {
-        let player = PlayerView(captureSession: captureSession)
-        guard let previewLayer = player.previewLayer, let connection = previewLayer.connection, connection.isVideoMirroringSupported else {
-            return player
-        }
+    init(source: PreviewSource, captureSession: AVCaptureSession) {
+        self.source = source
+        self.captureSession = captureSession
+    }
 
+    func makeNSView(context: Context) -> PlayerView {
+        let player = PlayerView()
+        source.connect(to: player)
         return player
     }
 
     func updateNSView(_ nsView: PlayerView, context: Context) {
-        guard let previewLayer = nsView.previewLayer, let connection = previewLayer.connection, connection.isVideoMirroringSupported else {
-            return
-        }
+
+        let previewLayer = nsView.previewLayer
+       guard let connection = previewLayer.connection else { return }
 
         DispatchQueue.main.async {
             connection.automaticallyAdjustsVideoMirroring = false
@@ -38,24 +40,35 @@ struct VideoOutputView: NSViewRepresentable {
 
 extension VideoOutputView {
 
-    class PlayerView: NSView {
-        var previewLayer: AVCaptureVideoPreviewLayer?
+    class PlayerView: NSView, PreviewTarget {
+        var previewLayer: AVCaptureVideoPreviewLayer = .init()
         private var dbags = [AnyCancellable]()
 
-        init(captureSession: AVCaptureSession) {
-            previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        init() {
             super.init(frame: .zero)
             setupLayer()
         }
 
+        // Use `AVCaptureVideoPreviewLayer` as the view's backing layer.
+        class var layerClass: AnyClass {
+            AVCaptureVideoPreviewLayer.self
+        }
+
         func setupLayer() {
-            guard let previewLayer else { return }
             previewLayer.frame = self.frame
             previewLayer.isDeferredStartEnabled = true
             previewLayer.contentsGravity = .resizeAspectFill
             previewLayer.videoGravity = .resizeAspectFill
             previewLayer.connection?.automaticallyAdjustsVideoMirroring = true
             layer = previewLayer
+        }
+
+        nonisolated func setSession(_ session: AVCaptureSession) {
+            // Connects the session with the preview layer, which allows the layer
+            // to provide a live view of the captured content.
+            Task { @MainActor in
+                previewLayer.session = session
+            }
         }
 
         required init?(coder: NSCoder) {

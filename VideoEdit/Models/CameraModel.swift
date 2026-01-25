@@ -116,7 +116,7 @@ final class CameraModel: Camera {
     func switchVideoDevices() async {
         isSwitchingVideoDevices = true
         defer { isSwitchingVideoDevices = false }
-        await captureService.selectNextVideoDevice()
+        try? await captureService.selectNextVideoDevice()
     }
     
     // MARK: - Photo capture

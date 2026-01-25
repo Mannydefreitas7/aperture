@@ -22,6 +22,7 @@ import AVFoundation
 /// disappears, ensuring resources are managed appropriately.
 struct AudioInputProxy<Content: View>: View {
 
+
     /// Behavior:
     /// - Creates an `AVCaptureAudioMonitor` with the provided tuning parameters and binds it
     ///   to an internal `ViewModel`.
@@ -35,7 +36,7 @@ struct AudioInputProxy<Content: View>: View {
     /// to drive meters or waveforms.
     ///
     /// Example:
-    ///     AudioInputProxy(engine: engine) {
+    ///     AudioInputProxy(viewModel: captureViewModel) {
     ///         AudioMeterView() // reads audioInputWave and/or audioInputWaveHistory
     ///     }
     ///

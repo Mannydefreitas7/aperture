@@ -110,7 +110,10 @@ extension VideoInputView {
                     }
                 }
 
-                VideoOutputView(captureSession: appState.previewViewModel.session)
+            VideoOutputView(
+                source: appState.previewViewModel.engine.previewSource,
+                captureSession: appState.previewViewModel.session
+            )
                     .clipShape(.rect(cornerRadius: .medium, style: .circular))
             }
             .frame(width: .popoverWidth)

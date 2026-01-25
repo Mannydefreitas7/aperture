@@ -9,7 +9,6 @@
 import AVFoundation
 import Accelerate
 
-
 actor AVCaptureAudioMonitor {
 
     private(set) var level: Double = 0
@@ -27,24 +26,24 @@ actor AVCaptureAudioMonitor {
         self.gain = max(0.1, gain)
     }
 
-    func start(using stream: AsyncStream<CMSampleBuffer>) -> Task<Void, Never> {
+    func start(using engine: CaptureEngine) async {
 
         /// Stop method in case the stream is currently running.
         stop()
 
-        let _task = Task(priority: .userInitiated) { [weak self] in
-            guard let gain = self?.gain else { return }
+        task = Task(priority: .userInitiated) { [weak engine] in
+            guard let engine else { return }
+            let stream = await engine.makeAudioSampleBufferStream()
 
             for await sbuf in stream {
                 if Task.isCancelled { break }
                 let rms = Self.rms(from: sbuf)
+
                 let normalized = min(max(rms * gain, 0), 1)
-                await self?.push(normalized)
+                await self.push(normalized)
             }
         }
 
-        task = _task
-        return _task
     }
 
     func stop() {
@@ -64,6 +63,8 @@ actor AVCaptureAudioMonitor {
         if nextHistory.count > historyCapacity {
             nextHistory.removeFirst(nextHistory.count - historyCapacity)
         }
+
+            // logger.log(level: .info, "level: \(smoothed)")
 
         level = smoothed
         history = nextHistory

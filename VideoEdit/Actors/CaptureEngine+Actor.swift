@@ -18,13 +18,19 @@ actor CaptureEngine {
     /// A value that indicates whether the capture service is idle or capturing a photo or movie.
     @Published private(set) var captureActivity: CaptureActivity = .idle
     /// A value that indicates the current capture capabilities of the service.
-    @Published private(set) var captureCapabilities = CaptureCapabilities.unknown
+    @Published private(set) var captureCapabilities: CaptureCapabilities = .unknown
     /// A Boolean value that indicates whether a higher priority event, like receiving a phone call, interrupts the app.
-    @Published private(set) var isInterrupted = false
+    @Published private(set) var isInterrupted: Bool = false
     /// A Boolean value that indicates whether the user enables HDR video capture.
-    @Published var isHDRVideoEnabled = false
+    @Published var isHDRVideoEnabled: Bool = false
     /// A Boolean value that indicates whether capture controls are in a fullscreen appearance.
-    @Published var isShowingFullscreenControls = false
+    @Published var isShowingFullscreenControls: Bool = false
+    
+    /// Available video capture devices.
+    @Published private(set) var availableVideoDevices: [AVCaptureDevice] = []
+    
+    /// Available audio capture devices.
+    @Published private(set) var availableAudioDevices: [AVCaptureDevice] = []
 
     /// A type that connects a preview destination with the capture session.
     nonisolated let previewSource: PreviewSource
@@ -43,6 +49,9 @@ actor CaptureEngine {
 
     // The video input for the currently selected device camera.
     internal var activeVideoInput: AVCaptureDeviceInput?
+
+    // The video input for the currently selected device microphone.
+    var activeAudioInput: AVCaptureDeviceInput?
 
     // The mode of capture, either photo or video. Defaults to photo.
     private(set) var captureMode = CaptureMode.video
@@ -63,7 +72,7 @@ actor CaptureEngine {
     private let audioOutputQueue = DispatchQueue(label: .dispatchQueueKey(.captureAudioOutput))
 
     // A Boolean value that indicates whether the actor finished its required configuration.
-    private var isSetUp = false
+    private var isSetUp: Bool = false
 
     // A delegate object that responds to capture control activation and presentation events.
     private var controlsDelegate = CaptureControlsDelegate()
@@ -79,6 +88,14 @@ actor CaptureEngine {
     // Sets the session queue as the actor's executor.
     nonisolated var unownedExecutor: UnownedSerialExecutor {
         sessionQueue.asUnownedSerialExecutor()
+    }
+
+    var audioDevice: AVCaptureDevice? {
+        return activeAudioInput?.device
+    }
+
+    var videoDevice: AVCaptureDevice? {
+        return activeVideoInput?.device
     }
 
     // MARK: - Authorization
@@ -138,6 +155,14 @@ actor CaptureEngine {
             // Retrieve the default camera and microphone.
             let defaultCamera = try deviceLookup.defaultCamera
             let defaultMic = try deviceLookup.defaultMic
+            
+            // Populate available devices for the UI
+            availableVideoDevices = deviceLookup.cameras
+            availableAudioDevices = AVCaptureDevice.DiscoverySession(
+                deviceTypes: [.microphone, .external],
+                mediaType: .audio,
+                position: .unspecified
+            ).devices
 
 #if os(iOS)
             // Enable using AirPods as a high-quality lapel microphone.
@@ -145,10 +170,10 @@ actor CaptureEngine {
 #endif
             // Add inputs for the default camera and microphone devices.
             activeVideoInput = try addInput(for: defaultCamera)
-            try addInput(for: defaultMic)
+            activeAudioInput = try addInput(for: defaultMic)
 
             // Configure the session preset based on the current capture mode.
-            captureSession.sessionPreset = captureMode == .photo ? .photo : .high
+            captureSession.sessionPreset = captureMode == .photo ? .photo : .hd4K3840x2160
             // Add the photo capture output as the default output type.
             try addOutput(photoCapture.output)
             // If the capture mode is set to Video, add a movie capture output.
@@ -162,6 +187,20 @@ actor CaptureEngine {
             // This is lightweight and does not create a second AVCaptureSession.
             if captureSession.canAddOutput(audioDataOutput) {
                 captureSession.addOutput(audioDataOutput)
+                
+                // Verify the audio connection is properly established
+                if let audioConnection = audioDataOutput.connection(with: .audio) {
+                    if audioConnection.isEnabled {
+                        logger.debug("Audio data output successfully connected to audio input.")
+                    } else {
+                        logger.warning("Audio connection exists but is disabled.")
+                        audioConnection.isEnabled = true
+                    }
+                } else {
+                    logger.error("No audio connection found for audioDataOutput. Audio samples will be empty.")
+                }
+            } else {
+                logger.error("Cannot add audio data output to capture session.")
             }
 
             // Configure controls to use with the Camera Control.
@@ -283,7 +322,11 @@ actor CaptureEngine {
     /// The app calls this method in response to the user tapping the button in the UI to change cameras.
     /// The implementation switches between the front and back cameras and, in iPadOS,
     /// connected external cameras.
-    func selectNextVideoDevice() {
+    func selectNextVideoDevice() throws {
+        // Current active device
+        guard let currentDevice else {
+            throw AVError(_nsError: .init(domain: String(describing: self), code: 0))
+        }
         // The array of available video capture devices.
         let videoDevices = deviceLookup.cameras
 
@@ -392,7 +435,9 @@ actor CaptureEngine {
 
     private func focusAndExpose(at devicePoint: CGPoint, isUserInitiated: Bool) throws {
         // Configure the current device.
-        let device = currentDevice
+       guard let device = currentDevice else {
+           throw AVError(.sessionConfigurationChanged)
+        }
 
         // The following mode and point of interest configuration requires obtaining an exclusive lock on the device.
         try device.lockForConfiguration()
@@ -440,8 +485,11 @@ actor CaptureEngine {
     /// Audio samples stream from the existing `captureSession`.
     ///
     /// Use this for meters/waveforms. Keep the returned stream alive for continuous updates.
-    func makeAudioSampleBufferStream() -> AsyncStream<CMSampleBuffer> {
-        AsyncStream { continuation in
+    func makeAudioSampleBufferStream() async -> AsyncStream<CMSampleBuffer> {
+        // Verify audio setup before creating stream
+        verifyAudioConfiguration()
+        
+        return AsyncStream { continuation in
             // Single-consumer semantics.
             self.audioStreamContinuation = continuation
 
@@ -452,13 +500,44 @@ actor CaptureEngine {
                     Task { await self?.yieldAudioSample(sbuf) }
                 }
                 self.audioSampleDelegate = delegate
-                self.audioDataOutput.setSampleBufferDelegate(delegate, queue: self.audioOutputQueue)
+                self.audioDataOutput.setSampleBufferDelegate(
+                    delegate,
+                    queue: self.audioOutputQueue
+                )
             }
 
             continuation.onTermination = { [weak self] _ in
                 Task { await self?.clearAudioStream() }
             }
         }
+    }
+    
+    /// Verifies that the audio input is properly connected to the audio data output.
+    private func verifyAudioConfiguration() {
+        guard let audioInput = activeAudioInput else {
+            logger.error("No active audio input configured!")
+            return
+        }
+        
+        logger.debug("Active audio device: \(audioInput.device.localizedName)")
+        
+        // Check if the audio data output has a valid connection
+        if let audioConnection = audioDataOutput.connection(with: .audio) {
+            logger.debug("Audio connection found - enabled: \(audioConnection.isEnabled), active: \(audioConnection.isActive)")
+            
+            if !audioConnection.isEnabled {
+                logger.warning("Audio connection is disabled. Attempting to enable...")
+                audioConnection.isEnabled = true
+            }
+        } else {
+            logger.error("⚠️ NO AUDIO CONNECTION - This is why you're getting zeros!")
+            logger.error("Audio input ports: \(audioInput.ports)")
+            logger.error("Audio output connections: \(self.audioDataOutput.connections)")
+        }
+        
+        // Log all session inputs and outputs for debugging
+        logger.debug("Session inputs: \(self.captureSession.inputs.count)")
+        logger.debug("Session outputs: \(self.captureSession.outputs.count)")
     }
 
     private func yieldAudioSample(_ sbuf: CMSampleBuffer) {
@@ -492,11 +571,12 @@ actor CaptureEngine {
     }
 
     // The device for the active video input.
-    private var currentDevice: AVCaptureDevice {
-        guard let device = activeVideoInput?.device else {
-            fatalError("No device found for current video input.")
-        }
-        return device
+    private var currentDevice: AVCaptureDevice? {
+       get { activeVideoInput?.device }
+    }
+
+    var currentAudioDevice: AVCaptureDevice? {
+        get { activeAudioInput?.device }
     }
 
     /// Sets whether the app captures HDR video.
@@ -506,7 +586,7 @@ actor CaptureEngine {
         defer { captureSession.commitConfiguration() }
         do {
             // If the current device provides a 10-bit HDR format, enable it for use.
-            if isEnabled, let format = currentDevice.activeFormat10BitVariant {
+            if isEnabled, let currentDevice, let format = currentDevice.activeFormat10BitVariant {
                 try currentDevice.lockForConfiguration()
                 currentDevice.activeFormat = format
                 currentDevice.unlockForConfiguration()
@@ -527,6 +607,9 @@ actor CaptureEngine {
     /// calls this method to update its configuration and capabilities. The app uses this state to
     /// determine which features to enable in the user interface.
     internal func updateCaptureCapabilities() {
+        // Current device has to be set
+        guard let currentDevice else { return }
+
         // Update the output service configuration.
         outputServices.forEach { $0.updateConfiguration(for: currentDevice) }
         // Set the capture service's capabilities for the selected mode.
@@ -564,7 +647,6 @@ actor CaptureEngine {
 
 
     // MARK: - Audio output delegate
-
     final class AudioSampleOutputDelegate: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
         let onSample: @Sendable (CMSampleBuffer) -> Void
 

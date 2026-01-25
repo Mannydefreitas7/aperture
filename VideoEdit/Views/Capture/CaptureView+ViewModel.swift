@@ -17,7 +17,6 @@ extension CaptureView {
         // The engine
         let engine = CaptureEngine()
         private let audioMonitor = AVCaptureAudioMonitor()
-
         private var cancellables: Set<AnyCancellable> = []
 
         // Published UI state
@@ -31,17 +30,15 @@ extension CaptureView {
         @Published var isRecording: Bool = false
         @Published private(set) var recordingDuration: TimeInterval = 0
 
-        // Waveform / meters
+        /// Waveform / meters
         @Published var audioLevel: Double = 0
         @Published var audioHistory: [Double] = []
-
         @Published var selectedVideoDevice: DeviceInfo?
-
         @Published var selectedAudioDevice: DeviceInfo?
-
         @Published var controlsBarViewModel: RecordingControlsView.ViewModel = .init()
         @Published var cameraOverlayViewModel: CameraOverlayView.ViewModel = .init()
 
+        /// Recording time string
         var recordingTimeString: String {
             let total = Int(recordingDuration.rounded(.down))
             let h = total / 3600
@@ -54,16 +51,21 @@ extension CaptureView {
             // Set engine session
             session = engine.captureSession
 
-            $audioLevel.receive(on: RunLoop.main)
-                .sink { val in
-                    logger.debug("Audio level: \(val)")
-                }
+            $selectedAudioID
+                .combineLatest($audioDevices)
+                .compactMap { (id, devices) in devices.first(where: { $0.id == id })  }
+                .assign(to: \.microphone, on: controlsBarViewModel)
+                .store(in: &cancellables)
+
+            $selectedVideoID
+                .combineLatest($audioDevices)
+                .compactMap { (id, devices) in devices.first(where: { $0.id == id })  }
+                .assign(to: \.camera, on: controlsBarViewModel)
                 .store(in: &cancellables)
         }
 
         // Modern observation tasks (async sequences)
         private var observationTasks: [Task<Void, Never>] = []
-
         private var audioMonitorPollTask: Task<Void, Never>?
 
         func onAppear() async {
@@ -71,22 +73,29 @@ extension CaptureView {
             status = .configuring
 
             do {
+                await updateEngineDevices()
                 await configureAudioSessionForCapture()
                 // Configure + start the single underlying captureSession.
                 try await engine.start(with: .current)
                 session = engine.captureSession
+                let connections = session.connections
+                let channels = connections.first { $0.isActive && !$0.audioChannels.isEmpty }.map { $0.audioChannels } ?? []
+                if channels.isEmpty, let channel = channels.first {
+                    logger.debug("No audio channels found on first video track: \(channel.averagePowerLevel)")
+                }
+                logger.debug("channels: \(channels)")
+                //
+                let connection = connections.first { $0.isActive && !$0.audioChannels.isEmpty }
+                let audioChannel = connection?.audioChannels.first
+
                 status = .running
 
                 // Start audio monitoring (reuses CaptureEngine audio stream).
-                let stream = await engine.makeAudioSampleBufferStream()
-                audioMonitorPollTask = await audioMonitor.start(using: stream)
+              //  let stream = await engine.makeAudioSampleBufferStream()
+                await audioMonitor.start(using: engine)
 
-
-                //
-                let (level, history) = await audioMonitor.snapshot()
-                logger.info("LEVEL: \(level) AND HISTORY: \(history)")
-                audioLevel = level
-                audioHistory = history
+                // Start polling the audio monitor to update UI state
+                startAudioMonitorPolling()
 
             } catch {
                 status = .failed(message: String(describing: error))
@@ -97,10 +106,24 @@ extension CaptureView {
         func onDisappear() async {
             observationTasks.forEach { $0.cancel() }
             observationTasks.removeAll()
-
             audioMonitorPollTask?.cancel()
             audioMonitorPollTask = nil
+            await audioMonitor.stop()
             status = .stopped
+        }
+        
+        private func startAudioMonitorPolling() {
+            audioMonitorPollTask?.cancel()
+            audioMonitorPollTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                while !Task.isCancelled {
+                    let snapshot = await self.audioMonitor.snapshot()
+                    
+                    self.audioLevel = snapshot.level
+                    self.audioHistory = snapshot.history
+                    try? await Task.sleep(nanoseconds: 33_000_000) // ~30fps
+                }
+            }
         }
 
         func selectVideo(id: String) async {
@@ -131,7 +154,6 @@ extension CaptureView {
         }
 
         // MARK: - Internals
-
         private func installObservers(for session: AVCaptureSession) {
             let nc = NotificationCenter.default
 
@@ -163,7 +185,7 @@ extension CaptureView {
         }
 
         private func configureAudioSessionForCapture() async {
-#if os(iOS)
+            #if os(iOS)
             // Make this match your needs (bluetooth, speaker, etc.)
             // This runs on main actor; AVAudioSession expects main-thread friendliness.
             let a = AVAudioSession.sharedInstance()
@@ -175,12 +197,47 @@ extension CaptureView {
             } catch {
                 status = .failed(message: "AVAudioSession error: \(error)")
             }
-#else
+            #else
             // AVAudioSession is unavailable on macOS; nothing to configure here.
-            return
-#endif
+            #endif
+        }
+        
+        // MARK: - Device Observation
+        
+        /// Observes the engine's published device lists and updates the ViewModel accordingly.
+        private func updateEngineDevices() async {
+    
+            // Get the current video device id
+            let videoID = await engine.videoDevice?.uniqueID
+            selectedVideoID = videoID
+            // Get the current audio devie id
+            let audioID = await engine.audioDevice?.uniqueID
+            selectedAudioID = audioID
+
+
+            // updates camera devices
+            videoDevices = await engine.availableVideoDevices.map {
+                DeviceInfo(
+                    id: $0.uniqueID,
+                    kind: .video,
+                    name: $0.localizedName,
+                    position: $0.position,
+                    isOn: $0.uniqueID == selectedVideoID,
+                    showSettings: false
+                )
+            }
+
+            // updates audio devices
+            audioDevices = await engine.availableAudioDevices.map {
+                DeviceInfo(
+                    id: $0.uniqueID,
+                    kind: .audio,
+                    name: $0.localizedName,
+                    position: .unspecified,
+                    isOn: $0.uniqueID == selectedAudioID,
+                    showSettings: false
+                )
+            }
         }
     }
-
-
 }

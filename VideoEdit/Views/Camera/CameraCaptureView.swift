@@ -14,8 +14,6 @@ struct CameraCaptureView: View {
 
     @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: CaptureView.ViewModel
-
-//    @State private var viewModel: ViewModel = .init()
     @State private var spacing: CGFloat = 8
     @State private var isTimerEnabled: Bool = false
     @State private var timerSelection: TimeInterval.Option = .threeSeconds
@@ -25,11 +23,6 @@ struct CameraCaptureView: View {
     @Preference(\.showSafeGuides) var showSafeGuides
     @Preference(\.showAspectMask) var showAspectMask
     @Preference(\.showPlatformSafe) var showPlatformSafe
-
-//    @Namespace private var namespace
-//    @Namespace private var namespace2
-
-   // private let ratioSize = CGSize(width: 16, height: 9)
 
     var body: some View {
 
@@ -56,7 +49,7 @@ extension CameraCaptureView {
 
     @ViewBuilder
     func VideoOutput() -> some View {
-        VideoOutputView(captureSession: viewModel.session)
+        VideoOutputView(source: viewModel.engine.previewSource, captureSession: viewModel.session)
             .ignoresSafeArea(.all)
     }
 
@@ -95,116 +88,6 @@ extension CameraCaptureView {
     }
 
 }
-
-
-extension CameraCaptureView {
-
-//    struct DesignToken {
-//        static let defaultCornerRadius: CGFloat = 32
-//        static let defaultBorderWidth: CGFloat = 1
-//        static let defaultBorderColor: NSColor = .secondaryLabelColor
-//        static let topPadding: CGFloat = 54
-//        static let bottomPadding: CGFloat = 64
-//        static let dimmingAlpha: CGFloat = 0.5
-//
-//        static let maskColor: Color = .recordingRed.opacity(0.1)
-//        static let guideColor: Color = .white.opacity(0.5)
-//    }
-//
-//    enum Mode: String, Hashable {
-//        case screenshare
-//        case camera
-//    }
-
-//    struct VideoOutputView: NSViewRepresentable {
-//        typealias NSViewType = PlayerView
-//        @Binding var captureSession: AVCaptureSession
-//        @Binding var isMirror: Bool
-//
-//        func makeNSView(context: Context) -> PlayerView {
-//            let player = PlayerView(captureSession: captureSession)
-//            guard let previewLayer = player.previewLayer, let connection = previewLayer.connection, connection.isVideoMirroringSupported else {
-//                return player
-//            }
-//            return player
-//        }
-//
-//        func updateNSView(_ nsView: PlayerView, context: Context) {
-//            guard let previewLayer = nsView.previewLayer, let connection = previewLayer.connection, connection.isVideoMirroringSupported else {
-//                return
-//            }
-//
-//            DispatchQueue.main.async {
-//                connection.automaticallyAdjustsVideoMirroring = false
-//                connection.isVideoMirrored = isMirror
-//            }
-//        }
-//    }
-}
-
-
-
-//actor Manager {
-//
-//    func availableCameras() -> [AVCaptureDevice] {
-//        return AVCaptureDevice
-//                .DiscoverySession(
-//                    deviceTypes: [.builtInWideAngleCamera, .external],
-//                    mediaType: .video,
-//                    position: .unspecified
-//                )
-//                .devices
-//    }
-//
-//
-//
-//    func start(_ session: AVCaptureSession, with selectedCamera: CameraInfo?) throws -> AVCaptureDeviceInput {
-//        guard !session.isRunning else {
-//            throw NSError(domain: String(describing: self), code: AVError.sessionNotRunning.rawValue)
-//        }
-//
-//        session.beginConfiguration()
-//        session.sessionPreset = .high
-//
-//        // Remove existing inputs
-//        for input in session.inputs {
-//            session.removeInput(input)
-//        }
-//
-//        // Add video input
-//        guard let camera = selectedCamera, let input = try? AVCaptureDeviceInput(device: camera.device), session.canAddInput(input) else {
-//            session.commitConfiguration()
-//            throw NSError(domain: String(describing: self), code: AVError.sessionNotRunning.rawValue)
-//        }
-//
-//        return input
-//    }
-//
-//    func stop(_ session: AVCaptureSession) async -> Void {
-//        guard session.isRunning else { return }
-//        session.stopRunning()
-//    }
-//
-//    func addAudioInput(_ session: AVCaptureSession) -> AVCaptureSession {
-//        guard let device = AVCaptureDevice.default(for: .audio) else { return session }
-//        guard let input = try? AVCaptureDeviceInput(device: device) else { return session }
-//        if session.canAddInput(input) {
-//            session.addInput(input)
-//        }
-//        return session
-//    }
-//
-//    func addVideoInput(_ session: AVCaptureSession, with selected: AVCaptureDevice? = nil) -> AVCaptureSession {
-//        guard let defaultDevice = AVCaptureDevice.default(for: .video) else {  return session }
-//        let device: AVCaptureDevice = selected ?? defaultDevice
-//        guard let input = try? AVCaptureDeviceInput(device: device) else {  return session }
-//        if session.canAddInput(input) {
-//            session.addInput(input)
-//        }
-//        return session
-//    }
-//}
-
 
 #Preview {
     @Previewable @StateObject var captureVM: CaptureView.ViewModel = .init()
