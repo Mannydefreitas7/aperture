@@ -4,290 +4,580 @@
 //
 //  Created by Emmanuel on 1/18/26.
 //
-import AVFoundation
+
+@preconcurrency import AVFoundation
+import Combine
 
 enum CaptureEngineError: Error {
     case noVideoDeviceAvailable
     case noAudioDeviceAvailable
 }
 
-
 actor CaptureEngine {
 
-    // Exposed for preview layer wiring (reference type is OK to hand out).
-    // Important: Mutate/configure ONLY via actor methods.
-    nonisolated let session: AVCaptureSession = AVCaptureSession()
+    /// A value that indicates whether the capture service is idle or capturing a photo or movie.
+    @Published private(set) var captureActivity: CaptureActivity = .idle
+    /// A value that indicates the current capture capabilities of the service.
+    @Published private(set) var captureCapabilities = CaptureCapabilities.unknown
+    /// A Boolean value that indicates whether a higher priority event, like receiving a phone call, interrupts the app.
+    @Published private(set) var isInterrupted = false
+    /// A Boolean value that indicates whether the user enables HDR video capture.
+    @Published var isHDRVideoEnabled = false
+    /// A Boolean value that indicates whether capture controls are in a fullscreen appearance.
+    @Published var isShowingFullscreenControls = false
 
-    private let sessionQueue = DispatchQueue(label: .dispatchQueueKey(.captureSession))
+    /// A type that connects a preview destination with the capture session.
+    nonisolated let previewSource: PreviewSource
 
-    // Inputs / outputs we manage
-    private var videoInput: AVCaptureDeviceInput?
-    private var audioInput: AVCaptureDeviceInput?
+    // The app's capture session.
+    nonisolated let captureSession = AVCaptureSession()
 
-    private let videoOutput = AVCaptureVideoDataOutput()
-    private let audioOutput = AVCaptureAudioDataOutput()
+    // An object that manages the app's photo capture behavior.
+    private let photoCapture = PhotoCapture()
 
-    private var videoDiscovery: AVCaptureDevice.DiscoverySession?
-    private var audioDiscovery: AVCaptureDevice.DiscoverySession?
+    // An object that manages the app's video capture behavior.
+    private let movieCapture = MovieCapture()
 
-    private var selectedVideoID: String?
-    private var selectedAudioID: String?
+    // An internal collection of output services.
+    private var outputServices: [any OutputService] { [photoCapture, movieCapture] }
 
-    // Video frames stream
-    private var videoStreamContinuation: AsyncStream<CMSampleBuffer>.Continuation?
-    private var videoDelegate: VideoOutputDelegate?
+    // The video input for the currently selected device camera.
+    internal var activeVideoInput: AVCaptureDeviceInput?
 
-    // Audio samples stream (optional, but included since you said “yes to all”)
+    // The mode of capture, either photo or video. Defaults to photo.
+    private(set) var captureMode = CaptureMode.video
+
+    // An object the service uses to retrieve capture devices.
+    private let deviceLookup = DeviceLookup()
+
+    // An object that monitors the state of the system-preferred camera.
+    private let systemPreferredCamera = SystemPreferredCameraObserver()
+
+    private var rotationObservers = [AnyObject]()
+
+    // MARK: - Audio sample stream (for waveform / meters)
+
+    private let audioDataOutput = AVCaptureAudioDataOutput()
     private var audioStreamContinuation: AsyncStream<CMSampleBuffer>.Continuation?
-    private var audioDelegate: AudioOutputDelegate?
+    private var audioSampleDelegate: AudioSampleOutputDelegate?
+    private let audioOutputQueue = DispatchQueue(label: .dispatchQueueKey(.captureAudioOutput))
 
-    // MARK: Public API
+    // A Boolean value that indicates whether the actor finished its required configuration.
+    private var isSetUp = false
 
-    func currentSelection() -> (videoID: String?, audioID: String?) {
-        (selectedVideoID, selectedAudioID)
+    // A delegate object that responds to capture control activation and presentation events.
+    private var controlsDelegate = CaptureControlsDelegate()
+
+    // A map that stores capture controls by device identifier.
+    private var controlsMap: [String: [AVCaptureControl]] = [:]
+
+    // A serial dispatch queue to use for capture control actions.
+    private let sessionQueue = DispatchSerialQueue(label: .dispatchQueueKey(.captureSession))
+
+    // (session property removed as per instructions)
+
+    // Sets the session queue as the actor's executor.
+    nonisolated var unownedExecutor: UnownedSerialExecutor {
+        sessionQueue.asUnownedSerialExecutor()
     }
 
-    func setSelection(videoID: String?, audioID: String?) {
-        self.selectedVideoID = videoID
-        self.selectedAudioID = audioID
+    // MARK: - Authorization
+    /// A Boolean value that indicates whether a person authorizes this app to use
+    /// device cameras and microphones. If they haven't previously authorized the
+    /// app, querying this property prompts them for authorization.
+    var isAuthorized: Bool {
+        get async {
+            let status = AVCaptureDevice.authorizationStatus(for: .video)
+            // Determine whether a person previously authorized camera access.
+            var isAuthorized = status == .authorized
+            // If the system hasn't determined their authorization status,
+            // explicitly prompt them for approval.
+            if status == .notDetermined {
+                isAuthorized = await AVCaptureDevice.requestAccess(for: .video)
+            }
+            return isAuthorized
+        }
     }
 
-    func refreshVideoDevices() -> [AVCaptureDevice] {
-        let types: [AVCaptureDevice.DeviceType] = [
-            .builtInWideAngleCamera
-        ]
-        let d = AVCaptureDevice.DiscoverySession(deviceTypes: types, mediaType: .video, position: .unspecified)
-        self.videoDiscovery = d
-        return d.devices
+    init() {
+        // Create a source object to connect the preview view with the capture session.
+        previewSource = DefaultPreviewSource(session: captureSession)
     }
 
-    func refreshAudioDevices() -> [AVCaptureDevice] {
-        // For audio inputs, DiscoverySession with mediaType .audio works well.
-        // Note: some “audio devices” are better managed through AVAudioSession inputs.
-        let d = AVCaptureDevice.DiscoverySession(deviceTypes: [.microphone], mediaType: .audio, position: .unspecified)
-        self.audioDiscovery = d
-        return d.devices
+    // MARK: - Capture session life cycle
+    func start(with state: CameraState) async throws {
+        // Set initial operating state.
+        captureMode = state.captureMode
+        isHDRVideoEnabled = state.isVideoHDREnabled
+
+        // Exit early if not authorized or the session is already running.
+        guard await isAuthorized, !captureSession.isRunning else { return }
+        // Configure the session and start it.
+        try setUpSession()
+        captureSession.startRunning()
     }
 
-    /// Request camera/mic permissions (call from UI on appear).
-    func requestPermissions() async -> Bool {
-        let cam = await AVCaptureDevice.requestAccess(for: .video)
-        let mic = await AVCaptureDevice.requestAccess(for: .audio)
-        return cam && mic
+    // MARK: - Capture stop
+    func stop() {
+        guard captureSession.isRunning else { return }
+        captureSession.stopRunning()
     }
 
-    /// Configure session (inputs + outputs). Safe to call repeatedly; it rebuilds inputs.
-    func configureSession(preferFrontCamera: Bool = false) async throws {
-        try await runSessionConfig {
-            self.session.beginConfiguration()
-            defer { self.session.commitConfiguration() }
+    // MARK: - Capture setup
+    // Performs the initial capture session configuration.
+    private func setUpSession() throws {
+        // Return early if already set up.
+        guard !isSetUp else { return }
 
-            // Preset choice: pick something sane for both preview + video data output.
-            // Adjust as needed (.high / .inputPriority / .hd1280x720 etc.)
-            if self.session.canSetSessionPreset(.high) { self.session.sessionPreset = .high }
+        // Observe internal state and notifications.
+        observeOutputServices()
+        observeNotifications()
+        observeCaptureControlsState()
 
-            // Ensure outputs exist once
-            self.installOutputsIfNeeded()
+        do {
+            // Retrieve the default camera and microphone.
+            let defaultCamera = try deviceLookup.defaultCamera
+            let defaultMic = try deviceLookup.defaultMic
 
-            // Remove existing inputs
-            if let vi = self.videoInput { self.session.removeInput(vi); self.videoInput = nil }
-            if let ai = self.audioInput { self.session.removeInput(ai); self.audioInput = nil }
+#if os(iOS)
+            // Enable using AirPods as a high-quality lapel microphone.
+            captureSession.configuresApplicationAudioSessionForBluetoothHighQualityRecording = true
+#endif
+            // Add inputs for the default camera and microphone devices.
+            activeVideoInput = try addInput(for: defaultCamera)
+            try addInput(for: defaultMic)
 
-            // Determine selected devices (or fallback)
-            let videoDevice = self.pickVideoDevice(preferFront: preferFrontCamera)
-            let audioDevice = self.pickAudioDevice()
+            // Configure the session preset based on the current capture mode.
+            captureSession.sessionPreset = captureMode == .photo ? .photo : .high
+            // Add the photo capture output as the default output type.
+            try addOutput(photoCapture.output)
+            // If the capture mode is set to Video, add a movie capture output.
+            if captureMode == .video {
+                // Add the movie output as the default output type.
+                try addOutput(movieCapture.output)
+                setHDRVideoEnabled(isHDRVideoEnabled)
+            }
 
-            // Add inputs
-            if let videoDevice {
-                let input = try AVCaptureDeviceInput(device: videoDevice)
-                if self.session.canAddInput(input) {
-                    self.session.addInput(input)
-                    self.videoInput = input
-                    self.selectedVideoID = videoDevice.uniqueID
+            // Add an audio data output for level monitoring / waveform rendering.
+            // This is lightweight and does not create a second AVCaptureSession.
+            if captureSession.canAddOutput(audioDataOutput) {
+                captureSession.addOutput(audioDataOutput)
+            }
+
+            // Configure controls to use with the Camera Control.
+            configureControls(for: defaultCamera)
+            // Monitor the system-preferred camera state.
+            monitorSystemPreferredCamera()
+            // Observe changes to the default camera's subject area.
+            observeSubjectAreaChanges(of: defaultCamera)
+            // Update the service's advertised capabilities.
+            updateCaptureCapabilities()
+
+            isSetUp = true
+        } catch {
+            throw CameraError.setupFailed
+        }
+    }
+
+    // MARK: - Capture controls
+    internal func configureControls(for device: AVCaptureDevice) {
+
+        // Exit early if the host device doesn't support capture controls.
+        guard captureSession.supportsControls else { return }
+
+        // Begin configuring the capture session.
+        captureSession.beginConfiguration()
+
+        // Remove previously configured controls, if any.
+        for control in captureSession.controls {
+            captureSession.removeControl(control)
+        }
+
+        // Create controls and add them to the capture session.
+        for control in createControls(for: device) {
+            if captureSession.canAddControl(control) {
+                captureSession.addControl(control)
+            } else {
+                logger.info("Unable to add control \(control).")
+            }
+        }
+
+        // Set the controls delegate.
+        captureSession.setControlsDelegate(controlsDelegate, queue: sessionQueue)
+
+        // Commit the capture session configuration.
+        captureSession.commitConfiguration()
+    }
+
+    func createControls(for device: AVCaptureDevice) -> [AVCaptureControl] {
+        // Retrieve the capture controls for this device, if they exist.
+        guard let controls = controlsMap[device.uniqueID] else {
+            // Define the default controls.
+            var controls = [
+                AVCaptureSystemZoomSlider(device: device),
+                AVCaptureSystemExposureBiasSlider(device: device)
+            ]
+#if os(iOS)
+            // Create a lens position control if the device supports setting a custom position.
+            if device.isLockingFocusWithCustomLensPositionSupported {
+                // Create a slider to adjust the value from 0 to 1.
+                let lensSlider = AVCaptureSlider("Lens Position", symbolName: "circle.dotted.circle", in: 0...1)
+                // Perform the slider's action on the session queue.
+                lensSlider.setActionQueue(sessionQueue) { lensPosition in
+                    do {
+                        try device.lockForConfiguration()
+                        device.setFocusModeLocked(lensPosition: lensPosition)
+                        device.unlockForConfiguration()
+                    } catch {
+                        logger.info("Unable to change the lens position: \(error)")
+                    }
+                }
+                // Add the slider the controls array.
+                controls.append(lensSlider)
+            }
+#endif
+            // Store the controls for future use.
+            controlsMap[device.uniqueID] = controls
+            return controls
+        }
+
+        // Return the previously created controls.
+        return controls
+    }
+
+    // MARK: - Capture mode selection
+
+    /// Changes the mode of capture, which can be `photo` or `video`.
+    ///
+    /// - Parameter `captureMode`: The capture mode to enable.
+    func setCaptureMode(_ captureMode: CaptureMode) throws {
+        // Update the internal capture mode value before performing the session configuration.
+        self.captureMode = captureMode
+
+        // Change the configuration atomically.
+        captureSession.beginConfiguration()
+        defer { captureSession.commitConfiguration() }
+
+        // Configure the capture session for the selected capture mode.
+        switch captureMode {
+            case .photo:
+                // The app needs to remove the movie capture output to perform Live Photo capture.
+                captureSession.sessionPreset = .photo
+                captureSession.removeOutput(movieCapture.output)
+            case .video:
+                captureSession.sessionPreset = .high
+                try addOutput(movieCapture.output)
+                if isHDRVideoEnabled {
+                    setHDRVideoEnabled(true)
+                }
+        }
+
+        // Update the advertised capabilities after reconfiguration.
+        updateCaptureCapabilities()
+    }
+
+    // MARK: - Device selection
+
+    /// Changes the capture device that provides video input.
+    ///
+    /// The app calls this method in response to the user tapping the button in the UI to change cameras.
+    /// The implementation switches between the front and back cameras and, in iPadOS,
+    /// connected external cameras.
+    func selectNextVideoDevice() {
+        // The array of available video capture devices.
+        let videoDevices = deviceLookup.cameras
+
+        // Find the index of the currently selected video device.
+        let selectedIndex = videoDevices.firstIndex(of: currentDevice) ?? 0
+        // Get the next index.
+        var nextIndex = selectedIndex + 1
+        // Wrap around if the next index is invalid.
+        if nextIndex == videoDevices.endIndex {
+            nextIndex = 0
+        }
+
+        let nextDevice = videoDevices[nextIndex]
+        // Change the session's active capture device.
+        changeCaptureDevice(to: nextDevice)
+
+        // The app only calls this method in response to the user requesting to switch cameras.
+        // Set the new selection as the user's preferred camera.
+        AVCaptureDevice.userPreferredCamera = nextDevice
+    }
+
+    // Changes the device the service uses for video capture.
+    private func changeCaptureDevice(to device: AVCaptureDevice) {
+        // The service must have a valid video input prior to calling this method.
+        guard let currentInput = activeVideoInput else { fatalError() }
+
+        // Bracket the following configuration in a begin/commit configuration pair.
+        captureSession.beginConfiguration()
+        defer { captureSession.commitConfiguration() }
+
+        // Remove the existing video input before attempting to connect a new one.
+        captureSession.removeInput(currentInput)
+        do {
+            // Attempt to connect a new input and device to the capture session.
+            activeVideoInput = try addInput(for: device)
+            // Configure capture controls for new device selection.
+            configureControls(for: device)
+            // Register for device observations.
+            observeSubjectAreaChanges(of: device)
+            // Update the service's advertised capabilities.
+            updateCaptureCapabilities()
+        } catch {
+            // Reconnect the existing camera on failure.
+            captureSession.addInput(currentInput)
+        }
+    }
+
+    /// Monitors changes to the system's preferred camera selection.
+    ///
+    /// iPadOS supports external cameras. When someone connects an external camera to their iPad,
+    /// they're signaling the intent to use the device. The system responds by updating the
+    /// system-preferred camera (SPC) selection to this new device. When this occurs, if the SPC
+    /// isn't the currently selected camera, switch to the new device.
+    private func monitorSystemPreferredCamera() {
+        Task {
+            // An object monitors changes to system-preferred camera (SPC) value.
+            for await camera in systemPreferredCamera.changes {
+                // If the SPC isn't the currently selected camera, attempt to change to that device.
+                if let camera, currentDevice != camera {
+                    logger.debug("Switching camera selection to the system-preferred camera.")
+                    changeCaptureDevice(to: camera)
                 }
             }
-
-            // System mic (default audio device)
-            if let defaultMic = AVCaptureDevice.default(for: .audio) {
-                let micInput = try AVCaptureDeviceInput(device: defaultMic)
-                if self.session.canAddInput(micInput) {
-                    self.session.addInput(micInput)
-                    self.audioInput = micInput
-                }
-            }
         }
     }
 
-    func startRunning() async {
-        await runOnSessionQueue {
-            if !self.session.isRunning { self.session.startRunning() }
+    private var videoPreviewLayer: AVCaptureVideoPreviewLayer {
+        // Access the capture session's connected preview layer.
+        guard let previewLayer = captureSession.connections.compactMap({ $0.videoPreviewLayer }).first else {
+            fatalError("The app is misconfigured. The capture session should have a connection to a preview layer.")
+        }
+        return previewLayer
+    }
+
+    // MARK: - Automatic focus and exposure
+
+    /// Performs a one-time automatic focus and expose operation.
+    ///
+    /// The app calls this method as the result of a person tapping on the preview area.
+    func focusAndExpose(at point: CGPoint) {
+        // The point this call receives is in view-space coordinates. Convert this point to device coordinates.
+        let devicePoint = videoPreviewLayer.captureDevicePointConverted(fromLayerPoint: point)
+        do {
+            // Perform a user-initiated focus and expose.
+            try focusAndExpose(at: devicePoint, isUserInitiated: true)
+        } catch {
+            logger.debug("Unable to perform focus and exposure operation. \(error)")
         }
     }
 
-    func stopRunning() async {
-        await runOnSessionQueue {
-            if self.session.isRunning { self.session.stopRunning() }
-        }
-    }
-
-    /// A stream of CMSampleBuffer frames from AVCaptureVideoDataOutput.
-    /// Call once and keep it alive.
-    func makeVideoSampleBufferStream() -> AsyncStream<CMSampleBuffer> {
-        AsyncStream { continuation in
-            // Store continuation on the actor
-            Task { [weak self] in
-                await self?.setVideoContinuation(continuation)
-            }
-
-            Task { [weak self] in
-                await self?.installVideoDelegate()
-            }
-
-            continuation.onTermination = { [weak self] _ in
-                Task { await self?.clearVideoStream() }
-                Task { [weak self] in await self?.setVideoContinuation(nil) }
+    // Observe notifications of type `subjectAreaDidChangeNotification` for the specified device.
+    private func observeSubjectAreaChanges(of device: AVCaptureDevice) {
+        // Cancel the previous observation task.
+        subjectAreaChangeTask?.cancel()
+#if os(iOS)
+        subjectAreaChangeTask = Task {
+            // Signal true when this notification occurs.
+            for await _ in NotificationCenter.default.notifications(named: AVCaptureDevice.subjectAreaDidChangeNotification, object: device).compactMap({ _ in true }) {
+                // Perform a system-initiated focus and expose.
+                try? focusAndExpose(at: CGPoint(x: 0.5, y: 0.5), isUserInitiated: false)
             }
         }
+#endif
+    }
+    private var subjectAreaChangeTask: Task<Void, Never>?
+
+    private func focusAndExpose(at devicePoint: CGPoint, isUserInitiated: Bool) throws {
+        // Configure the current device.
+        let device = currentDevice
+
+        // The following mode and point of interest configuration requires obtaining an exclusive lock on the device.
+        try device.lockForConfiguration()
+
+        let focusMode = isUserInitiated ? AVCaptureDevice.FocusMode.autoFocus : .continuousAutoFocus
+        if device.isFocusPointOfInterestSupported && device.isFocusModeSupported(focusMode) {
+            device.focusPointOfInterest = devicePoint
+            device.focusMode = focusMode
+        }
+
+        let exposureMode = isUserInitiated ? AVCaptureDevice.ExposureMode.autoExpose : .continuousAutoExposure
+        if device.isExposurePointOfInterestSupported && device.isExposureModeSupported(exposureMode) {
+            device.exposurePointOfInterest = devicePoint
+            device.exposureMode = exposureMode
+        }
+
+#if os(iOS)
+        // Enable subject-area change monitoring when performing a user-initiated automatic focus and exposure operation.
+        // If this method enables change monitoring, when the device's subject area changes, the app calls this method a
+        // second time and resets the device to continuous automatic focus and exposure.
+        device.isSubjectAreaChangeMonitoringEnabled = isUserInitiated
+#endif
+
+        // Release the lock.
+        device.unlockForConfiguration()
     }
 
-    /// Optional: audio samples (if you need them).
+    // MARK: - Photo capture
+    func capturePhoto(with features: PhotoFeatures) async throws -> Photo {
+        try await photoCapture.capturePhoto(with: features)
+    }
+
+    // MARK: - Movie capture
+    /// Starts recording video. The video records until the user stops recording,
+    /// which calls the following `stopRecording()` method.
+    func startRecording() {
+        movieCapture.startRecording()
+    }
+
+    /// Stops the recording and returns the captured movie.
+    func stopRecording() async throws -> Movie {
+        try await movieCapture.stopRecording()
+    }
+
+    /// Audio samples stream from the existing `captureSession`.
+    ///
+    /// Use this for meters/waveforms. Keep the returned stream alive for continuous updates.
     func makeAudioSampleBufferStream() -> AsyncStream<CMSampleBuffer> {
         AsyncStream { continuation in
-            // Store continuation on the actor
-            Task { [weak self] in
-                await self?.setAudioContinuation(continuation)
-            }
+            // Single-consumer semantics.
+            self.audioStreamContinuation = continuation
 
-            Task { [weak self] in
-                await self?.installAudioDelegate()
+            // Install delegate once.
+            if self.audioSampleDelegate == nil {
+                let delegate = AudioSampleOutputDelegate { [weak self] sbuf in
+                    // Hop onto the actor to yield.
+                    Task { await self?.yieldAudioSample(sbuf) }
+                }
+                self.audioSampleDelegate = delegate
+                self.audioDataOutput.setSampleBufferDelegate(delegate, queue: self.audioOutputQueue)
             }
 
             continuation.onTermination = { [weak self] _ in
                 Task { await self?.clearAudioStream() }
-                Task { [weak self] in await self?.setAudioContinuation(nil) }
             }
         }
     }
 
-    // MARK: - Private
-
-    private func installVideoDelegate() {
-        // Create delegate that forwards frames by hopping back to the actor
-        let delegate = VideoOutputDelegate { [weak self] sbuf in
-            Task { await self?.yieldVideo(sbuf) }
-        }
-        // Store delegate and set on output while on the actor
-        self.videoDelegate = delegate
-        let outputQueue = DispatchQueue(label: .dispatchQueueKey(.captureVideoOutput))
-        self.videoOutput.setSampleBufferDelegate(delegate, queue: outputQueue)
-    }
-
-    private func installAudioDelegate() {
-        // Create delegate that forwards samples by hopping back to the actor
-        let delegate = AudioOutputDelegate { [weak self] sbuf in
-            Task { await self?.yieldAudio(sbuf) }
-        }
-        // Store delegate and set on output while on the actor
-        self.audioDelegate = delegate
-        let outputQueue = DispatchQueue(label: .dispatchQueueKey(.captureAudioOutput))
-        self.audioOutput.setSampleBufferDelegate(delegate, queue: outputQueue)
-    }
-
-    // Hop-back helpers for nonisolated contexts (delegates/queues)
-    private func setVideoContinuation(_ c: AsyncStream<CMSampleBuffer>.Continuation?) {
-        self.videoStreamContinuation = c
-    }
-
-    private func setAudioContinuation(_ c: AsyncStream<CMSampleBuffer>.Continuation?) {
-        self.audioStreamContinuation = c
-    }
-
-    private func yieldVideo(_ sbuf: CMSampleBuffer) {
-        self.videoStreamContinuation?.yield(sbuf)
-    }
-
-    private func yieldAudio(_ sbuf: CMSampleBuffer) {
-        self.audioStreamContinuation?.yield(sbuf)
-    }
-
-    private func installOutputsIfNeeded() {
-        // Video output config
-        videoOutput.alwaysDiscardsLateVideoFrames = true
-        // Common pixel format for CVPixelBuffer usage
-        videoOutput.videoSettings = [
-            kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarFullRange)
-        ]
-
-        if !session.outputs.contains(where: { $0 === videoOutput }) {
-            if session.canAddOutput(videoOutput) { session.addOutput(videoOutput) }
-        }
-
-        // Audio output (only if you need raw audio samples)
-        if !session.outputs.contains(where: { $0 === audioOutput }) {
-            if session.canAddOutput(audioOutput) { session.addOutput(audioOutput) }
-        }
-
-        // Stabilize connections if present
-        if let conn = videoOutput.connection(with: .video) {
-            // You can set videoOrientation if you manage rotation elsewhere.
-            conn.isVideoMirrored = false
-        }
-    }
-
-    private func pickVideoDevice(preferFront: Bool) -> AVCaptureDevice? {
-        let devices = videoDiscovery?.devices ?? refreshVideoDevices()
-
-        // If user selected a specific device and it exists, use it.
-        if let id = selectedVideoID, let d = devices.first(where: { $0.uniqueID == id }) {
-            return d
-        }
-
-        // Otherwise choose a reasonable default.
-        if preferFront, let front = devices.first(where: { $0.position == .front }) {
-            return front
-        }
-        if let back = devices.first(where: { $0.position == .back }) {
-            return back
-        }
-        return devices.first
-    }
-
-    private func pickAudioDevice() -> AVCaptureDevice? {
-        let devices = audioDiscovery?.devices ?? refreshAudioDevices()
-        if let id = selectedAudioID, let d = devices.first(where: { $0.uniqueID == id }) {
-            return d
-        }
-        return devices.first
-    }
-
-    private func clearVideoStream() {
-        videoOutput.setSampleBufferDelegate(nil, queue: nil)
-        videoDelegate = nil
-        videoStreamContinuation = nil
+    private func yieldAudioSample(_ sbuf: CMSampleBuffer) {
+        audioStreamContinuation?.yield(sbuf)
     }
 
     private func clearAudioStream() {
-        audioOutput.setSampleBufferDelegate(nil, queue: nil)
-        audioDelegate = nil
         audioStreamContinuation = nil
+        // Keep the delegate installed to avoid churn; it’s cheap and avoids reconfiguration.
     }
 
-    private func runOnSessionQueue(_ work: @escaping () -> Void) async {
-        await withCheckedContinuation { cont in
-            sessionQueue.async {
-                work()
-                cont.resume()
+    // Adds an input to the capture session to connect the specified capture device.
+    @discardableResult
+    internal func addInput(for device: AVCaptureDevice) throws -> AVCaptureDeviceInput {
+        let input = try AVCaptureDeviceInput(device: device)
+        if captureSession.canAddInput(input) {
+            captureSession.addInput(input)
+        } else {
+            throw CameraError.addInputFailed
+        }
+        return input
+    }
+
+    // Adds an output to the capture session to connect the specified capture device, if allowed.
+    private func addOutput(_ output: AVCaptureOutput) throws {
+        if captureSession.canAddOutput(output) {
+            captureSession.addOutput(output)
+        } else {
+            throw CameraError.addOutputFailed
+        }
+    }
+
+    // The device for the active video input.
+    private var currentDevice: AVCaptureDevice {
+        guard let device = activeVideoInput?.device else {
+            fatalError("No device found for current video input.")
+        }
+        return device
+    }
+
+    /// Sets whether the app captures HDR video.
+    func setHDRVideoEnabled(_ isEnabled: Bool) {
+        // Bracket the following configuration in a begin/commit configuration pair.
+        captureSession.beginConfiguration()
+        defer { captureSession.commitConfiguration() }
+        do {
+            // If the current device provides a 10-bit HDR format, enable it for use.
+            if isEnabled, let format = currentDevice.activeFormat10BitVariant {
+                try currentDevice.lockForConfiguration()
+                currentDevice.activeFormat = format
+                currentDevice.unlockForConfiguration()
+                isHDRVideoEnabled = true
+            } else {
+                captureSession.sessionPreset = .high
+                isHDRVideoEnabled = false
+            }
+        } catch {
+            logger.error("Unable to obtain lock on device and can't enable HDR video capture.")
+        }
+    }
+
+    // MARK: - Internal state management
+    /// Updates the state of the actor to ensure its advertised capabilities are accurate.
+    ///
+    /// When the capture session changes, such as changing modes or input devices, the service
+    /// calls this method to update its configuration and capabilities. The app uses this state to
+    /// determine which features to enable in the user interface.
+    internal func updateCaptureCapabilities() {
+        // Update the output service configuration.
+        outputServices.forEach { $0.updateConfiguration(for: currentDevice) }
+        // Set the capture service's capabilities for the selected mode.
+        switch captureMode {
+            case .photo:
+                captureCapabilities = photoCapture.capabilities
+            case .video:
+                captureCapabilities = movieCapture.capabilities
+        }
+    }
+
+    /// Merge the `captureActivity` values of the photo and movie capture services,
+    /// and assign the value to the actor's property.`
+    private func observeOutputServices() {
+        Publishers.Merge(photoCapture.$captureActivity, movieCapture.$captureActivity)
+            .assign(to: &$captureActivity)
+    }
+
+    /// Observe when capture control enter and exit a fullscreen appearance.
+    private func observeCaptureControlsState() {
+        controlsDelegate.$isShowingFullscreenControls
+            .assign(to: &$isShowingFullscreenControls)
+    }
+
+    /// Observe capture-related notifications.
+    private func observeNotifications() {
+
+        Task {
+            // Await notification of the end of an interruption.
+            for await _ in NotificationCenter.default.notifications(named: AVCaptureSession.interruptionEndedNotification) {
+                isInterrupted = false
             }
         }
     }
 
-    private func runSessionConfig(_ work: @escaping () throws -> Void) async throws {
-        try await withCheckedThrowingContinuation { cont in
-            sessionQueue.async {
-                do { try work(); cont.resume() }
-                catch { cont.resume(throwing: error) }
-            }
+
+    // MARK: - Audio output delegate
+
+    final class AudioSampleOutputDelegate: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {
+        let onSample: @Sendable (CMSampleBuffer) -> Void
+
+        init(onSample: @escaping @Sendable (CMSampleBuffer) -> Void) {
+            self.onSample = onSample
+        }
+
+        func captureOutput(
+            _ output: AVCaptureOutput,
+            didOutput sampleBuffer: CMSampleBuffer,
+            from connection: AVCaptureConnection
+        ) {
+            onSample(sampleBuffer)
         }
     }
 }
-

@@ -20,14 +20,7 @@ struct VideoEditApp: App {
             }
 
         RecordingWindow()
-            .windowBackgroundDragBehavior(.enabled)
             .environmentObject(appState)
-            .commands {
-                // General Commands
-                GeneralCommand(appState: appState)
-                // Video Commands
-                VideoCommand(appState: appState)
-            }
         
         Settings {
             SettingsView()

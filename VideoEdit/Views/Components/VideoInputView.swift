@@ -33,7 +33,9 @@ struct VideoInputView: View {
             namespace: controlGroup
         )
         .onDisappear {
-            appState.previewViewModel.onDisappear()
+            Task {
+                await appState.previewViewModel.onDisappear()
+            }
         }
         .task {
             await appState.previewViewModel.onAppear()
@@ -43,11 +45,14 @@ struct VideoInputView: View {
 
 extension VideoInputView {
 
+    var imageWidth: CGFloat { .thumbnail / 2.5 }
+
     @ViewBuilder
     func ToolCloseButton() -> some View {
         Button {
             withAnimation(.bouncy) {
                 device.showSettings.toggle()
+
             }
         } label: {
             Image(systemSymbol: .xmark)
@@ -71,6 +76,9 @@ extension VideoInputView {
                 Button {
                     withAnimation(.bouncy) {
                         device.showSettings.toggle()
+                        if appState.captureViewModel.controlsBarViewModel.microphone.showSettings {
+                            appState.captureViewModel.controlsBarViewModel.microphone.showSettings = false
+                        }
                     }
                 } label: {
                     Text(device.name)
@@ -83,17 +91,35 @@ extension VideoInputView {
 
     @ViewBuilder
     func ToolBarOptions() -> some View {
-            VStack {
-                Text(device.name)
-                VideoOutputView(captureSession: appState.previewViewModel.session, isMirror: $isMirrored)
+        VStack(alignment: .leading) {
+                HStack {
+
+                    Image("imac")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: imageWidth)
+
+                    VStack(alignment: .leading) {
+                        Text("Device")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+
+                        Text(device.name.capitalized)
+                            .font(.headline)
+                            .bold()
+                    }
+                }
+
+                VideoOutputView(captureSession: appState.previewViewModel.session)
                     .clipShape(.rect(cornerRadius: .medium, style: .circular))
             }
             .frame(width: .popoverWidth)
             .overlay(alignment: .topTrailing) {
                 ToolCloseButton()
-                    .offset(x: .medium, y: -(.small))
+                    .offset(x: .small)
             }
-            .padding(.large)
+            .padding(.medium)
+            .frame(minHeight: .zero)
     }
 
     enum UIString: String {

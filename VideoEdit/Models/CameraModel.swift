@@ -54,7 +54,7 @@ final class CameraModel: Camera {
     private let mediaLibrary = MediaLibrary()
     
     /// An object that manages the app's capture functionality.
-    private let captureService = CaptureService()
+    private let captureService = CaptureEngine()
     
     /// Persistent state shared between the app and capture extension.
     private var cameraState = CameraState()

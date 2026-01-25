@@ -1,6 +1,15 @@
 {
-  "originHash" : "1457fa32121ba4fe2d7bea84aa1a1b6d2bd36a2bbeaba650ef6064146d789bf3",
+  "originHash" : "ac755277baf407c05056fb9e4e5c5ee58393b38ae1c94afbfc8c4b0597cd986f",
   "pins" : [
+    {
+      "identity" : "aperture",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wulkano/Aperture.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7591bb540c844fe6c47edeac34b17c25e92a717f"
+      }
+    },
     {
       "identity" : "capcutsdk",
       "kind" : "remoteSourceControl",
@@ -26,6 +35,15 @@
       "state" : {
         "revision" : "d4feaf0d8bf9c49cecc0617d8ed0706417792f86",
         "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "fluidaudio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/FluidInference/FluidAudio.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "7459740a6b30755c51c1594ff08ee80e1527dc5d"
       }
     },
     {

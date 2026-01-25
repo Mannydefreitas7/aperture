@@ -77,6 +77,7 @@ class Constants {
         case showSafeGuides = "show_safe_guides"
         case showPlatformGuides = "show_platform_safe"
         case isMirrored = "is_mirrored"
+        case audioVolume = "audio_volume"
     }
 
     static let screen_capture_security_key: String = "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"

@@ -10,8 +10,8 @@ import SwiftUI
 
 struct EditorSettingsView: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject var cameraManager: CameraPreviewViewModel = .init()
-    @EnvironmentObject var editorViewModel: VECameraCaptureView.ViewModel
+    //@StateObject var cameraManager: CameraPreviewViewModel = .init()
+   // @EnvironmentObject var editorViewModel: CameraCaptureView.ViewModel
     @ObservedObject var viewModel: ViewModel = .init()
 
     var body: some View {
@@ -34,14 +34,14 @@ struct EditorSettingsView: View {
                 List {
 
                  ///   DisclosureGroup("Video") {
-                        CameraSettingsView(cameraManager: cameraManager)
+                       // CameraSettingsView(cameraManager: cameraManager)
                  //   }
 
                 }
                 .toolbar {
                     ToolbarSpacer()
                     ToolbarItem {
-                        SettingsButton(systemImage: "sidebar.trailing", isOn: $editorViewModel.isSettingsPresented)
+                      //  SettingsButton(systemImage: "sidebar.trailing", isOn: $editorViewModel.isSettingsPresented)
                     }
                 }
             }

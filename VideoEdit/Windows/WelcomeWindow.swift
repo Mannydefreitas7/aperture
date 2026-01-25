@@ -25,9 +25,7 @@ struct VEWelcomeWindow: Scene {
                     WelcomeScreen.production
                         .with(continueAction: markComplete)
                 }
-        }
-
-        actions: { dismissWindow in
+        } actions: { dismissWindow in
 
             VIWelcomeButton(
                 iconName: "record.circle",

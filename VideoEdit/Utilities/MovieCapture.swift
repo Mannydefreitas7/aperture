@@ -114,3 +114,21 @@ final class MovieCapture: OutputService {
         CaptureCapabilities(isHDRSupported: isHDRSupported)
     }
 }
+
+enum ResolutionPreset: String, CaseIterable, Identifiable {
+    case p720 = "720p"
+    case p1080 = "1080p"
+    case p4k = "4K"
+    case high = "High"
+
+    var id: String { rawValue }
+
+    var sessionPreset: AVCaptureSession.Preset {
+        switch self {
+            case .p720:  return .hd1280x720
+            case .p1080: return .hd1920x1080
+            case .p4k:   return .hd4K3840x2160
+            case .high:  return .high
+        }
+    }
+}

@@ -12,6 +12,7 @@ struct AudioInputView: View {
 
     var controlGroup: Namespace.ID
     @Binding var device: DeviceInfo
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         Group {
@@ -22,7 +23,7 @@ struct AudioInputView: View {
             }
         }
         .frame(
-            height: device.showSettings ? nil : .minHeight,
+            minHeight: device.showSettings ? nil : .minHeight,
             alignment: .center
         )
         .glassEffect(
@@ -37,6 +38,8 @@ struct AudioInputView: View {
 }
 
 extension AudioInputView {
+
+   
 
     @ViewBuilder
     func ToolBarOptions() -> some View {
@@ -68,6 +71,9 @@ extension AudioInputView {
                 Button {
                     withAnimation(.bouncy) {
                         device.showSettings.toggle()
+                        if appState.captureViewModel.controlsBarViewModel.camera.showSettings {
+                            appState.captureViewModel.controlsBarViewModel.camera.showSettings = false
+                        }
                     }
                 } label: {
                     Text(device.name)

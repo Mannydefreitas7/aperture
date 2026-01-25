@@ -47,6 +47,14 @@ extension EnvironmentValues {
     @Entry
     var styleMask: NSWindow.StyleMask = .unifiedTitleAndToolbar
 
+    /// Live microphone input level normalized to 0.0...1.0
+    @Entry
+    var audioInputWave: Double = .zero
+
+    /// Rolling history of microphone levels normalized to 0.0...1.0
+    @Entry
+    var audioInputWaveHistory: [Double] = []
+
 }
 
 private struct WindowStyleMask: ViewModifier {

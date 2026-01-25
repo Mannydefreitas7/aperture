@@ -14,59 +14,73 @@ struct VolumeHUD<Content: View>: View {
 
     @Binding var device: DeviceInfo
     @ViewBuilder var content: () -> Content
+    @Preference(\.audioVolume) var audioVolume
 
     init(for device: Binding<DeviceInfo>, content: @escaping () -> Content) {
         self._device = device
         self.content = content
     }
 
-    private var percentText: String { "\(Int((device.volume * 100).rounded()))%" }
-    private let imageWidth: CGFloat = .thumbnail / 2
-    private let segmentedPill: CGFloat = .small * 3
-
     var body: some View {
 
-            LazyVStack(spacing: .medium) {
+        LazyVStack(alignment: .leading, spacing: .medium) {
 
                 HStack(alignment: .center, spacing: .medium) {
-                    VStack {
-                        Image("mic")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: imageWidth)
-                    }
+
+                    Image("mic")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: imageWidth)
 
                     VStack(alignment: .leading) {
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading) {
-                                Text("Device")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                        Text("Device")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
 
-                                Text(device.name.capitalized)
-                                    .font(.headline)
-                                    .bold()
-                            }
-
-                        }
-
-                        VStack(alignment: .leading, spacing: .small) {
-
-                            let pillWidthSpace: CGFloat = .pillWidth + .spacing
-                            let segments = (.popoverWidth - (imageWidth)) / pillWidthSpace
-
-                            SegmentedPillBar(
-                                value: device.volume,
-                                segments: Int(segments)
-                            )
-                            HStack {
-                                Image(systemName: device.volume >= 1 ? "volume.\(device.volume).fill" : "volume.fill")
-                                Slider(value: $device.volume, in: 0...3)
-                            }
-                            .padding(.top, .small / 2)
-                            .controlSize(.mini)
-                        }
+                        Text(device.name.capitalized)
+                            .font(.headline)
+                            .bold()
                     }
+                }
+
+                VStack(alignment: .leading, spacing: .small) {
+
+                    AudioWaveformBars(maxBarHeight: 90)
+
+                    let pillWidthSpace: CGFloat = CGSize.pill.width + .spacing
+                    let segments = .popoverWidth / pillWidthSpace
+
+                    SegmentedPillBar(
+                        value: device.volume,
+                        segments: Int(segments)
+                    )
+                    .padding(.leading, .medium)
+                    HStack {
+                        Button {
+                           // device.volume
+                        } label: {
+                            Image(
+                                systemName: symbolName
+                            )
+                            .contentTransition(.symbolEffect(.automatic)) // macOS-safe
+                            .animation(.easeInOut, value: symbolName)
+                        }
+
+                        .buttonBorderShape(.capsule)
+                        .buttonStyle(.accessoryBar)
+
+                        Slider(value: $device.volume, in: 0...1)
+                            .onChange(of: device.volume) { oldValue, newValue in
+                                audioVolume = newValue
+                            }
+
+                    }
+                    .padding(.top, .small / 2)
+                    .controlSize(.regular)
+                    .onAppear {
+                        device.volume = audioVolume
+                    }
+                    .frame(minHeight: .extraLarge)
                 }
             }
             .frame(width: .popoverWidth)
@@ -77,6 +91,8 @@ struct VolumeHUD<Content: View>: View {
     }
 
     private func adjust(_ delta: Double) {
+        let volume = min(1.0, max(0.0, device.volume + delta))
+        print(volume)
         device.volume = min(1.0, max(0.0, device.volume + delta))
     }
 }
@@ -88,20 +104,19 @@ struct VolumeHUD<Content: View>: View {
 struct SegmentedPillBar: View {
     var value: Double
     var segments: Int
-    var pillWidth: CGFloat = .pillWidth
-    var pillHeight: CGFloat = 18
-    var spacing: CGFloat = .spacing
+
+    var size: CGSize = .pill
 
     private var activeCount: Int {
         Int((value * Double(segments)).rounded(.toNearestOrAwayFromZero))
     }
 
     var body: some View {
-        HStack(spacing: spacing) {
+        HStack(spacing: .spacing) {
             ForEach(0..<segments, id: \.self) { i in
                 Capsule(style: .continuous)
                     .fill(fillColor(for: i))
-                    .frame(width: pillWidth, height: pillHeight)
+                    .frame(width: size.width, height: size.height)
                     .overlay(
                         Capsule(style: .continuous)
                             .stroke(Color.white.opacity(0.06), lineWidth: 1)
@@ -124,19 +139,25 @@ struct SegmentedPillBar: View {
     }
 }
 
-//// MARK: - Preview
-//
-//struct VolumeHUD_Previews: PreviewProvider {
-//    struct Demo: View {
-//        @State private var volume = 0.70
-//        var body: some View {
-//            VolumeHUD(volume: $volume, connectedDevice: <#T##DeviceInfo#>)
-//        }
-//    }
-//
-//    static var previews: some View {
-//        Demo()
-//            .frame(width: .popoverWidth)
-//            .previewLayout(.sizeThatFits)
-//    }
-//}
+extension VolumeHUD {
+
+    var symbolName: String {
+        switch device.volume {
+            case 0:
+                return "speaker.slash.fill"
+            case 0..<0.33:
+                return "speaker.wave.1.fill"
+            case 0..<0.66:
+                return "speaker.wave.2.fill"
+            default:
+                return "speaker.wave.3.fill"
+        }
+    }
+
+    private var imageWidth: CGFloat { .thumbnail / 2.5 }
+    private var maxValue: CGFloat { 3 }
+    private var segmentedPill: CGFloat { .small * maxValue }
+    private var volume: Int { Int(device.volume) }
+    private var percentText: String { "\(Int((device.volume * 100).rounded()))%" }
+
+}

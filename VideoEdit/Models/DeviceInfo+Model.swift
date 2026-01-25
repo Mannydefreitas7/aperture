@@ -22,7 +22,7 @@ struct DeviceInfo: Identifiable, Equatable {
     var toolGroup: ToolGroup = .options
 
     private func shape(for device: Self) -> AnyShape {
-        return device.isOn || device.showSettings ? AnyShape(.rect(cornerRadius: .large, style: .continuous)) : AnyShape(
+        return device.isOn || device.showSettings ? AnyShape(.rect(cornerRadius: .extraLarge, style: .continuous)) : AnyShape(
             .capsule
         )
     }

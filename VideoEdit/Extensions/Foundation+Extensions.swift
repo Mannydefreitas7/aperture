@@ -3,7 +3,6 @@ import SwiftUI
 import AppKit
 
 // MARK: - Double Extensions
-
 extension Double {
     func rounded(toPlaces places: Int) -> Double {
         let divisor = pow(10.0, Double(places))
@@ -13,7 +12,6 @@ extension Double {
 
 
 // MARK: - Array Extensions
-
 extension Array {
     func chunked(into size: Int) -> [[Element]] {
         stride(from: 0, to: count, by: size).map {
@@ -22,10 +20,7 @@ extension Array {
     }
 }
 
-
-
 // MARK: - Date Extensions
-
 extension Date {
     var formattedRecordingName: String {
         let formatter = DateFormatter()
@@ -34,11 +29,11 @@ extension Date {
     }
 }
 
+// MARK: - CGSize
 extension CGSize {
     var aspectRatio: CGFloat {
         width.isZero ? 1.0 : CGFloat(height) / CGFloat(width)
     }
-
 
     var windowSize: Self {
         guard let window = NSApplication.shared.keyWindow else {
@@ -46,6 +41,11 @@ extension CGSize {
         }
         return window.frame.size
     }
+
+    /// Record circle shape height, inherit record width - value: `self.recordWidth`
+    static var recordCircle: Self { .init(width: .recordWidth, height: .recordHeight) }
+    /// PillWidth size - width:`12` / height: `18`
+    static var pill: Self { .init(width: 12, height: 18) }
 
     static var systemSize: SystemSize {
         return SystemSize()
@@ -58,7 +58,6 @@ extension CGSize {
 }
 
 // MARK: - Int
-
 extension Double {
 
     static var columnWidth: Double {
@@ -86,22 +85,36 @@ extension Double {
 }
 
 // MARK: - CGFloat
-
 extension CGFloat {
     var isEven: Bool { truncatingRemainder(dividingBy: 2) == 0 }
 
+    /// Small size - value: `8`
     static var small: Self { 8 }
+    /// Medium size - value: `16`
     static var medium: Self { 16 }
+    /// Large size - value: `24`
     static var large: Self { 24 }
+    /// Extra Large size - value: `32`
     static var extraLarge: Self { 32 }
+    /// Minium Height for toolbar height - value: `48`
     static var minHeight: Self { 48 }
+    /// Record circle shape width - value: `28`
     static var recordWidth: Self { 28 }
+    /// Record circle shape height, inherit record width - value: `self.recordWidth`
     static var recordHeight: Self { 28 }
+    /// Popeper Width - value: `280`
     static var popoverWidth: Self { 280 }
+    /// Thumbnail size - value: `188`
     static var thumbnail: Self { 128 }
-    static var pillWidth: Self { 12 }
-    static var pillHeight: Self { 18 }
+    /// Spacing size - value: `6`
     static var spacing: Self { 6 }
+
+    static var cornerRadius: Self { 32 }
+    static var borderWidth: Self { 1 }
+
+    static var topPadding: Self { 54 }
+    static var bottomPadding: Self { 64 }
+    static var dimmingAlpha: Self { 0.5 }
 
     static func columnWidth(spacing: Double.Spacing) -> CGFloat {
         let totalColumns: CGFloat = 12
@@ -110,15 +123,14 @@ extension CGFloat {
     }
 
     static var windowWidth: Self {
-
         guard let window = NSApplication.shared.keyWindow else {
             return .zero
         }
         return window.frame.width
-
     }
 }
 
+// MARK: - URL
 extension URL {
     /// A unique output location to write a movie.
     static var movieFileURL: URL {
@@ -126,9 +138,7 @@ extension URL {
     }
 }
 
-
 // MARK: - CGRect
-
 extension CGRect {
     var center: CGPoint {
         CGPoint(x: midX, y: midY)
@@ -154,7 +164,6 @@ extension CGRect {
 }
 
 // MARK: - Task Extensions
-
 extension Task where Success == Never, Failure == Never {
     static func sleep(seconds: Double) async throws {
         try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
@@ -187,8 +196,8 @@ extension Task where Success == Never, Failure == Never {
         }
     }
 }
-// MARK: - Notification Names
 
+// MARK: - Notification Names
 extension Notification.Name {
     static let recordingDidStart = Notification.Name("recordingDidStart")
     static let recordingDidStop = Notification.Name("recordingDidStop")
@@ -276,8 +285,9 @@ extension String {
         return id.rawValue
     }
 
-}
+    static let selectedAudioVolume: Self = "selected_audio_volume"
 
+}
 
 enum ToolGroup: String, Hashable, Sendable {
     case all
