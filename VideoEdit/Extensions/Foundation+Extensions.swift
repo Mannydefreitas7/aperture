@@ -249,6 +249,7 @@ extension String {
         case captureSession = "io.philagora.captureSession.queue"
         case captureVideoOutput = "io.philagora.captureVideoOutput.queue"
         case captureAudioOutput = "io.philagora.captureAudioOutput.queue"
+        case audioLevel = "io.philagora.audio-level.queue"
         case videoExport = "io.philagora.videoExport.queue"
     }
 

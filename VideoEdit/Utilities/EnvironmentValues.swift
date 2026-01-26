@@ -49,11 +49,17 @@ extension EnvironmentValues {
 
     /// Live microphone input level normalized to 0.0...1.0
     @Entry
-    var audioInputWave: Double = .zero
+    var audioInputWave: Float = .zero
 
     /// Rolling history of microphone levels normalized to 0.0...1.0
     @Entry
     var audioInputWaveHistory: [Double] = []
+
+    @Entry
+    var isCameraOn: Bool = false
+
+    @Entry
+    var isMicrophoneOn: Bool = false
 
 }
 

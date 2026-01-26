@@ -11,11 +11,11 @@ struct DeviceInfo: Identifiable, Equatable {
     enum Kind: Equatable { case video, audio }
 
     let id: String
-    var kind: Kind
-    var name: String
-    var position: AVCaptureDevice.Position
-    var isOn: Bool
-    var showSettings: Bool
+    var kind: Kind = .video
+    var name: String = ""
+    var position: AVCaptureDevice.Position = .unspecified
+    var isOn: Bool = false
+    var showSettings: Bool = false
     var volume: Double = 0
 
     var shape: AnyShape { shape(for: self) }

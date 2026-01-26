@@ -158,11 +158,7 @@ actor CaptureEngine {
             
             // Populate available devices for the UI
             availableVideoDevices = deviceLookup.cameras
-            availableAudioDevices = AVCaptureDevice.DiscoverySession(
-                deviceTypes: [.microphone, .external],
-                mediaType: .audio,
-                position: .unspecified
-            ).devices
+            availableAudioDevices = deviceLookup.microphones
 
 #if os(iOS)
             // Enable using AirPods as a high-quality lapel microphone.
@@ -171,6 +167,8 @@ actor CaptureEngine {
             // Add inputs for the default camera and microphone devices.
             activeVideoInput = try addInput(for: defaultCamera)
             activeAudioInput = try addInput(for: defaultMic)
+
+            logger.info("active audio input \(String(describing: self.activeAudioInput))")
 
             // Configure the session preset based on the current capture mode.
             captureSession.sessionPreset = captureMode == .photo ? .photo : .hd4K3840x2160

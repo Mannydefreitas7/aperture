@@ -21,23 +21,9 @@ extension RecordingControlsView {
         @Published var isSettingsPresented: Bool = false
         @Published var showRecordButton: Bool = true
 
-        @Published var microphone: DeviceInfo = .init(
-            id: UUID().uuidString,
-            kind: .audio,
-            name: "Unknown",
-            position: .unspecified,
-            isOn: false,
-            showSettings: false
-        )
+        @Published var microphone: DeviceInfo = .init(id: UUID().uuidString)
 
-        @Published var camera: DeviceInfo = .init(
-            id: UUID().uuidString,
-            kind: .video,
-            name: "Unknown",
-            position: .unspecified,
-            isOn: false,
-            showSettings: false
-        )
+        @Published var camera: DeviceInfo = .init(id: UUID().uuidString)
 
         var spacing: CGFloat {
             isTimerEnabled || isRecording ? .small : .zero
@@ -50,7 +36,7 @@ extension RecordingControlsView {
         init() {
             $microphone
                 .combineLatest($camera)
-                .map { $0.showSettings == false && $1.showSettings == false }
+                .compactMap { $0.showSettings == false && $1.showSettings == false }
                 .receive(on: RunLoop.main)
                 .assign(to: \.showRecordButton, on: self)
                 .store(in: &cancellables)

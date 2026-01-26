@@ -20,6 +20,12 @@ actor AVCaptureAudioMonitor {
     private let smoothing: Double
     private let gain: Double
 
+    private var engine: AVAudioEngine?
+    private var input: AVAudioInputNode?
+    @Published var currentAudioLevel: Float = 0
+
+    var audioLevel: Float { currentAudioLevel }
+
     init(historyCapacity: Int = 48, smoothing: Double = 0.75, gain: Double = 18.0) {
         self.historyCapacity = max(8, historyCapacity)
         self.smoothing = min(max(smoothing, 0), 0.98)
@@ -30,6 +36,8 @@ actor AVCaptureAudioMonitor {
 
         /// Stop method in case the stream is currently running.
         stop()
+
+        setupAudioEngine(await engine.isAuthorized)
 
         task = Task(priority: .userInitiated) { [weak engine] in
             guard let engine else { return }
@@ -43,12 +51,75 @@ actor AVCaptureAudioMonitor {
                 await self.push(normalized)
             }
         }
+    }
 
+    func setupAudioEngine(_ hasPermissions: Bool) {
+        let engine = AVAudioEngine()
+        let inputNode = engine.inputNode
+
+        self.engine = engine
+        self.input = inputNode
+
+        guard let input else {
+            print(" couldn't create input node")
+            return
+        }
+
+        // Request microphone permission
+        if hasPermissions {
+            print("Microphone access granted")
+            self.startMonitoring(inputNode: input)
+        } else {
+            print("Microphone access denied")
+        }
+    }
+
+    func startMonitoring(inputNode: AVAudioInputNode) {
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+
+        // Install a tap on the input node to get audio buffers
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
+            // Process the audio buffer here
+            self.processAudioBuffer(buffer)
+        }
+
+        do {
+            try engine?.start()
+            print("Audio engine started")
+        } catch {
+            print("Error starting audio engine: \(error.localizedDescription)")
+        }
+    }
+
+    func processAudioBuffer(_ buffer: AVAudioPCMBuffer) {
+        guard let channelData = buffer.floatChannelData else { return }
+        let channelDataArray = channelData[0]
+        let frameLength = Int(buffer.frameLength)
+
+        // Calculate the average power level (amplitude)
+        var totalPower: Float = 0.0
+        for i in 0..<frameLength {
+            totalPower += abs(channelDataArray[i])
+        }
+        let averagePower = totalPower / Float(frameLength)
+        currentAudioLevel = averagePower * 10
+        // You can define a threshold to "detect sound"
+        if averagePower > 0.01 { // Example threshold
+            // Sound is being detected
+
+        }
+    }
+
+    func stopMonitoring() {
+        engine?.stop()
+        input?.removeTap(onBus: 0)
+        print("Audio engine stopped")
     }
 
     func stop() {
         task?.cancel()
         task = nil
+        stopMonitoring()
     }
 
     func snapshot() -> (level: Double, history: [Double]) {
@@ -63,8 +134,6 @@ actor AVCaptureAudioMonitor {
         if nextHistory.count > historyCapacity {
             nextHistory.removeFirst(nextHistory.count - historyCapacity)
         }
-
-            // logger.log(level: .info, "level: \(smoothed)")
 
         level = smoothed
         history = nextHistory

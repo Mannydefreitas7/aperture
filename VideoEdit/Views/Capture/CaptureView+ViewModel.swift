@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import Combine
+import CombineAsync
 
 extension CaptureView {
 
@@ -31,7 +32,7 @@ extension CaptureView {
         @Published private(set) var recordingDuration: TimeInterval = 0
 
         /// Waveform / meters
-        @Published var audioLevel: Double = 0
+        @Published var audioLevel: Float = 0
         @Published var audioHistory: [Double] = []
         @Published var selectedVideoDevice: DeviceInfo?
         @Published var selectedAudioDevice: DeviceInfo?
@@ -72,8 +73,8 @@ extension CaptureView {
             installObservers(for: engine.captureSession)
             status = .configuring
 
+
             do {
-                await updateEngineDevices()
                 await configureAudioSessionForCapture()
                 // Configure + start the single underlying captureSession.
                 try await engine.start(with: .current)
@@ -84,19 +85,12 @@ extension CaptureView {
                     logger.debug("No audio channels found on first video track: \(channel.averagePowerLevel)")
                 }
                 logger.debug("channels: \(channels)")
-                //
-                let connection = connections.first { $0.isActive && !$0.audioChannels.isEmpty }
-                let audioChannel = connection?.audioChannels.first
-
                 status = .running
+                await updateEngineDevices()
 
-                // Start audio monitoring (reuses CaptureEngine audio stream).
-              //  let stream = await engine.makeAudioSampleBufferStream()
+                // Audio samples monitoring
                 await audioMonitor.start(using: engine)
-
-                // Start polling the audio monitor to update UI state
                 startAudioMonitorPolling()
-
             } catch {
                 status = .failed(message: String(describing: error))
                 await onDisappear()
@@ -113,13 +107,14 @@ extension CaptureView {
         }
         
         private func startAudioMonitorPolling() {
+
             audioMonitorPollTask?.cancel()
             audioMonitorPollTask = Task { @MainActor [weak self] in
                 guard let self else { return }
                 while !Task.isCancelled {
                     let snapshot = await self.audioMonitor.snapshot()
-                    
-                    self.audioLevel = snapshot.level
+                    audioLevel = await self.audioMonitor.audioLevel
+
                     self.audioHistory = snapshot.history
                     try? await Task.sleep(nanoseconds: 33_000_000) // ~30fps
                 }
@@ -210,6 +205,9 @@ extension CaptureView {
             // Get the current video device id
             let videoID = await engine.videoDevice?.uniqueID
             selectedVideoID = videoID
+
+            logger.info("Current video device ID: \(String(describing: videoID))")
+
             // Get the current audio devie id
             let audioID = await engine.audioDevice?.uniqueID
             selectedAudioID = audioID

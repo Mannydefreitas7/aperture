@@ -107,6 +107,7 @@
 		144E66022F0A687100D044AD /* RectCorner+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E66012F0A687100D044AD /* RectCorner+Model.swift */; };
 		144E66042F0A6C0D00D044AD /* RecordingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E66032F0A6C0D00D044AD /* RecordingWindow.swift */; };
 		144E66072F0A70DD00D044AD /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 144E66062F0A70DD00D044AD /* Onboarding */; };
+		1451A6852F282212001268D1 /* AVAudioLevel+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1451A6842F2821F6001268D1 /* AVAudioLevel+Actor.swift */; };
 		145D15E22F1D37FD00F8A4BB /* DeviceInfo+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D15E12F1D37EB00F8A4BB /* DeviceInfo+Model.swift */; };
 		145D15E42F1D392100F8A4BB /* CaptureStatus+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D15E32F1D390D00F8A4BB /* CaptureStatus+Model.swift */; };
 		145D15E62F1D394E00F8A4BB /* CaptureEngine+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 145D15E52F1D393F00F8A4BB /* CaptureEngine+Actor.swift */; };
@@ -159,6 +160,7 @@
 		148B596D2F2142E800F840BF /* PreviewSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 148B596C2F2142E300F840BF /* PreviewSource.swift */; };
 		14972F432F0EC72A002CE41C /* View+ViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F422F0EC72A002CE41C /* View+ViewModifier.swift */; };
 		14972F452F10EDFF002CE41C /* TimerPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14972F442F10EDFF002CE41C /* TimerPicker.swift */; };
+		14D7B36F2F27F2000095A508 /* Combine+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D7B36E2F27F1F90095A508 /* Combine+Extensions.swift */; };
 		14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A42F05974400065B49 /* SwiftBasicFormat */; };
 		14D9D6A72F05974400065B49 /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A62F05974400065B49 /* SwiftCompilerPlugin */; };
 		14D9D6A92F05974400065B49 /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6A82F05974400065B49 /* SwiftDiagnostics */; };
@@ -273,6 +275,7 @@
 		144E65FF2F0A583500D044AD /* FocusRingModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusRingModifier.swift; sourceTree = "<group>"; };
 		144E66012F0A687100D044AD /* RectCorner+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RectCorner+Model.swift"; sourceTree = "<group>"; };
 		144E66032F0A6C0D00D044AD /* RecordingWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingWindow.swift; sourceTree = "<group>"; };
+		1451A6842F2821F6001268D1 /* AVAudioLevel+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVAudioLevel+Actor.swift"; sourceTree = "<group>"; };
 		145D15E12F1D37EB00F8A4BB /* DeviceInfo+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceInfo+Model.swift"; sourceTree = "<group>"; };
 		145D15E32F1D390D00F8A4BB /* CaptureStatus+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CaptureStatus+Model.swift"; sourceTree = "<group>"; };
 		145D15E52F1D393F00F8A4BB /* CaptureEngine+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CaptureEngine+Actor.swift"; sourceTree = "<group>"; };
@@ -313,6 +316,7 @@
 		148B596C2F2142E300F840BF /* PreviewSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSource.swift; sourceTree = "<group>"; };
 		14972F422F0EC72A002CE41C /* View+ViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ViewModifier.swift"; sourceTree = "<group>"; };
 		14972F442F10EDFF002CE41C /* TimerPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerPicker.swift; sourceTree = "<group>"; };
+		14D7B36E2F27F1F90095A508 /* Combine+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Combine+Extensions.swift"; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		14D9D6B12F0718AB00065B49 /* NamePrintable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePrintable.swift; sourceTree = "<group>"; };
 		14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
@@ -591,6 +595,7 @@
 		146CAECC2F1C80A10021CE3A /* Actors */ = {
 			isa = PBXGroup;
 			children = (
+				1451A6842F2821F6001268D1 /* AVAudioLevel+Actor.swift */,
 				144D9D582F24824300E21458 /* AVCaptureAudioMonitor+Actor.swift */,
 				145D15E52F1D393F00F8A4BB /* CaptureEngine+Actor.swift */,
 				146CAECD2F1C80B30021CE3A /* Device+Actor.swift */,
@@ -624,6 +629,7 @@
 		14D9D6B32F07191000065B49 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				14D7B36E2F27F1F90095A508 /* Combine+Extensions.swift */,
 				148B59662F213D4500F840BF /* Capture+Extensions.swift */,
 				148B59682F213D4500F840BF /* View+Extensions.swift */,
 				148B59442F1E9D1D00F840BF /* AppState+Extensions.swift */,
@@ -921,6 +927,7 @@
 				1400C8FF2F04C2A5001EF209 /* SidebarContent.swift in Sources */,
 				148AAC602F0742800087D649 /* NamePrintable+Extensions.swift in Sources */,
 				1400C9002F04C2A5001EF209 /* RecordingView.swift in Sources */,
+				1451A6852F282212001268D1 /* AVAudioLevel+Actor.swift in Sources */,
 				146CAECE2F1C80C40021CE3A /* Device+Actor.swift in Sources */,
 				14D9D6B02F0717B400065B49 /* Base.swift in Sources */,
 				1431F83A2F24F11A000855C6 /* Preferences.swift in Sources */,
@@ -932,6 +939,7 @@
 				148B595A2F213C6300F840BF /* MovieCapture.swift in Sources */,
 				148B595B2F213C6300F840BF /* DeviceLookup.swift in Sources */,
 				148B595C2F213C6300F840BF /* PhotoCapture.swift in Sources */,
+				14D7B36F2F27F2000095A508 /* Combine+Extensions.swift in Sources */,
 				148B595D2F213C6300F840BF /* SPCObserver.swift in Sources */,
 				146CAEC52F1AD6E60021CE3A /* General+Command.swift in Sources */,
 				1400C9032F04C2A5001EF209 /* AspectRatioButton.swift in Sources */,

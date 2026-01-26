@@ -15,7 +15,8 @@ final class DeviceLookup {
     private let frontCameraDiscoverySession: AVCaptureDevice.DiscoverySession
     private let backCameraDiscoverySession: AVCaptureDevice.DiscoverySession
     private let externalCameraDiscoverSession: AVCaptureDevice.DiscoverySession
-    
+    private let audioDiscoverySession: AVCaptureDevice.DiscoverySession
+
     init() {
         backCameraDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [
                 .builtInWideAngleCamera
@@ -30,7 +31,11 @@ final class DeviceLookup {
         externalCameraDiscoverSession = AVCaptureDevice.DiscoverySession(deviceTypes: [.external],
                                                                          mediaType: .video,
                                                                          position: .unspecified)
-        
+
+        audioDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.microphone, .external],
+                                                                 mediaType: .audio,
+                                                                 position: .unspecified)
+
         // If the host doesn't currently define a system-preferred camera device, set the user's preferred selection to the back camera.
         if AVCaptureDevice.systemPreferredCamera == nil {
             AVCaptureDevice.userPreferredCamera = backCameraDiscoverySession.devices.first
@@ -70,12 +75,18 @@ final class DeviceLookup {
         if let externalCamera = externalCameraDiscoverSession.devices.first {
             cameras.append(externalCamera)
         }
-        
+
 #if !targetEnvironment(simulator)
         if cameras.isEmpty {
             fatalError("No camera devices are found on this system.")
         }
 #endif
         return cameras
+    }
+
+
+    var microphones : [AVCaptureDevice] {
+        let devices = audioDiscoverySession.devices
+        return devices
     }
 }

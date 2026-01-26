@@ -58,6 +58,8 @@ struct RecordingControlsView: View {
                     .controlSize(.large)
             }
         }
+        .environment(\.isCameraOn, viewModel.camera.isOn)
+        .environment(\.isMicrophoneOn, viewModel.microphone.isOn)
     }
 }
 

@@ -55,11 +55,12 @@ extension CameraCaptureView {
 
     @ViewBuilder
     func BottomBar() -> some View {
-        AudioInputProxy(viewModel: viewModel) {
+       
             RecordingControlsView(viewModel: viewModel.controlsBarViewModel)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding(.bottom, .small)
-        }
+                .environment(\.audioInputWave, viewModel.audioLevel)
+
 
 //            .inspector(isPresented: $viewModel.isSettingsPresented) {
 //                EditorSettingsView()

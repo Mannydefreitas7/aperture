@@ -385,8 +385,7 @@ struct AudioWaveformBars: View {
     var body: some View {
         HStack(alignment: .center, spacing: barSpacing) {
 
-            Text("History Count: \(history.count) and Audio Input Wave: \(audioInputWave)")
-            ForEach(history.indices, id: \.self) { idx in
+            ForEach(0...8, id: \.self) { idx in
                 let v = history[idx]
                 let h = min(max(minBarHeight, CGFloat(v) * maxBarHeight), maxBarHeight)
                 
@@ -407,7 +406,7 @@ struct AudioWaveForm: View {
     var body: some View {
         VStack {
             Rectangle()
-                .frame(width: 12, height: max(2, audioInputWave * 100))
+                .frame(width: 12, height: max(2, CGFloat(audioInputWave) * 100))
                 .animation(.easeOut(duration: 0.10), value: audioInputWave)
         }
     }

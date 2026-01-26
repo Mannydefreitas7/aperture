@@ -12,7 +12,6 @@ struct AudioInputView: View {
 
     var controlGroup: Namespace.ID
     @Binding var device: DeviceInfo
-    @EnvironmentObject var appState: AppState
 
     var body: some View {
         Group {
@@ -71,9 +70,9 @@ extension AudioInputView {
                 Button {
                     withAnimation(.bouncy) {
                         device.showSettings.toggle()
-                        if appState.captureViewModel.controlsBarViewModel.camera.showSettings {
-                            appState.captureViewModel.controlsBarViewModel.camera.showSettings = false
-                        }
+//                        if let camera, camera.showSettings {
+//                            self.camera?.showSettings = false
+//                        }
                     }
                 } label: {
                     Text(device.name)

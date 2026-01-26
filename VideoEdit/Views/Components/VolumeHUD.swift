@@ -15,6 +15,7 @@ struct VolumeHUD<Content: View>: View {
     @Binding var device: DeviceInfo
     @ViewBuilder var content: () -> Content
     @Preference(\.audioVolume) var audioVolume
+    @Environment(\.audioInputWave) var audioInputWave
 
     init(for device: Binding<DeviceInfo>, content: @escaping () -> Content) {
         self._device = device
@@ -45,13 +46,11 @@ struct VolumeHUD<Content: View>: View {
 
                 VStack(alignment: .leading, spacing: .small) {
 
-                    AudioWaveformBars(maxBarHeight: 90)
-
                     let pillWidthSpace: CGFloat = CGSize.pill.width + .spacing
                     let segments = .popoverWidth / pillWidthSpace
 
                     SegmentedPillBar(
-                        value: device.volume,
+                        value: audioInputWave.magnitudeSquared,
                         segments: Int(segments)
                     )
                     .padding(.leading, .medium)
