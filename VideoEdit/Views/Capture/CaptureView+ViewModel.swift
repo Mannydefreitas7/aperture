@@ -85,7 +85,7 @@ extension CaptureView {
                 status = .running
                 await updateEngineDevices()
 
-                
+                startAudioMonitorPolling()
             } catch {
                 status = .failed(message: String(describing: error))
                 await onDisappear()
@@ -107,9 +107,8 @@ extension CaptureView {
             audioMonitorPollTask = Task { @MainActor [weak self] in
                 guard let self else { return }
                 while !Task.isCancelled {
-                  //  let snapshot = await self.audioMonitor.snapshot()
-                  //  audioLevel = await self.audioMonitor.audioLevel
-
+                    let snapshot = await self.engine.audioLevelMonitor.snapshot()
+                    audioLevel = snapshot
                   //  self.audioHistory = snapshot.history
                     try? await Task.sleep(nanoseconds: 33_000_000) // ~30fps
                 }

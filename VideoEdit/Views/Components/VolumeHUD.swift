@@ -50,7 +50,7 @@ struct VolumeHUD<Content: View>: View {
                     let segments = .popoverWidth / pillWidthSpace
 
                     SegmentedPillBar(
-                        value: audioInputWave.magnitudeSquared,
+                        value: audioInputWave,
                         segments: Int(segments)
                     )
                     .padding(.leading, .medium)
@@ -101,13 +101,13 @@ struct VolumeHUD<Content: View>: View {
 // MARK: - Segmented Pills
 
 struct SegmentedPillBar: View {
-    var value: Double
+    var value: Float
     var segments: Int
 
     var size: CGSize = .pill
 
     private var activeCount: Int {
-        Int((value * Double(segments)).rounded(.toNearestOrAwayFromZero))
+        Int((value * Float(segments)).rounded(.toNearestOrAwayFromZero))
     }
 
     var body: some View {

@@ -34,8 +34,6 @@ actor CaptureEngine {
     /// Available audio capture devices.
     @Published private(set) var availableAudioDevices: [AVCaptureDevice] = []
 
-    
-
     /// A type that connects a preview destination with the capture session.
     nonisolated let previewSource: PreviewSource
 
@@ -72,8 +70,6 @@ actor CaptureEngine {
     private var rotationObservers = [AnyObject]()
 
     // MARK: - Audio sample stream (for waveform / meters)
-
-    private let audioDataOutput = AVCaptureAudioDataOutput()
     private var audioStreamContinuation: AsyncStream<CMSampleBuffer>.Continuation?
   //  private var audioSampleDelegate: AudioSampleOutputDelegate?
     private let audioOutputQueue = DispatchQueue(label: .dispatchQueueKey(.captureAudioOutput))
@@ -182,7 +178,7 @@ actor CaptureEngine {
             activeAudioInput = try addInput(for: defaultMic)
 
             logger.info("active audio input \(String(describing: self.activeAudioInput))")
-
+            try addOutput(photoCapture.output)
             // Configure the session preset based on the current capture mode.
             captureSession.sessionPreset = captureMode == .photo ? .photo : .hd4K3840x2160
             // If the capture mode is set to Video, add a movie capture output.
@@ -193,7 +189,7 @@ actor CaptureEngine {
             }
 
             // Add an audio data output for level monitoring / waveform rendering.
-            let audioOutput = audioLevelMonitor.start(with: audioDataOutput)
+            let audioOutput = await audioLevelMonitor.startMonitor()
             // This is lightweight and does not create a second AVCaptureSession.
             if captureSession.canAddOutput(audioOutput) {
                 captureSession.addOutput(audioOutput)
@@ -525,28 +521,9 @@ actor CaptureEngine {
 //    }
     
     /// Verifies that the audio input is properly connected to the audio data output.
-    private func verifyAudioConfiguration() {
-        guard let audioInput = activeAudioInput else {
-            logger.error("No active audio input configured!")
-            return
-        }
-        
-        logger.debug("Active audio device: \(audioInput.device.localizedName)")
-        
-        // Check if the audio data output has a valid connection
-        if let audioConnection = audioDataOutput.connection(with: .audio) {
-            logger.debug("Audio connection found - enabled: \(audioConnection.isEnabled), active: \(audioConnection.isActive)")
-            
-            if !audioConnection.isEnabled {
-                logger.warning("Audio connection is disabled. Attempting to enable...")
-                audioConnection.isEnabled = true
-            }
-        } else {
-            logger.error("⚠️ NO AUDIO CONNECTION - This is why you're getting zeros!")
-            logger.error("Audio input ports: \(audioInput.ports)")
-            logger.error("Audio output connections: \(self.audioDataOutput.connections)")
-        }
-        
+    private func verifyAudioConfiguration() async {
+
+        await audioLevelMonitor.verifyAudioConfiguration(activeAudioInput)
         // Log all session inputs and outputs for debugging
         logger.debug("Session inputs: \(self.captureSession.inputs.count)")
         logger.debug("Session outputs: \(self.captureSession.outputs.count)")
