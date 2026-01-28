@@ -102,8 +102,12 @@ extension CaptureView {
                 session = engine.captureSession
                 let connections = session.connections
                 let channels = connections.first { $0.isActive && !$0.audioChannels.isEmpty }.map { $0.audioChannels } ?? []
-                if channels.isEmpty, let channel = channels.first {
-                    logger.debug("No audio channels found on first video track: \(channel.averagePowerLevel)")
+                if channels.isEmpty {
+                    logger.debug("No audio channels found on first video track")
+                }
+                if let channel = channels.first {
+                    logger.debug("Found audio channel: \(channel)")
+                    connections.first?.output?.connection(with: .audio)
                 }
                 logger.debug("channels: \(channels)")
                 status = .running
@@ -128,6 +132,7 @@ extension CaptureView {
         private func startAudioMonitorPolling() {
 
             audioMonitorPollTask?.cancel()
+            audioMonitorPollTask = nil
             audioMonitorPollTask = Task { @MainActor [weak self] in
                 guard let self else { return }
                 while !Task.isCancelled {
@@ -139,14 +144,19 @@ extension CaptureView {
             }
         }
 
-        func selectVideo(id: String) async {
-            selectedVideoID = id
+        func selectVideo(device: AVDeviceInfo) async {
+            selectedVideoID = device.id
+
+            await engine.change(device)
+            startAudioMonitorPolling()
             // Device switching is handled inside the updated CaptureEngine implementation.
             // If you add an explicit device-switch API later, call it here.
         }
 
-        func selectAudio(id: String) async {
-            selectedAudioID = id
+        func selectAudio(device: AVDeviceInfo) async {
+            selectedAudioID = device.id
+            await engine.change(device)
+            startAudioMonitorPolling()
             // Device switching is handled inside the updated CaptureEngine implementation.
             // If you add an explicit device-switch API later, call it here.
         }
@@ -173,13 +183,15 @@ extension CaptureView {
             // Capture session interruptions
             observationTasks.append(
                 Task { @MainActor in
-                    for await _ in nc.notifications(named: AVCaptureSession.wasInterruptedNotification) {
+                    for await notification in nc.notifications(named: AVCaptureSession.wasInterruptedNotification) {
+                        logger.debug("Connection was interrupted, \(notification.name.rawValue)")
                         status = .interrupted(reason: .mediaDiscontinuity)
                     }
                 })
 
             observationTasks.append(Task { @MainActor in
-                for await _ in nc.notifications(named: AVCaptureSession.interruptionEndedNotification) {
+                for await notification in nc.notifications(named: AVCaptureSession.interruptionEndedNotification) {
+                    logger.debug("Interruption ended, \(notification.name.rawValue)")
                     await start()
                 }
             })
@@ -188,9 +200,11 @@ extension CaptureView {
             observationTasks.append(Task { @MainActor in
                 for await note in nc.notifications(named: AVCaptureSession.runtimeErrorNotification) {
                     let err = note.userInfo?[AVCaptureSessionErrorKey] as? NSError
+                    logger.debug("Run-time error, \(note.name.rawValue)")
                     status = .failed(message: err?.localizedDescription ?? "AVCaptureSession runtime error")
 
                     if let avErr = err as? AVError, avErr.code == .mediaDiscontinuity {
+                        logger.debug("Code error is .mediaDiscontinuity, \(note.name.rawValue)")
                         await start()
                     }
                 }

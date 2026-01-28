@@ -57,6 +57,7 @@ actor CaptureEngine {
 
     // The video input for the currently selected device microphone.
     var activeAudioInput: AVCaptureDeviceInput?
+    var activeAudioOutput: AVCaptureAudioDataOutput = .init()
 
     // The mode of capture, either photo or video. Defaults to photo.
     private(set) var captureMode = CaptureMode.video
@@ -135,7 +136,6 @@ actor CaptureEngine {
         // Set initial operating state.
         captureMode = state.captureMode
         isHDRVideoEnabled = state.isVideoHDREnabled
-
         // Exit early if not authorized or the session is already running.
         guard await isAuthorized, !captureSession.isRunning else { return }
         // Configure the session and start it.
@@ -147,6 +147,61 @@ actor CaptureEngine {
     func stop() {
         guard captureSession.isRunning else { return }
         captureSession.stopRunning()
+    }
+
+    private func changeAudio(_ device: AVDeviceInfo) async {
+        guard let nestedDevice = device.device, let currentAudioDevice else { return }
+        // Device cannot be same as current, cancel operation otherwise.
+        guard nestedDevice.uniqueID != currentAudioDevice.uniqueID else { return }
+        // The service must have a audio input prior to calling this method.
+        guard let currentAudioDeviceInput = activeAudioInput else { return }
+        captureSession.beginConfiguration()
+        defer { captureSession.commitConfiguration() }
+        // Remove previous audio device input
+        captureSession.removeInput(currentAudioDeviceInput)
+        do {
+            // Attempt to connect a new input and device to the capture session.
+            activeAudioInput = try addInput(for: nestedDevice)
+            await addAudioMonitor()
+        } catch {
+            // Reconnect the existing audio on failure.
+            captureSession.addInput(currentAudioDeviceInput)
+        }
+    }
+
+    private func changeVideo(_ device: AVDeviceInfo) async {
+        guard let nestedDevice = device.device, let currentDevice else { return }
+        guard nestedDevice.uniqueID != currentDevice.uniqueID else { return }
+        guard let currentInput = activeVideoInput else { return }
+        captureSession.beginConfiguration()
+        defer { captureSession.commitConfiguration() }
+        // Remove previous video device input
+        captureSession.removeInput(currentInput)
+        do {
+            // Attempt to connect a new input and device to the capture session.
+            activeVideoInput = try addInput(for: nestedDevice)
+            // Configure controls for device
+            configureControls(for: nestedDevice)
+            // setup observers for new device
+            observeOutputServices()
+            // setup subject area change observer
+            observeSubjectAreaChanges(of: nestedDevice)
+        } catch {
+            // Reconnect the existing audio on failure.
+            captureSession.addInput(currentInput)
+        }
+    }
+
+    func change(_ device: AVDeviceInfo) async {
+        guard let nestedDevice = device.device, let currentDevice, let currentAudioDevice else { return }
+        let isVideoDevice = nestedDevice.uniqueID == currentDevice.uniqueID
+        if isVideoDevice {
+            await changeVideo(device)
+            return
+        }
+
+        await changeAudio(device)
+        return
     }
 
     // MARK: - Capture setup
@@ -187,28 +242,7 @@ actor CaptureEngine {
                 try addOutput(movieCapture.output)
                 setHDRVideoEnabled(isHDRVideoEnabled)
             }
-
-            // Add an audio data output for level monitoring / waveform rendering.
-            let audioOutput = await audioLevelMonitor.startMonitor()
-            // This is lightweight and does not create a second AVCaptureSession.
-            if captureSession.canAddOutput(audioOutput) {
-                captureSession.addOutput(audioOutput)
-
-                // Verify the audio connection is properly established
-                if let audioConnection = audioOutput.connection(with: .audio) {
-                    if audioConnection.isEnabled {
-                        logger.debug("Audio data output successfully connected to audio input.")
-                    } else {
-                        logger.warning("Audio connection exists but is disabled.")
-                        audioConnection.isEnabled = true
-                    }
-                } else {
-                    logger.error("No audio connection found for audioDataOutput. Audio samples will be empty.")
-                }
-            } else {
-                logger.error("Cannot add audio data output to capture session.")
-            }
-
+            await addAudioMonitor()
             // Configure controls to use with the Camera Control.
             configureControls(for: defaultCamera)
             // Monitor the system-preferred camera state.
@@ -224,6 +258,41 @@ actor CaptureEngine {
         } catch {
             throw CameraError.setupFailed
         }
+    }
+
+    private func addAudioMonitor() async {
+
+        guard !captureSession.outputs.contains(activeAudioOutput) else {
+            return
+        }
+
+        // Add an audio data output for level monitoring / waveform rendering.
+        activeAudioOutput = await audioLevelMonitor.startMonitor()
+        // This is lightweight and does not create a second AVCaptureSession.
+        guard captureSession.canAddOutput(activeAudioOutput) else {
+            logger.error("Cannot add audio data output to capture session.")
+            return
+        }
+
+        captureSession.addOutput(activeAudioOutput)
+
+        //
+        guard let audioConnection = activeAudioOutput.connection(with: .audio) else {
+            logger.error("No audio connection found for audioDataOutput. Audio samples will be empty.")
+            return
+        }
+
+        guard audioConnection.isEnabled else {
+            logger.warning("Audio connection exists but is disabled.")
+            audioConnection.isEnabled = true
+            // Retries
+            logger.warning("Retrieving audio data output connection.")
+            await addAudioMonitor()
+            return
+        }
+
+        logger.info("Audio data output successfully connected to audio input.")
+        return
     }
 
     // MARK: - Capture controls

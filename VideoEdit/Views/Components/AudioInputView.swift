@@ -36,8 +36,6 @@ struct AudioInputView: View {
 
 extension AudioInputView {
 
-   
-
     @ViewBuilder
     func ToolBarOptions() -> some View {
         VolumeHUD(for: $device) {

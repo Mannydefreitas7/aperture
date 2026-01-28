@@ -67,6 +67,11 @@ actor AVAudioLevelMonitor: NSObject, AVCaptureAudioDataOutputSampleBufferDelegat
         return await audioDataOutput
     }
 
+    nonisolated
+    func stopMonitor() async  {
+        await audioDataOutput.setSampleBufferDelegate(nil, queue: nil)
+    }
+
     /// Verifies that the audio input is properly connected to the audio data output.
     func verifyAudioConfiguration(_ audioInput: AVCaptureDeviceInput?) {
         guard let audioInput else {

@@ -49,17 +49,21 @@ struct VolumeHUD<Content: View>: View {
                             .font(.headline)
                     }
                 }
+                .animation(.bouncy, value: device.id)
 
                 VStack(alignment: .leading, spacing: .small) {
 
                     let pillWidthSpace: CGFloat = CGSize.pill.width + .spacing
                     let segments = .popoverWidth / pillWidthSpace
 
-                    SegmentedPillBar(
-                        value: audioInputWave,
-                        segments: Int(segments)
-                    )
-                    .padding(.leading, .medium)
+
+                        SegmentedPillBar(
+                            value: audioInputWave.isNaN ? 0 : audioInputWave,
+                            segments: Int(segments)
+                        )
+                        .padding(.leading, .medium)
+                    
+
 
                     HStack {
                         Button {
@@ -92,7 +96,7 @@ struct VolumeHUD<Content: View>: View {
                     ForEach(audioDevices, id: \.id) { device in
                         Button {
                             Task {
-                                await appState.captureViewModel.selectAudio(id: device.id)
+                                await appState.captureViewModel.selectAudio(device: device)
                             }
                         } label: {
                             HStack {
@@ -156,7 +160,7 @@ extension VolumeHUD {
 // MARK: - Segmented Pills
 
 struct SegmentedPillBar: View {
-    var value: Float
+    var value: Float = 0
     var segments: Int
 
     var size: CGSize = .pill
