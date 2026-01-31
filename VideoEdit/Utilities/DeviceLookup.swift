@@ -17,7 +17,10 @@ final class DeviceLookup {
     private let externalCameraDiscoverSession: AVCaptureDevice.DiscoverySession
     private let audioDiscoverySession: AVCaptureDevice.DiscoverySession
 
+    static let shared = DeviceLookup()
+
     init() {
+
         backCameraDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [
                 .builtInWideAngleCamera
         ],
@@ -43,23 +46,13 @@ final class DeviceLookup {
     }
     
     /// Returns the system-preferred camera for the host system.
-    var defaultCamera: AVCaptureDevice {
-        get throws {
-            guard let videoDevice = AVCaptureDevice.systemPreferredCamera else {
-                throw CameraError.videoDeviceUnavailable
-            }
-            return videoDevice
-        }
+    static var defaultCamera: AVCaptureDevice? {
+        AVCaptureDevice.systemPreferredCamera
     }
     
     /// Returns the default microphone for the device on which the app runs.
-    var defaultMic: AVCaptureDevice {
-        get throws {
-            guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
-                throw CameraError.audioDeviceUnavailable
-            }
-            return audioDevice
-        }
+   static var defaultMic: AVCaptureDevice? {
+       AVCaptureDevice.default(for: .audio) 
     }
 
     var cameras: [AVCaptureDevice] {
@@ -90,33 +83,4 @@ final class DeviceLookup {
         logger.info("devices \(devices)")
         return devices
     }
-}
-
-
-extension DeviceLookup {
-
-    static var defaultCamera: AVDeviceInfo {
-        guard let device = AVCaptureDevice.default(for: .video) else {
-            return .init(id: UUID().uuidString, kind: .video, name: "Unknown", isOn: false)
-        }
-        return .init(
-            id: device.uniqueID,
-            kind: .video,
-            name: device.localizedName,
-            isOn: false
-         )
-    }
-
-    static var defaultMicrophone: AVDeviceInfo {
-        guard let device = AVCaptureDevice.default(for: .audio) else {
-            return .init(id: UUID().uuidString, kind: .audio, name: "Unknown", isOn: false)
-        }
-        return .init(
-            id: device.uniqueID,
-            kind: .audio,
-            name: device.localizedName,
-            isOn: false
-        )
-    }
-
 }

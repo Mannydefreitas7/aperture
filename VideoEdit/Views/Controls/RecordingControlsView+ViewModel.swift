@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import CombineAsync
 
 extension RecordingControlsView {
 
@@ -21,8 +22,8 @@ extension RecordingControlsView {
         @Published var isSettingsPresented: Bool = false
         @Published var showRecordButton: Bool = true
 
-        @Published var microphone: AVDeviceInfo = AVDeviceInfo.defaultDevice(.audio)
-        @Published var camera: AVDeviceInfo = AVDeviceInfo.defaultDevice(.video)
+        @Published var microphone: AVDeviceInfo = .defaultDevice(.audio)
+        @Published var camera: AVDeviceInfo = .defaultDevice(.video)
 
         var spacing: CGFloat {
             isTimerEnabled || isRecording ? .small : .zero
@@ -39,6 +40,8 @@ extension RecordingControlsView {
                 .receive(on: RunLoop.main)
                 .assign(to: \.showRecordButton, on: self)
                 .store(in: &cancellables)
+
+
         }
     }
 }

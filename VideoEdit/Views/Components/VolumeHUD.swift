@@ -96,7 +96,7 @@ struct VolumeHUD<Content: View>: View {
                     ForEach(audioDevices, id: \.id) { device in
                         Button {
                             Task {
-                                await appState.captureViewModel.selectAudio(device: device)
+                                //await appState.captureViewModel.selectAudio(device: device)
                             }
                         } label: {
                             HStack {

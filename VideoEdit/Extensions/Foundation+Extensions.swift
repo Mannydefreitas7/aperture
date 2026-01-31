@@ -242,7 +242,9 @@ extension NSObject: NamePrintable {}
 extension String {
     typealias RawValue = Self
 
-
+    static var uuid: Self {
+        UUID().uuidString
+    }
 
     enum DispatchQueueKey: String {
         case windowCoordinator = "io.philagora.windowcoordinator.queue"
@@ -287,6 +289,7 @@ extension String {
     }
 
     static let selectedAudioVolume: Self = "selected_audio_volume"
+    static let unknown: Self = "unknown"
 
 }
 

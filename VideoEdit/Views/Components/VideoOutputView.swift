@@ -7,6 +7,7 @@
 import AVFoundation
 import SwiftUI
 import Combine
+import AVKit
 
 struct VideoOutputView: NSViewRepresentable {
     typealias NSViewType = PlayerView
@@ -14,6 +15,7 @@ struct VideoOutputView: NSViewRepresentable {
     private var captureSession: AVCaptureSession
 
     @Preference(\.isMirrored) private var isMirror
+
 
     init(source: PreviewSource, captureSession: AVCaptureSession) {
         self.source = source
@@ -62,6 +64,7 @@ extension VideoOutputView {
             previewLayer.contentsGravity = .resizeAspectFill
             previewLayer.videoGravity = .resizeAspectFill
             previewLayer.connection?.automaticallyAdjustsVideoMirroring = true
+           // previewLayer.connection?.audioChannels
             layer = previewLayer
         }
 

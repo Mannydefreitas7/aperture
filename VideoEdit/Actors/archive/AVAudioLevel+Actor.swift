@@ -5,7 +5,7 @@
 //  Created by Emmanuel on 2026-01-26.
 //
 
-import AVFoundation
+@preconcurrency import AVFoundation
 import Accelerate
 
 actor AVAudioLevelMonitor: NSObject, AVCaptureAudioDataOutputSampleBufferDelegate {

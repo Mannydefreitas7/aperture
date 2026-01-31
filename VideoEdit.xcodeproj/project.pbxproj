@@ -90,7 +90,6 @@
 		1431F84A2F25E579000855C6 /* CaptureEngine+ScreenCapture+Usage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1431F8492F25E579000855C6 /* CaptureEngine+ScreenCapture+Usage.swift */; };
 		1431F84C2F25E596000855C6 /* ScreenCaptureExtensions-README.md in Resources */ = {isa = PBXBuildFile; fileRef = 1431F84B2F25E596000855C6 /* ScreenCaptureExtensions-README.md */; };
 		144D9D542F241A8B00E21458 /* AudioEqualizerBars.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144D9D532F241A8B00E21458 /* AudioEqualizerBars.swift */; };
-		144D9D592F24824300E21458 /* AVCaptureAudioMonitor+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144D9D582F24824300E21458 /* AVCaptureAudioMonitor+Actor.swift */; };
 		144E65E22F094FA400D044AD /* WelcomeWindow in Frameworks */ = {isa = PBXBuildFile; productRef = 144E65E12F094FA400D044AD /* WelcomeWindow */; };
 		144E65E52F09556E00D044AD /* Onboarding in Frameworks */ = {isa = PBXBuildFile; productRef = 144E65E42F09556E00D044AD /* Onboarding */; };
 		144E65E72F09619C00D044AD /* NewFileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 144E65E62F09619C00D044AD /* NewFileButton.swift */; };
@@ -118,7 +117,6 @@
 		146CAEC72F1ADB020021CE3A /* Video+Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAEC62F1ADAF40021CE3A /* Video+Command.swift */; };
 		146CAEC92F1C7EAE0021CE3A /* CameraInfo+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAEC82F1C7EAE0021CE3A /* CameraInfo+Model.swift */; };
 		146CAECB2F1C7EF40021CE3A /* MicrophoneInfo+Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAECA2F1C7EEF0021CE3A /* MicrophoneInfo+Model.swift */; };
-		146CAECE2F1C80C40021CE3A /* Device+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 146CAECD2F1C80B30021CE3A /* Device+Actor.swift */; };
 		146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EF72F0A7C0000AA07CC /* SwiftBasicFormat */; };
 		146E4EFA2F0A7C0000AA07CC /* SwiftCompilerPlugin in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EF92F0A7C0000AA07CC /* SwiftCompilerPlugin */; };
 		146E4EFC2F0A7C0000AA07CC /* SwiftDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 146E4EFB2F0A7C0000AA07CC /* SwiftDiagnostics */; };
@@ -168,6 +166,10 @@
 		14D9D6AD2F05974400065B49 /* SwiftIfConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 14D9D6AC2F05974400065B49 /* SwiftIfConfig */; };
 		14D9D6B02F0717B400065B49 /* Base.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9D6AF2F0717AF00065B49 /* Base.swift */; };
 		14D9D6B22F0718B400065B49 /* NamePrintable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14D9D6B12F0718AB00065B49 /* NamePrintable.swift */; };
+		14DF07122F2C58B000D9AC53 /* AudioCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07112F2C58B000D9AC53 /* AudioCapture.swift */; };
+		14DF07142F2C60CD00D9AC53 /* AVCaptureEngine+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07132F2C60BE00D9AC53 /* AVCaptureEngine+Actor.swift */; };
+		14DF07162F2C683B00D9AC53 /* AVCaptureAudio+Actors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07152F2C682C00D9AC53 /* AVCaptureAudio+Actors.swift */; };
+		14DF07182F2C997900D9AC53 /* AVCaptureVideo+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07172F2C996D00D9AC53 /* AVCaptureVideo+Actor.swift */; };
 		14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */; };
 		14FC9EC62F156D6A0053C019 /* EditorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC52F156D6A0053C019 /* EditorSettingsView.swift */; };
 		14FC9EC82F16C35C0053C019 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC72F16C35C0053C019 /* SettingsButton.swift */; };
@@ -261,7 +263,6 @@
 		1431F8492F25E579000855C6 /* CaptureEngine+ScreenCapture+Usage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CaptureEngine+ScreenCapture+Usage.swift"; sourceTree = "<group>"; };
 		1431F84B2F25E596000855C6 /* ScreenCaptureExtensions-README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "ScreenCaptureExtensions-README.md"; sourceTree = "<group>"; };
 		144D9D532F241A8B00E21458 /* AudioEqualizerBars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioEqualizerBars.swift; sourceTree = "<group>"; };
-		144D9D582F24824300E21458 /* AVCaptureAudioMonitor+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureAudioMonitor+Actor.swift"; sourceTree = "<group>"; };
 		144E65E62F09619C00D044AD /* NewFileButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewFileButton.swift; sourceTree = "<group>"; };
 		144E65E82F0961ED00D044AD /* OpenFileOrFolderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenFileOrFolderButton.swift; sourceTree = "<group>"; };
 		144E65EA2F09624800D044AD /* WelcomeSubtitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeSubtitleView.swift; sourceTree = "<group>"; };
@@ -285,7 +286,6 @@
 		146CAEC62F1ADAF40021CE3A /* Video+Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Video+Command.swift"; sourceTree = "<group>"; };
 		146CAEC82F1C7EAE0021CE3A /* CameraInfo+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraInfo+Model.swift"; sourceTree = "<group>"; };
 		146CAECA2F1C7EEF0021CE3A /* MicrophoneInfo+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MicrophoneInfo+Model.swift"; sourceTree = "<group>"; };
-		146CAECD2F1C80B30021CE3A /* Device+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Device+Actor.swift"; sourceTree = "<group>"; };
 		146E4F0A2F0A830000AA07CC /* VIRecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VIRecordingView.swift; sourceTree = "<group>"; };
 		146E4F0F2F0AA8B900AA07CC /* CameraCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraCaptureView.swift; sourceTree = "<group>"; };
 		146E4F132F0D66EB00AA07CC /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
@@ -319,6 +319,10 @@
 		14D7B36E2F27F1F90095A508 /* Combine+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Combine+Extensions.swift"; sourceTree = "<group>"; };
 		14D9D6AF2F0717AF00065B49 /* Base.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base.swift; sourceTree = "<group>"; };
 		14D9D6B12F0718AB00065B49 /* NamePrintable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamePrintable.swift; sourceTree = "<group>"; };
+		14DF07112F2C58B000D9AC53 /* AudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapture.swift; sourceTree = "<group>"; };
+		14DF07132F2C60BE00D9AC53 /* AVCaptureEngine+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureEngine+Actor.swift"; sourceTree = "<group>"; };
+		14DF07152F2C682C00D9AC53 /* AVCaptureAudio+Actors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureAudio+Actors.swift"; sourceTree = "<group>"; };
+		14DF07172F2C996D00D9AC53 /* AVCaptureVideo+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureVideo+Actor.swift"; sourceTree = "<group>"; };
 		14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
 		14FC9EC52F156D6A0053C019 /* EditorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSettingsView.swift; sourceTree = "<group>"; };
 		14FC9EC72F16C35C0053C019 /* SettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButton.swift; sourceTree = "<group>"; };
@@ -595,10 +599,10 @@
 		146CAECC2F1C80A10021CE3A /* Actors */ = {
 			isa = PBXGroup;
 			children = (
-				1451A6842F2821F6001268D1 /* AVAudioLevel+Actor.swift */,
-				144D9D582F24824300E21458 /* AVCaptureAudioMonitor+Actor.swift */,
-				145D15E52F1D393F00F8A4BB /* CaptureEngine+Actor.swift */,
-				146CAECD2F1C80B30021CE3A /* Device+Actor.swift */,
+				14DF07192F2D1DA200D9AC53 /* archive */,
+				14DF07172F2C996D00D9AC53 /* AVCaptureVideo+Actor.swift */,
+				14DF07152F2C682C00D9AC53 /* AVCaptureAudio+Actors.swift */,
+				14DF07132F2C60BE00D9AC53 /* AVCaptureEngine+Actor.swift */,
 				1431F8452F25E539000855C6 /* CaptureEngine+ScreenCapture.swift */,
 				1431F8472F25E55A000855C6 /* CaptureEngine+ScreenRecording.swift */,
 				1431F8492F25E579000855C6 /* CaptureEngine+ScreenCapture+Usage.swift */,
@@ -642,6 +646,15 @@
 				148AAC562F073A300087D649 /* SwiftUI+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		14DF07192F2D1DA200D9AC53 /* archive */ = {
+			isa = PBXGroup;
+			children = (
+				145D15E52F1D393F00F8A4BB /* CaptureEngine+Actor.swift */,
+				1451A6842F2821F6001268D1 /* AVAudioLevel+Actor.swift */,
+			);
+			path = archive;
 			sourceTree = "<group>";
 		};
 		14FC9ED32F16FB750053C019 /* Frameworks */ = {
@@ -748,6 +761,7 @@
 				2000000000000006 /* VideoEditor.swift */,
 				2000000000000007 /* GIFExporter.swift */,
 				2000000000000010 /* MouseClickVisualizer.swift */,
+				14DF07112F2C58B000D9AC53 /* AudioCapture.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -901,6 +915,7 @@
 				14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */,
 				1000000000000002 /* ContentView.swift in Sources */,
 				1000000000000005 /* ScreenRecorder.swift in Sources */,
+				14DF07162F2C683B00D9AC53 /* AVCaptureAudio+Actors.swift in Sources */,
 				14FC9EC82F16C35C0053C019 /* SettingsButton.swift in Sources */,
 				1000000000000006 /* VideoEditor.swift in Sources */,
 				1000000000000007 /* GIFExporter.swift in Sources */,
@@ -917,6 +932,7 @@
 				1431F8342F24D2AE000855C6 /* WindowAspectRatio.swift in Sources */,
 				1400C8FB2F04C2A5001EF209 /* ShortcutsSettingsView.swift in Sources */,
 				1400C8FC2F04C2A5001EF209 /* RecordingInProgressView.swift in Sources */,
+				14DF07182F2C997900D9AC53 /* AVCaptureVideo+Actor.swift in Sources */,
 				1400C8FD2F04C2A5001EF209 /* AboutSettingsView.swift in Sources */,
 				1400C8FE2F04C2A5001EF209 /* VideoInfoSection.swift in Sources */,
 				14FC9ED12F16F6970053C019 /* Picker.swift in Sources */,
@@ -926,8 +942,8 @@
 				1400C8FF2F04C2A5001EF209 /* SidebarContent.swift in Sources */,
 				148AAC602F0742800087D649 /* NamePrintable+Extensions.swift in Sources */,
 				1400C9002F04C2A5001EF209 /* RecordingView.swift in Sources */,
+				14DF07122F2C58B000D9AC53 /* AudioCapture.swift in Sources */,
 				1451A6852F282212001268D1 /* AVAudioLevel+Actor.swift in Sources */,
-				146CAECE2F1C80C40021CE3A /* Device+Actor.swift in Sources */,
 				14D9D6B02F0717B400065B49 /* Base.swift in Sources */,
 				1431F83A2F24F11A000855C6 /* Preferences.swift in Sources */,
 				14972F452F10EDFF002CE41C /* TimerPicker.swift in Sources */,
@@ -962,6 +978,7 @@
 				1400C90B2F04C2A5001EF209 /* PlaybackControls.swift in Sources */,
 				14972F432F0EC72A002CE41C /* View+ViewModifier.swift in Sources */,
 				1400C90C2F04C2A5001EF209 /* ExportSettingsView.swift in Sources */,
+				14DF07142F2C60CD00D9AC53 /* AVCaptureEngine+Actor.swift in Sources */,
 				148B59652F213D0E00F840BF /* MediaLibrary.swift in Sources */,
 				1400C90D2F04C2A5001EF209 /* VideoPlayerView.swift in Sources */,
 				144E65F62F0966AB00D044AD /* DocumentController.swift in Sources */,
@@ -970,7 +987,6 @@
 				148B596B2F213D4500F840BF /* View+Extensions.swift in Sources */,
 				1400C90F2F04C2A5001EF209 /* PresetButton.swift in Sources */,
 				144E65F32F0964F500D044AD /* EnvironmentValues.swift in Sources */,
-				144D9D592F24824300E21458 /* AVCaptureAudioMonitor+Actor.swift in Sources */,
 				1400C9102F04C2A5001EF209 /* CropHandleView.swift in Sources */,
 				146CAEC72F1ADB020021CE3A /* Video+Command.swift in Sources */,
 				148B59552F213BEA00F840BF /* CameraModel.swift in Sources */,

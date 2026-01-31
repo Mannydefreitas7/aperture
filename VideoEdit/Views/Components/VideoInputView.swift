@@ -76,9 +76,9 @@ extension VideoInputView {
                 Button {
                     withAnimation(.bouncy) {
                         device.showSettings.toggle()
-//                        if appState.captureViewModel.controlsBarViewModel.microphone.showSettings {
-//                            appState.captureViewModel.controlsBarViewModel.microphone.showSettings = false
-//                        }
+                        if viewModel.controlsBarViewModel.microphone.showSettings {
+                            viewModel.controlsBarViewModel.microphone.showSettings = false
+                        }
                     }
                 } label: {
                     Text(device.device?.localizedName)
@@ -112,7 +112,7 @@ extension VideoInputView {
 
             VideoOutputView(
                 source: viewModel.engine.previewSource,
-                captureSession: viewModel.session
+                captureSession: viewModel.engine.captureSession
             )
                     .clipShape(.rect(cornerRadius: .medium, style: .circular))
             }

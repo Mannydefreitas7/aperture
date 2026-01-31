@@ -84,6 +84,9 @@ actor CaptureEngine {
     // A map that stores capture controls by device identifier.
     private var controlsMap: [String: [AVCaptureControl]] = [:]
 
+    //
+    private var audioSample = AVAudioSampleListener()
+
     // A method to forward the
     nonisolated
     func onChange(_ handler: @escaping @Sendable (Float) -> Void) async {
@@ -162,7 +165,7 @@ actor CaptureEngine {
         do {
             // Attempt to connect a new input and device to the capture session.
             activeAudioInput = try addInput(for: nestedDevice)
-            await addAudioMonitor()
+            try await addAudioMonitor()
         } catch {
             // Reconnect the existing audio on failure.
             captureSession.addInput(currentAudioDeviceInput)
@@ -217,8 +220,8 @@ actor CaptureEngine {
 
         do {
             // Retrieve the default camera and microphone.
-            let defaultCamera = try deviceLookup.defaultCamera
-            let defaultMic = try deviceLookup.defaultMic
+            let defaultCamera = try DeviceLookup.defaultCamera
+            let defaultMic = try DeviceLookup.defaultMic
             
             // Populate available devices for the UI
             availableVideoDevices = deviceLookup.cameras
@@ -229,8 +232,8 @@ actor CaptureEngine {
             captureSession.configuresApplicationAudioSessionForBluetoothHighQualityRecording = true
             #endif
             // Add inputs for the default camera and microphone devices.
-            activeVideoInput = try addInput(for: defaultCamera)
-            activeAudioInput = try addInput(for: defaultMic)
+            //activeVideoInput = try addInput(for: defaultCamera)
+           // activeAudioInput = try addInput(for: defaultMic)
 
             logger.info("active audio input \(String(describing: self.activeAudioInput))")
             try addOutput(photoCapture.output)
@@ -242,16 +245,23 @@ actor CaptureEngine {
                 try addOutput(movieCapture.output)
                 setHDRVideoEnabled(isHDRVideoEnabled)
             }
-            await addAudioMonitor()
+
+            let audioPreviewOutput = AVCaptureAudioPreviewOutput()
+            audioPreviewOutput.connection(with: .audio)?.audioChannels
+           // guard let audioConnection = AVCaptureAudioPreviewOutput()
+
+         //   try await audioSample.setup(using: audioConnection)
+
+          //  try await addAudioMonitor()
             // Configure controls to use with the Camera Control.
-            configureControls(for: defaultCamera)
+         //   configureControls(for: defaultCamera)
             // Monitor the system-preferred camera state.
             monitorSystemPreferredCamera()
             // Observe changes to the default camera's subject area.
-            observeSubjectAreaChanges(of: defaultCamera)
+          //  observeSubjectAreaChanges(of: defaultCamera)
             // Update the service's advertised capabilities.
             updateCaptureCapabilities()
-
+            // 
             isSetUp = true
 
           
@@ -260,7 +270,7 @@ actor CaptureEngine {
         }
     }
 
-    private func addAudioMonitor() async {
+    private func addAudioMonitor() async throws {
 
         guard !captureSession.outputs.contains(activeAudioOutput) else {
             return
@@ -287,9 +297,11 @@ actor CaptureEngine {
             audioConnection.isEnabled = true
             // Retries
             logger.warning("Retrieving audio data output connection.")
-            await addAudioMonitor()
+            try await addAudioMonitor()
             return
         }
+
+
 
         logger.info("Audio data output successfully connected to audio input.")
         return

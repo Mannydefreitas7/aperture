@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import AppKit
+import AVKit
 import Combine
 
 struct CameraCaptureView: View {
@@ -49,7 +50,10 @@ extension CameraCaptureView {
 
     @ViewBuilder
     func VideoOutput() -> some View {
-        VideoOutputView(source: viewModel.engine.previewSource, captureSession: viewModel.session)
+
+        //CustomCaptureView(session: viewModel.session)
+
+        VideoOutputView(source: viewModel.engine.previewSource, captureSession: viewModel.engine.captureSession)
             .ignoresSafeArea(.all)
     }
 
@@ -89,4 +93,33 @@ extension CameraCaptureView {
 #Preview {
     @Previewable @StateObject var captureVM: CaptureView.ViewModel = .init()
     CameraCaptureView(viewModel: captureVM)
+}
+
+struct CustomCaptureView: NSViewRepresentable {
+
+    var session: AVCaptureSession?
+
+    init(session: AVCaptureSession? = nil) {
+        self.session = session
+    }
+
+    func makeNSView(context: Context) -> AVCaptureView {
+       let view = AVCaptureView()
+        view.controlsStyle = .default
+        view.videoGravity = .resizeAspectFill
+        return view
+    }
+    
+    func updateNSView(_ nsView: AVCaptureView, context: Context) {
+        nsView.setSession(session, showVideoPreview: true, showAudioPreview: true)
+    }
+
+    class Coordinator: NSObject, AVCaptureViewDelegate {
+        func captureView(_ captureView: AVCaptureView, startRecordingTo fileOutput: AVCaptureFileOutput) {
+            logger.info("\(captureView.fileOutput?.description ?? "")")
+        }
+
+
+    }
+    func makeCoordinator() -> Coordinator { Coordinator() }
 }
