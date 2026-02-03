@@ -229,6 +229,13 @@ actor AVCaptureAudioService {
         level = await listener.level
     }
 
+    func toggleMute(_ isEnabled: Bool) async {
+        guard let connection = audioDataOutput.connection(with: .audio) else {
+            return
+        }
+        connection.isEnabled = isEnabled
+    }
+
     func stop() async {
         await listener.stopMonitoring()
     }

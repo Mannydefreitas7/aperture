@@ -14,7 +14,7 @@ import Combine
 struct CameraCaptureView: View {
 
     @EnvironmentObject var appState: AppState
-    @ObservedObject var state: CaptureView.State
+    @ObservedObject var state: CaptureView.ViewModel
     @State private var spacing: CGFloat = 8
     @State private var isTimerEnabled: Bool = false
     @State private var timerSelection: TimeInterval.Option = .threeSeconds
@@ -40,10 +40,9 @@ struct CameraCaptureView: View {
                 // MARK: Crop mask for selected ratio
                 MaskAspectRatioView()
 
-                if isHoveringWindow {
-                    // MARK: Bottom bar content
-                    BottomBar()
-                }
+                // MARK: Bottom bar content
+                BottomBar()
+                    .opacity(isHoveringWindow ? 1.0 : 0.0)
 
             }
             .environmentObject(state)
@@ -114,7 +113,7 @@ extension CameraCaptureView {
 }
 
 #Preview {
-    @Previewable @StateObject var captureVM: CaptureView.State = .init()
+    @Previewable @StateObject var captureVM: CaptureView.ViewModel = .init()
     CameraCaptureView(state: captureVM)
 }
 

@@ -45,7 +45,7 @@ struct AudioInputProxy<Content: View>: View {
     ///   placeholder values until the stream becomes active.
 
     /// Internal `ViewModel` state to be initialized accordingly with the actor binding.
-    @ObservedObject var viewModel: CaptureView.State
+    @ObservedObject var viewModel: CaptureView.ViewModel
 
     /// Generic Parameters:
     /// - Content: The SwiftUI `View` type being wrapped.

@@ -38,13 +38,15 @@ struct HoverableModifier: ViewModifier {
     @State private var isHovered: Bool = false
     @Environment(\.isHoveringWindow) var isHoveringWindow
 
+    func onHover(_ hovering: Bool) {
+        withAnimation(.easeInOut.delay(hovering ? .zero : .pi)) {
+                isHovered = hovering
+            }
+    }
+
     func body(content: Content) -> some View {
         content
-            .onHover { hovering in
-                withAnimation(.easeInOut) {
-                    isHovered = hovering
-                }
-            }
+            .onHover { onHover($0) }
             .environment(\.isHoveringWindow, isHovered)
     }
 }

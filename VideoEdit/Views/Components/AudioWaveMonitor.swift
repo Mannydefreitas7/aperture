@@ -24,7 +24,7 @@ struct AudioWaveMonitor: View {
 
     @State private var drawingHeight = false
     @State private var isRecording = false
-    @EnvironmentObject var captureState: CaptureView.State
+    @EnvironmentObject var captureState: CaptureView.ViewModel
 
     private var animation: Animation {
         return .linear(duration: 0.5)

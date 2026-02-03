@@ -20,7 +20,7 @@ extension CaptureView {
     }
 
     @MainActor
-    final class State: ObservableObject {
+    final class ViewModel: ObservableObject {
 
         /// main capture session engine
         let engine: AVCaptureEngine = AVCaptureEngine.shared
@@ -91,14 +91,14 @@ extension CaptureView {
         func onDisappear() async {
             selectedAudioDevice = .defaultDevice(.audio)
             selectedVideoDevice = .defaultDevice(.video)
-            videoDevices = []
-            audioDevices = []
             isRecording = false
-//            observationTasks.forEach { $0.cancel() }
-//            observationTasks.removeAll()
-//            audioMonitorPollTask?.cancel()
-//            audioMonitorPollTask = nil
-            //   await audioMonitor.stop()
+            await audioService.stop()
+        }
+
+        /// Mute device
+        func muteDevice(_ device: AVDeviceInfo) async {
+            await audioService.toggleMute(device.isOn)
+            logger.info("Mute device: \(device.name)")
         }
 
         /// Select device
@@ -109,6 +109,7 @@ extension CaptureView {
                 return
             }
             selectedAudioDevice = device
+            await muteDevice(device)
         }
 
         /// Switch to a specific device

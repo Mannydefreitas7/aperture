@@ -20,6 +20,7 @@ struct VolumeHUD<Content: View>: View {
     @Environment(\.audioInputWave) var audioInputWave
     @Environment(\.audioDevices) var audioDevices
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var captureState: CaptureView.ViewModel
     @State private var isOpen: Bool = false
 
     init(for device: Binding<AVDeviceInfo>, content: @escaping () -> Content) {

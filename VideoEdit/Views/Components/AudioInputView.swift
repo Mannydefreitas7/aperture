@@ -13,6 +13,8 @@ struct AudioInputView: View {
     var controlGroup: Namespace.ID
     @Binding var device: AVDeviceInfo
     @Environment(\.isRecording) var isRecording
+    @EnvironmentObject var captureState: CaptureView.ViewModel
+    @StateObject var previewViewModel: CaptureView.ViewModel = .init()
 
     var body: some View {
         Group {
@@ -63,6 +65,11 @@ extension AudioInputView {
             }
             .toggleStyle(.secondary)
             .animation(.bouncy, value: device.isOn)
+            .onChange(of: device.isOn) {
+                Task {
+                    await captureState.muteDevice(device)
+                }
+            }
 
 
             if device.isOn {

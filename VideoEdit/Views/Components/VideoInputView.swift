@@ -15,7 +15,7 @@ struct VideoInputView: View {
     var controlGroup: Namespace.ID
     @Binding var device: AVDeviceInfo
 
-    @EnvironmentObject var viewModel: CaptureView.State
+    @EnvironmentObject var viewModel: CaptureView.ViewModel
 
     var body: some View {
         Group {
