@@ -176,6 +176,8 @@
 		14DF07142F2C60CD00D9AC53 /* AVCaptureEngine+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07132F2C60BE00D9AC53 /* AVCaptureEngine+Actor.swift */; };
 		14DF07162F2C683B00D9AC53 /* AVCaptureAudio+Actors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07152F2C682C00D9AC53 /* AVCaptureAudio+Actors.swift */; };
 		14DF07182F2C997900D9AC53 /* AVCaptureVideo+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07172F2C996D00D9AC53 /* AVCaptureVideo+Actor.swift */; };
+		14E2DD262F31BA3F0074AAEA /* Capture+View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E2DD252F31B98E0074AAEA /* Capture+View.swift */; };
+		14E2DD282F31BA580074AAEA /* Capture+View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E2DD272F31BA460074AAEA /* Capture+View+Extension.swift */; };
 		14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */; };
 		14FC9EC62F156D6A0053C019 /* EditorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC52F156D6A0053C019 /* EditorSettingsView.swift */; };
 		14FC9EC82F16C35C0053C019 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC72F16C35C0053C019 /* SettingsButton.swift */; };
@@ -333,6 +335,18 @@
 		14DF07132F2C60BE00D9AC53 /* AVCaptureEngine+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureEngine+Actor.swift"; sourceTree = "<group>"; };
 		14DF07152F2C682C00D9AC53 /* AVCaptureAudio+Actors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureAudio+Actors.swift"; sourceTree = "<group>"; };
 		14DF07172F2C996D00D9AC53 /* AVCaptureVideo+Actor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVCaptureVideo+Actor.swift"; sourceTree = "<group>"; };
+		14E2DD252F31B98E0074AAEA /* Capture+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+View.swift"; sourceTree = "<group>"; };
+		14E2DD272F31BA460074AAEA /* Capture+View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+View+Extension.swift"; sourceTree = "<group>"; };
+		14E2DD322F31BDE20074AAEA /* Capture+View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+View.swift"; sourceTree = "<group>"; };
+		14E2DD332F31BDF00074AAEA /* Capture+Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+Window.swift"; sourceTree = "<group>"; };
+		14E2DD342F31BE0E0074AAEA /* Capture+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+ViewModel.swift"; sourceTree = "<group>"; };
+		14E2DD352F31BE240074AAEA /* Capture+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+Extension.swift"; sourceTree = "<group>"; };
+		14E2DD372F31BF240074AAEA /* Main+Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Main+Store.swift"; sourceTree = "<group>"; };
+		14E2DD392F31BFDF0074AAEA /* DeviceDelegate+Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceDelegate+Protocol.swift"; sourceTree = "<group>"; };
+		14E2DD3A2F31C4020074AAEA /* AVDevice+Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVDevice+Model.swift"; sourceTree = "<group>"; };
+		14E2DD3B2F31C43F0074AAEA /* AVDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVDevice+Extension.swift"; sourceTree = "<group>"; };
+		14E2DD3C2F31C6AD0074AAEA /* Capture+Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+Command.swift"; sourceTree = "<group>"; };
+		14E2DD3D2F31C6EE0074AAEA /* Capture+Modifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Capture+Modifiers.swift"; sourceTree = "<group>"; };
 		14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeHUD.swift; sourceTree = "<group>"; };
 		14FC9EC52F156D6A0053C019 /* EditorSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorSettingsView.swift; sourceTree = "<group>"; };
 		14FC9EC72F16C35C0053C019 /* SettingsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsButton.swift; sourceTree = "<group>"; };
@@ -672,6 +686,110 @@
 			path = archive;
 			sourceTree = "<group>";
 		};
+		14E2DD242F31B97E0074AAEA /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD272F31BA460074AAEA /* Capture+View+Extension.swift */,
+				14E2DD252F31B98E0074AAEA /* Capture+View.swift */,
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
+		14E2DD292F31BB620074AAEA /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD382F31BFD30074AAEA /* Protocols */,
+				14E2DD362F31BF100074AAEA /* Stores */,
+				14E2DD312F31BDC60074AAEA /* Modifiers */,
+				14E2DD2F2F31BC1B0074AAEA /* Extensions */,
+				14E2DD2E2F31BC150074AAEA /* Models */,
+				14E2DD2D2F31BBF00074AAEA /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		14E2DD2A2F31BB6C0074AAEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				146E4F132F0D66EB00AA07CC /* AppIcon.icon */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		14E2DD2B2F31BB930074AAEA /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD2C2F31BB9C0074AAEA /* Capture */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		14E2DD2C2F31BB9C0074AAEA /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD3D2F31C6EE0074AAEA /* Capture+Modifiers.swift */,
+				14E2DD3C2F31C6AD0074AAEA /* Capture+Command.swift */,
+				14E2DD352F31BE240074AAEA /* Capture+Extension.swift */,
+				14E2DD342F31BE0E0074AAEA /* Capture+ViewModel.swift */,
+				14E2DD332F31BDF00074AAEA /* Capture+Window.swift */,
+				14E2DD322F31BDE20074AAEA /* Capture+View.swift */,
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
+		14E2DD2D2F31BBF00074AAEA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		14E2DD2E2F31BC150074AAEA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD3A2F31C4020074AAEA /* AVDevice+Model.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		14E2DD2F2F31BC1B0074AAEA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD3B2F31C43F0074AAEA /* AVDevice+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		14E2DD302F31BDB60074AAEA /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		14E2DD312F31BDC60074AAEA /* Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Modifiers;
+			sourceTree = "<group>";
+		};
+		14E2DD362F31BF100074AAEA /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD372F31BF240074AAEA /* Main+Store.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		14E2DD382F31BFD30074AAEA /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				14E2DD392F31BFDF0074AAEA /* DeviceDelegate+Protocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
 		14FC9ED32F16FB750053C019 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -682,7 +800,10 @@
 		5000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				146E4F132F0D66EB00AA07CC /* AppIcon.icon */,
+				14E2DD302F31BDB60074AAEA /* Services */,
+				14E2DD2B2F31BB930074AAEA /* Features */,
+				14E2DD2A2F31BB6C0074AAEA /* Resources */,
+				14E2DD292F31BB620074AAEA /* Shared */,
 				5000000000000002 /* VideoEdit */,
 				14FC9ED32F16FB750053C019 /* Frameworks */,
 				5000000000000003 /* Products */,
@@ -692,6 +813,7 @@
 		5000000000000002 /* VideoEdit */ = {
 			isa = PBXGroup;
 			children = (
+				14E2DD242F31B97E0074AAEA /* Capture */,
 				145D15E72F1D3EE500F8A4BB /* Delegates */,
 				146CAECC2F1C80A10021CE3A /* Actors */,
 				146CAEC32F1AD69D0021CE3A /* Commands */,
@@ -899,6 +1021,7 @@
 				1400C9392F04C472001EF209 /* ExportQuality+Model.swift in Sources */,
 				145D15E22F1D37FD00F8A4BB /* DeviceInfo+Model.swift in Sources */,
 				1400C93A2F04C472001EF209 /* RecordingError+Model.swift in Sources */,
+				14E2DD282F31BA580074AAEA /* Capture+View+Extension.swift in Sources */,
 				1431F82B2F249B92000855C6 /* RecordingControlsView+ViewModel.swift in Sources */,
 				1400C93C2F04C472001EF209 /* CameraPosition+Model.swift in Sources */,
 				145D15E62F1D394E00F8A4BB /* CaptureEngine+Actor.swift in Sources */,
@@ -919,6 +1042,7 @@
 				148B59452F1E9D3100F840BF /* AppState+Extensions.swift in Sources */,
 				146CAEC22F1966880021CE3A /* FloatingPanel.swift in Sources */,
 				1400C9452F04C472001EF209 /* VideoCodec+Model.swift in Sources */,
+				14E2DD262F31BA3F0074AAEA /* Capture+View.swift in Sources */,
 				1400C9462F04C472001EF209 /* ExportSettings+Model.swift in Sources */,
 				1400C9472F04C472001EF209 /* CropHandle+Model.swift in Sources */,
 				145D15E42F1D392100F8A4BB /* CaptureStatus+Model.swift in Sources */,

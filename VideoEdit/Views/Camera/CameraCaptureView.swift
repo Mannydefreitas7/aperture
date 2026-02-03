@@ -70,7 +70,6 @@ extension CameraCaptureView {
             angle: .degrees(-45),
             blurRadius: 50
         ))
-
     }
 
     @ViewBuilder
