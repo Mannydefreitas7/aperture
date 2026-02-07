@@ -19,7 +19,6 @@ struct CaptureView: View {
     @State private var timerSelection: TimeInterval.Option = .threeSeconds
 
     @Environment(\.isHoveringWindow) var isHoveringWindow
-    @AppState(\.selectedCamera) var selectedCamera: AVDevice
     @StateObject var store: CaptureView.Store = .init()
 
     // User preferences to store/restore window parameters
@@ -32,12 +31,12 @@ struct CaptureView: View {
 
         NavigationStack  {
             ZStack(alignment: .bottom) {
-                if selectedCamera.isOn {
-                    // MARK: Video preview
-                    VideoOutput()
-                } else {
-                    placeholderView()
-                }
+//                if selectedCamera.isOn {
+//                    // MARK: Video preview
+//                    VideoOutput()
+//                } else {
+//                    placeholderView()
+//                }
 
                 // MARK: Crop mask for selected ratio
                 MaskAspectRatioView()

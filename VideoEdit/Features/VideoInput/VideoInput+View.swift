@@ -23,16 +23,18 @@ struct VideoInputView: View {
             if device.showSettings {
                 ToolBarOptions()
                     .frame(height: .popoverWidth)
+                    .clipShape(device.shape)
             } else {
                 ToolButton()
                     .frame(height: .minHeight)
+                    .padding(.horizontal, .small)
             }
         }
-        .padding(.horizontal, .small)
         .glassEffect(.regular, in: device.shape)
         .toolEffectUnion(
             id: device.isOn ? .video : .options,
             namespace: controlGroup
         )
+
     }
 }

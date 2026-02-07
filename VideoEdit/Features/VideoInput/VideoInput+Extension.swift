@@ -54,13 +54,21 @@ extension VideoInputView {
 
     @ViewBuilder
     func ToolBarOptions() -> some View {
-        VStack(alignment: .leading) {
-            HStack {
+        ZStack(alignment: .topLeading) {
 
+            Placeholder()
+
+            if viewModel.videoInputViewModel.session.isRunning {
+                VideoPreview(session: viewModel.videoInputViewModel.session)
+               // VideoInputPreview(session: viewModel.videoInputViewModel.session)
+                    .frame(width: .popoverWidth)
+            }
+
+            HStack {
                 Image(.imac)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: imageWidth)
+                    .frame(width: .recordWidth)
 
                 VStack(alignment: .leading) {
                     Text("Device")
@@ -72,23 +80,14 @@ extension VideoInputView {
                         .bold()
                 }
             }
+            .padding(.medium)
 
-            if viewModel.videoInputViewModel.hasVideo {
-                VideoInputPreview(viewModel: $viewModel.videoInputViewModel)
-                    .clipShape(.rect(cornerRadius: .medium, style: .circular))
-            } else {
-                Placeholder()
-            }
-        }
-        .overlay(alignment: .topTrailing) {
-            ToolCloseButton()
-                .offset(x: .small)
         }
         .frame(minHeight: .zero)
-        .frame(width: .popoverWidth)
-        .padding(.medium)
-        .task {
-            await viewModel.videoInputViewModel.start()
+        .frame(width: .popoverWidth * 1.2)
+        .overlay(alignment: .topTrailing) {
+            ToolCloseButton()
+                .offset(x: .medium, y: .medium)
         }
     }
 

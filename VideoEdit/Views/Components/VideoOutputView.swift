@@ -26,13 +26,6 @@ struct VideoOutputView: NSViewRepresentable {
 
         let previewLayer = nsView.previewLayer
        guard let connection = previewLayer.connection else { return }
-
-        DispatchQueue.main.async {
-            connection.automaticallyAdjustsVideoMirroring = false
-            if connection.isVideoMirroringSupported {
-                connection.isVideoMirrored = isMirror
-            }
-        }
     }
 }
 

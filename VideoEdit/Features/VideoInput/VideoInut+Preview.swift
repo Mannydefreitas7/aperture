@@ -9,19 +9,72 @@ import AVFoundation
 import SwiftUI
 import Combine
 
+struct VideoPreview: NSViewRepresentable {
+    typealias NSViewType = VideoPreviewView
+   // var sessionLayer: AVCaptureVideoPreviewLayer? = nil
+    let session: AVCaptureSession
+
+    public class VideoPreviewView: NSView {
+        var previewLayer: AVCaptureVideoPreviewLayer? {
+            layer as? AVCaptureVideoPreviewLayer
+        }
+
+        override init(frame frameRect: NSRect) {
+            super.init(frame: frameRect)
+            wantsLayer = true
+           // setupLayer()
+        }
+
+        override func makeBackingLayer() -> CALayer {
+            AVCaptureVideoPreviewLayer()
+        }
+
+        override func layout() {
+            super.layout()
+            previewLayer?.frame = bounds
+            layer = previewLayer
+        }
+
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+    }
+
+    public init(session: AVCaptureSession) {
+        self.session = session
+      //  self.sessionLayer = AVCaptureVideoPreviewLayer(session: session)
+    }
+
+
+    func makeNSView(context: Context) -> VideoPreviewView {
+        let view = VideoPreviewView()
+        view.layer?.backgroundColor = .black
+        view.previewLayer?.videoGravity = .resizeAspectFill
+        view.previewLayer?.session = session
+        return view
+    }
+    
+    func updateNSView(_ nsView: VideoPreviewView, context: Context) {
+
+    }
+}
+
 struct VideoInputPreview: NSViewRepresentable {
     typealias NSViewType = PlayerView
-
-    @Binding var viewModel: VideoInputView.ViewModel
     
     private var dbags = [AnyCancellable]()
-    private let source: PreviewSource
+    private var source: PreviewSource
+    private var session: AVCaptureSession?
+
+    var isRecording: Bool = false
+    var outputURL: URL? = nil
+    var captureError: CaptureError? = nil
 
     @Preference(\.isMirrored) private var isMirror
 
-
-    init(source: PreviewSource) {
-        self.source = source
+    init(session: AVCaptureSession) {
+        self.source = DefaultPreviewSource(session: session)
     }
 
     func makeNSView(context: Context) -> PlayerView {
@@ -32,10 +85,10 @@ struct VideoInputPreview: NSViewRepresentable {
 
     func updateNSView(_ nsView: PlayerView, context: Context) {
 
-        let previewLayer = nsView.previewLayer
-        guard let connection = previewLayer.connection else { return }
+        guard let previewLayer = nsView.previewLayer,
+              let connection = previewLayer.connection else { return }
 
-        DispatchQueue.main.async {
+        Task { @MainActor in
             connection.automaticallyAdjustsVideoMirroring = false
             if connection.isVideoMirroringSupported {
                 connection.isVideoMirrored = isMirror
@@ -43,51 +96,30 @@ struct VideoInputPreview: NSViewRepresentable {
         }
     }
 
-    func makeNSView(context: Context) -> NSView {
-        let view = NSView()
-        view.wantsLayer = true
-
-        let previewLayer = AVCaptureVideoPreviewLayer(session: viewModel.session)
-        previewLayer.videoGravity = .resizeAspectFill
-
-            // This ensures the layer resizes automatically with the view
-        view.layer?.addSublayer(previewLayer)
-        context.coordinator.previewLayer = previewLayer
-
-        return view
-    }
-
-    func updateNSView(_ nsView: NSView, context: Context) {
-            // Sync the layer frame to the view's current bounds
-        context.coordinator.previewLayer?.frame = nsView.bounds
-    }
-
     func makeCoordinator() -> Coordinator {
-        Coordinator(viewModel: self.$viewModel)
+        Coordinator()
     }
 
     class Coordinator: NSObject, AVCaptureFileOutputRecordingDelegate {
 
-        @Binding var viewModel: VideoInputView.ViewModel
         var previewLayer: AVCaptureVideoPreviewLayer?
-
-        init(viewModel: Binding<VideoInputView.ViewModel>) {
-            self._viewModel = viewModel
-        }
+        var isRecording: Bool = false
+        var outputURL: URL? = nil
+        var captureError: CaptureError? = nil
 
             // Required delegate method
         func fileOutput(
             _ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: (any Error)?) {
                 guard error != nil else {
                     Task { @MainActor in
-                        viewModel.sessionError = .outputFileNotFound(url: outputFileURL, reason: "")
+                        captureError = .outputFileNotFound(url: outputFileURL, reason: "")
                     }
                     return
                 }
                 print("Successfully saved to: \(outputFileURL.path)")
                 Task { @MainActor in
-                    viewModel.isRecording = false
-                    viewModel.url = outputFileURL
+                    isRecording = false
+                    outputURL = outputFileURL
                 }
             }
 
@@ -95,8 +127,8 @@ struct VideoInputPreview: NSViewRepresentable {
         func fileOutput(_ output: AVCaptureFileOutput, didStartRecordingTo fileURL: URL, from connections: [AVCaptureConnection]) {
             print("Recording started!")
             Task { @MainActor in
-                viewModel.isRecording = true
-                viewModel.url = fileURL
+                isRecording = true
+                outputURL = fileURL
             }
         }
     }
@@ -105,34 +137,37 @@ struct VideoInputPreview: NSViewRepresentable {
 extension VideoInputPreview {
 
     class PlayerView: NSView, PreviewTarget {
-        var previewLayer: AVCaptureVideoPreviewLayer = .init()
         private var dbags = [AnyCancellable]()
 
-        init() {
-            super.init(frame: .zero)
+        var previewLayer: AVCaptureVideoPreviewLayer? {
+            layer as? AVCaptureVideoPreviewLayer
+        }
+
+        override init(frame frameRect: NSRect) {
+            super.init(frame: frameRect)
+            wantsLayer = true
             setupLayer()
         }
 
-            // Use `AVCaptureVideoPreviewLayer` as the view's backing layer.
-        class var layerClass: AnyClass {
-            AVCaptureVideoPreviewLayer.self
+        override func makeBackingLayer() -> CALayer {
+            AVCaptureVideoPreviewLayer()
         }
 
-        func setupLayer() {
-            previewLayer.frame = self.frame
-            previewLayer.isDeferredStartEnabled = true
-            previewLayer.contentsGravity = .resizeAspectFill
-            previewLayer.videoGravity = .resizeAspectFill
-            previewLayer.connection?.automaticallyAdjustsVideoMirroring = true
-                // previewLayer.connection?.audioChannels
-            layer = previewLayer
+        override func layout() {
+            super.layout()
+            previewLayer?.frame = bounds
+        }
+
+        private func setupLayer() {
+            previewLayer?.videoGravity = .resizeAspectFill
+            previewLayer?.connection?.automaticallyAdjustsVideoMirroring = true
         }
 
         nonisolated func setSession(_ session: AVCaptureSession) {
-                // Connects the session with the preview layer, which allows the layer
-                // to provide a live view of the captured content.
+            // Connects the session with the preview layer, which allows the layer
+            // to provide a live view of the captured content.
             Task { @MainActor in
-                previewLayer.session = session
+                previewLayer?.session = session
             }
         }
 

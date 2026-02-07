@@ -20,14 +20,10 @@ extension VideoInputView {
         var isRecording: Bool = false
         var url: URL? = nil
 
-        var session: AVCaptureSession {
-            captureSession.currentSession
-        }
+        var session: AVCaptureSession { captureSession.currentSession }
 
         var hasVideo: Bool {
-            guard let selectedDevice, let device = selectedDevice.device else {
-                return false
-            }
+            guard let selectedDevice, let device = selectedDevice.device else { return false }
             return device.isConnected
         }
 
