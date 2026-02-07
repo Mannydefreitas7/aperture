@@ -11,7 +11,6 @@ import Combine
 
 struct VideoPreview: NSViewRepresentable {
     typealias NSViewType = VideoPreviewView
-   // var sessionLayer: AVCaptureVideoPreviewLayer? = nil
     let session: AVCaptureSession
 
     public class VideoPreviewView: NSView {
@@ -22,7 +21,6 @@ struct VideoPreview: NSViewRepresentable {
         override init(frame frameRect: NSRect) {
             super.init(frame: frameRect)
             wantsLayer = true
-           // setupLayer()
         }
 
         override func makeBackingLayer() -> CALayer {
@@ -35,7 +33,6 @@ struct VideoPreview: NSViewRepresentable {
             layer = previewLayer
         }
 
-
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
@@ -46,7 +43,6 @@ struct VideoPreview: NSViewRepresentable {
       //  self.sessionLayer = AVCaptureVideoPreviewLayer(session: session)
     }
 
-
     func makeNSView(context: Context) -> VideoPreviewView {
         let view = VideoPreviewView()
         view.layer?.backgroundColor = .black
@@ -56,7 +52,8 @@ struct VideoPreview: NSViewRepresentable {
     }
     
     func updateNSView(_ nsView: VideoPreviewView, context: Context) {
-
+        nsView.previewLayer?.videoGravity = .resizeAspectFill
+        nsView.previewLayer?.frame = nsView.bounds
     }
 }
 
@@ -159,6 +156,7 @@ extension VideoInputPreview {
         }
 
         private func setupLayer() {
+            previewLayer?.contentsGravity = .resizeAspectFill
             previewLayer?.videoGravity = .resizeAspectFill
             previewLayer?.connection?.automaticallyAdjustsVideoMirroring = true
         }

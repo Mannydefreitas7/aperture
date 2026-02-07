@@ -172,6 +172,8 @@
 		14DF07142F2C60CD00D9AC53 /* AVCaptureEngine+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07132F2C60BE00D9AC53 /* AVCaptureEngine+Actor.swift */; };
 		14DF07162F2C683B00D9AC53 /* AVCaptureAudio+Actors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07152F2C682C00D9AC53 /* AVCaptureAudio+Actors.swift */; };
 		14DF07182F2C997900D9AC53 /* AVCaptureVideo+Actor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14DF07172F2C996D00D9AC53 /* AVCaptureVideo+Actor.swift */; };
+		14E2DD962F37DAB10074AAEA /* ProvisionInfoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 14E2DD952F37DAB10074AAEA /* ProvisionInfoKit */; };
+		14E2DD992F37DB760074AAEA /* AppInformation in Frameworks */ = {isa = PBXBuildFile; productRef = 14E2DD982F37DB760074AAEA /* AppInformation */; };
 		14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC32F14B1B70053C019 /* VolumeHUD.swift */; };
 		14FC9EC62F156D6A0053C019 /* EditorSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC52F156D6A0053C019 /* EditorSettingsView.swift */; };
 		14FC9EC82F16C35C0053C019 /* SettingsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14FC9EC72F16C35C0053C019 /* SettingsButton.swift */; };
@@ -391,8 +393,10 @@
 				144D27632F2F1ED300681899 /* DSWaveformImageViews in Frameworks */,
 				146E4EF82F0A7C0000AA07CC /* SwiftBasicFormat in Frameworks */,
 				144D27612F2F1ED300681899 /* DSWaveformImage in Frameworks */,
+				14E2DD962F37DAB10074AAEA /* ProvisionInfoKit in Frameworks */,
 				14FFBDBE2F13194A00B96C92 /* Shimmer in Frameworks */,
 				146E4EFE2F0A7C0000AA07CC /* SwiftIDEUtils in Frameworks */,
+				14E2DD992F37DB760074AAEA /* AppInformation in Frameworks */,
 				146E4F032F0A7C1400AA07CC /* WelcomeWindow in Frameworks */,
 				14FC9ED72F16FB750053C019 /* EngineCore in Frameworks */,
 				14D9D6A52F05974400065B49 /* SwiftBasicFormat in Frameworks */,
@@ -811,6 +815,8 @@
 				143AE5252F32F4F400DFED42 /* Ignition */,
 				143AE52B2F32F55600DFED42 /* Turbocharger */,
 				143AE5352F333BE800DFED42 /* AppState */,
+				14E2DD952F37DAB10074AAEA /* ProvisionInfoKit */,
+				14E2DD982F37DB760074AAEA /* AppInformation */,
 			);
 			productName = Claquette;
 			productReference = 3000000000000001 /* VideoEdit.app */;
@@ -860,6 +866,8 @@
 				143AE5242F32F4F400DFED42 /* XCRemoteSwiftPackageReference "Ignition" */,
 				143AE52A2F32F55600DFED42 /* XCRemoteSwiftPackageReference "Turbocharger" */,
 				143AE5342F333BE800DFED42 /* XCRemoteSwiftPackageReference "AppState" */,
+				14E2DD942F37DAB10074AAEA /* XCRemoteSwiftPackageReference "provision-info" */,
+				14E2DD972F37DB760074AAEA /* XCRemoteSwiftPackageReference "app-information" */,
 			);
 			preferredProjectObjectVersion = 90;
 			productRefGroup = 5000000000000003 /* Products */;
@@ -1443,6 +1451,22 @@
 				minimumVersion = 602.0.0;
 			};
 		};
+		14E2DD942F37DAB10074AAEA /* XCRemoteSwiftPackageReference "provision-info" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/juri/provision-info";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
+		14E2DD972F37DB760074AAEA /* XCRemoteSwiftPackageReference "app-information" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sersoft-gmbh/app-information";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.11.1;
+			};
+		};
 		14FC9ED22F16F8660053C019 /* XCRemoteSwiftPackageReference "Engine" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/nathantannar4/Engine";
@@ -1604,6 +1628,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 14D9D6A32F05974400065B49 /* XCRemoteSwiftPackageReference "swift-syntax" */;
 			productName = SwiftIfConfig;
+		};
+		14E2DD952F37DAB10074AAEA /* ProvisionInfoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 14E2DD942F37DAB10074AAEA /* XCRemoteSwiftPackageReference "provision-info" */;
+			productName = ProvisionInfoKit;
+		};
+		14E2DD982F37DB760074AAEA /* AppInformation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 14E2DD972F37DB760074AAEA /* XCRemoteSwiftPackageReference "app-information" */;
+			productName = AppInformation;
 		};
 		14FC9ED42F16FB750053C019 /* Engine */ = {
 			isa = XCSwiftPackageProductDependency;

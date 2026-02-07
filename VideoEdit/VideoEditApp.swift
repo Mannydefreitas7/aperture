@@ -3,12 +3,14 @@ import SwiftUI
 import AVFoundation
 import Onboarding
 import SFSafeSymbols
+import AppInformation
 //import ScreenCaptureKit
 
 @main
 struct VideoEditApp: App {
     @StateObject private var appState = IAppState()
     @AppStorage(.onboardingKey) var showOnboarding: Bool = true
+    @Environment(\.appInfo) var appInfo
 
     var body: some Scene {
 
@@ -26,4 +28,4 @@ struct VideoEditApp: App {
 
 
 // General logger
-let logger = Logger()
+let logger = Logger(subsystem:  AppInfo.current.id, category: AppInfo.current.identifier)

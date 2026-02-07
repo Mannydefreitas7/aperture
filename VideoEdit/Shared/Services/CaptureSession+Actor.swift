@@ -97,8 +97,7 @@ actor CaptureSession {
     }
 
     // add device input
-    @discardableResult
-    func addDeviceInput(_ device: AVDevice) throws -> Bool {
+    func addDeviceInput(_ device: AVDevice) throws {
 
         guard session.isRunning else {
             throw AVError(.sessionNotRunning)
@@ -113,12 +112,11 @@ actor CaptureSession {
             // if input is already in use,
             // remove it
             session.removeInput(input)
-            return false
+            throw AVError(_nsError: .init(domain: "COULD NOT ADD INPUT", code: AVError.deviceNotConnected.rawValue))
         }
         // add input to the session
         session.addInput(input)
         session.commitConfiguration()
-        return true
     }
 
     func stop() {

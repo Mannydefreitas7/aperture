@@ -1,5 +1,5 @@
 {
-  "originHash" : "29092eefea4b1840aaca382c157bb72f182d9ca12ae80cb781d904ea8cb853de",
+  "originHash" : "33fa937dfc49051fef08e0f9abb0cfadda98f8a3190476c8266cf94c8c8393a6",
   "pins" : [
     {
       "identity" : "aperture",
@@ -8,6 +8,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "7591bb540c844fe6c47edeac34b17c25e92a717f"
+      }
+    },
+    {
+      "identity" : "app-information",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sersoft-gmbh/app-information",
+      "state" : {
+        "revision" : "e8ed064169819ca50f36dea0d21a06ef3f6b53d6",
+        "version" : "1.11.1"
       }
     },
     {
@@ -101,6 +110,15 @@
       }
     },
     {
+      "identity" : "provision-info",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/juri/provision-info",
+      "state" : {
+        "revision" : "cf0da1cf2be06f152e8a966e9c4535ada168c7dc",
+        "version" : "0.3.0"
+      }
+    },
+    {
       "identity" : "retain",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hainayanda/Retain.git",
@@ -116,6 +134,15 @@
       "state" : {
         "revision" : "e01b3d4f861412f8dcee8d93c417d2c2b0cdfd77",
         "version" : "7.0.0"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "c5d11a805e765f52ba34ec7284bd4fcd6ba68615",
+        "version" : "1.7.0"
       }
     },
     {

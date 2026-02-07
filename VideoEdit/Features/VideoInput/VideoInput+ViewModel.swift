@@ -6,6 +6,7 @@
 //
 import SwiftUI
 import AVFoundation
+import Combine
 
 extension VideoInputView {
 
@@ -18,17 +19,24 @@ extension VideoInputView {
         var sessionError: CaptureError? = nil
         var selectedDevice: AVDevice? = nil
         var isRecording: Bool = false
+
+        var isRunning: Bool = false
         var url: URL? = nil
 
         var session: AVCaptureSession { captureSession.currentSession }
 
         var hasVideo: Bool {
-            guard let selectedDevice, let device = selectedDevice.device else { return false }
-            return device.isConnected
+            let connection = session.connections.first
+            guard let connection, let selectedDevice, let device = selectedDevice.device else { return false }
+            return device.isConnected && connection.isActive
+        }
+
+        func initialize() async {
+            guard !captureSession.currentSession.isRunning else { return }
+            await captureSession.initialize()
         }
 
         func start() async {
-            await captureSession.initialize()
             do {
                 if let selectedDevice {
                     try await captureSession.addDeviceInput(selectedDevice)
@@ -36,8 +44,13 @@ extension VideoInputView {
                 }
                 try await captureSession.addDeviceInput(.defaultDevice(.video))
             } catch {
+                logger.error("Failed to add device input: \(error.localizedDescription)")
                 sessionError = .noVideo
             }
+        }
+
+        func stop() async {
+            await captureSession.stop()
         }
     }
 }

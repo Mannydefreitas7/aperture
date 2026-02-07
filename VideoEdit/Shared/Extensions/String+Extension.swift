@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import AppKit
 
 extension String {
 
@@ -19,4 +20,9 @@ extension String {
 
     static let notAvailable: Self  = "Not available"
     static let notAvailbleDescription: Self = "Select a device from the menu below."
+
+    var applicationName: Self {
+
+        return Bundle.appName
+    }
 }

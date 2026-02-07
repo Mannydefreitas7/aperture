@@ -47,12 +47,5 @@ struct RecordingToolbar: View {
                 .environmentObject(viewModel)
             }
         }
-        .task {
-            // Starts the video input if its session
-            // isn't running.
-            if !viewModel.videoInputViewModel.session.isRunning {
-                await viewModel.videoInputViewModel.start()
-            }
-        }
     }
 }

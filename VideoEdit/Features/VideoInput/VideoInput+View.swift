@@ -24,9 +24,12 @@ struct VideoInputView: View {
                 ToolBarOptions()
                     .frame(height: .popoverWidth)
                     .clipShape(device.shape)
+                    .task {
+                        await viewModel.videoInputViewModel.start()
+                    }
             } else {
                 ToolButton()
-                    .frame(height: .minHeight)
+                     .frame(height: .minHeight)
                     .padding(.horizontal, .small)
             }
         }
@@ -35,6 +38,18 @@ struct VideoInputView: View {
             id: device.isOn ? .video : .options,
             namespace: controlGroup
         )
+        .onDisappear {
+            Task {
+                await viewModel.videoInputViewModel.stop()
+            }
+        }
+        .task {
+            // Starts the video input if its session
+            // isn't running and device is on.
+            if device.isOn {
+                await viewModel.videoInputViewModel.initialize()
+            }
+        }
 
     }
 }
