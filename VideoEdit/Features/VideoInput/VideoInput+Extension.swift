@@ -46,7 +46,6 @@ extension VideoInputView {
                 .buttonStyle(.accessoryBar)
             }
         }
-
     }
 
     @ViewBuilder
@@ -58,11 +57,12 @@ extension VideoInputView {
 
             if viewModel.session.isRunning {
                 VideoPreview(session: viewModel.session, isMirrored: $isMirrored)
+                    .clipShape(viewModel.selectedDevice.shape)
             }
             GlassEffectContainer(spacing: 20.0) {
                 HStack {
                         //
-                    Image(.imac)
+                    viewModel.selectedDevice.thumbnail
                         .resizable()
                         .scaledToFit()
                         .frame(width: .recordWidth)
@@ -74,21 +74,28 @@ extension VideoInputView {
                         
                         Text(viewModel.deviceName.capitalized)
                             .font(.headline)
-                            .bold()
                     }
                         //
                     Spacer()
                         //
-                    ToolCloseButton()
+                    // ToolCloseButton()
                 }
                 .padding(.medium)
-                .glassEffect(.clear, in: .rect(cornerRadius: .large, style: .circular))
+                .glassEffect(.regular, in: ConcentricRectangle(corners: .concentric(minimum: .fixed(.medium)), isUniform: true))
 
             }
             .padding(.medium)
             .padding(.leading, .small)
+
+            VStack {
+                ToolCloseButton()
+            }
+            .padding(.medium)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+
+
         }
-        .frame(width: .popoverWidth * 1.2, height: .popoverWidth)
+        .frame(width: .popoverWidth * 1.5, height: .popoverWidth)
 
     }
 

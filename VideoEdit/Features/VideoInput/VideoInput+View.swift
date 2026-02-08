@@ -22,7 +22,6 @@ struct VideoInputView: View {
         Group {
             if viewModel.showSettings {
                 ToolBarOptions()
-                    .clipShape(viewModel.selectedDevice.shape)
                     .task { await viewModel.start() }
             } else {
                 ToolButton()
