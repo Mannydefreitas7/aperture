@@ -14,8 +14,6 @@ extension CaptureView {
     final class Store: ObservableObject {
         // Combine cancellables
         private var cancellables: Set<AnyCancellable> = []
-        /// capture session actor
-        private let captureSession: CaptureSession = .init()
         // Device discovery actor
         private let deviceDiscovery: DeviceDiscovery = .shared
 
@@ -38,13 +36,8 @@ extension CaptureView {
         @Published var audioDevices: [AVDevice] = []
         @Published var videoDevices: [AVDevice] = []
 
-        init() {
-            guard videoInput.isRunning.inverted else { return }
-            videoInput.setSession(captureSession)
-        }
-
        var currentSession: AVCaptureSession {
-          get { captureSession.current }
+           get { videoInput.currentSession }
        }
 
         func authorizationStatus(for type: AVMediaType) -> AVAuthorizationStatus {
@@ -63,24 +56,26 @@ extension CaptureView {
             /// Configure + start the single underlying session.
             logger.debug("Starting capture engine")
             /// Audio service
-            await captureSession.initialize()
+
             ///
-            downsampledMagnitudes = await captureSession.downsampledMagnitudes
-            fftMagnitudes = await captureSession.fftMagnitudes
-            audioLevel = await captureSession.audioLevel
+            //downsampledMagnitudes = await captureSession.downsampledMagnitudes
+            //fftMagnitudes = await captureSession.fftMagnitudes
+           // audioLevel = await captureSession.audioLevel
             /// Switch to default devices
             logger.info("Switch to default devices")
             videoDevices = deviceDiscovery.discoverDevices(.video)
             audioDevices = deviceDiscovery.discoverDevices(.audio)
+
+            await videoInput.initialize()
         }
 
         func onDisappear() async {
-            await captureSession.stop()
+            await videoInput.stop()
         }
 
         /// Mute device
         func muteDevice(_ device: AVDevice) async {
-            await captureSession.toggleMute(device.isOn)
+           // await captureSession.toggleMute(device.isOn)
             logger.info("Mute device: \(device.name)")
         }
 
@@ -93,6 +88,11 @@ extension CaptureView {
             }
             selectedAudioDevice = device
             await muteDevice(device)
+        }
+
+        ///
+        func start() async {
+            await videoInput.start()
         }
 //
 //        /// Switch to a specific device

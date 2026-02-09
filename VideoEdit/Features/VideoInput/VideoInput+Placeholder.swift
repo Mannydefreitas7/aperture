@@ -10,13 +10,19 @@ import SwiftUI
 struct VideoInputPlaceholder: View {
     var body: some View {
         ContentUnavailableView {
-            Image(systemSymbol: .videoSlashCircle)
+            Image(.videoPlaceholder)
+                .renderingMode(.template)
+                .tint(.black)
+                .opacity(0.4)
                 .imageScale(.large)
         }
-        .padding(.bottom, .large)
         .transition(.movingParts.wipe(
             angle: .degrees(-45),
             blurRadius: 50
         ))
     }
+}
+
+#Preview {
+    VideoInputPlaceholder()
 }

@@ -115,7 +115,6 @@ actor CaptureSession {
     // remove connection
     func removeConnection(_ device: AVDevice) {
 
-
         let connection = session.connections.first { connection in
             return connection.isActive && connection.inputPorts.contains(where: { $0.mediaType == .video })
         }

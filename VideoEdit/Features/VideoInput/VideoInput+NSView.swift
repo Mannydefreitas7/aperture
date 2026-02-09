@@ -39,7 +39,7 @@ class VideoInputNSView: NSView {
 
         guard let session = session else { return }
 
-        let layer = AVCaptureVideoPreviewLayer(sessionWithNoConnection: session)
+        let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
         layer.frame = bounds
 

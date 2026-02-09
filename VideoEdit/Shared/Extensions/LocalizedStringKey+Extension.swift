@@ -11,6 +11,7 @@ extension LocalizedStringKey {
 
     static var notAvailableTitle: Self { .init("Not available") }
     static var notDevicesAvailableDescription: Self { .init("Select a device from the menu below.") }
+    static var noDeviceConnected: Self { .init("No device connected") }
 
     static var inputLabel: Self { .init("Inputs") }
 

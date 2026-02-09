@@ -64,21 +64,25 @@ extension VideoInputView {
         }
 
         func initialize() async {
-            guard !isRunning else { return }
+            guard !session.current.isRunning else {
+                logger.warning("Session is already running, skipping initialization")
+                return
+            }
             await session.initialize()
 
-            do {
-                try  await session.addDeviceInputs(deviceDescovery.cameras)
-            } catch {
-                logger.error("Failed to add device inputs: \(error.localizedDescription)")
-            }
-
-
+            logger.info("Initialized capture session...")
+//            do {
+//                try  await session.addDeviceInputs(deviceDescovery.cameras)
+//            } catch {
+//                logger.error("Failed to add device inputs: \(error.localizedDescription)")
+//            }
             selectedID = selectedVideoID
 
             if let device = await deviceDescovery.getDevice(withUniqueID: selectedVideoID) {
                 selectedDevice = device
+                logger.info("Selected device: \(device.name)")
             }
+
         }
 
         func start() async {
@@ -86,9 +90,8 @@ extension VideoInputView {
                 logger.info("Starting with device \(self.selectedDevice.name)")
                 previousDevice = selectedDevice
 
-                try await connectDevice(selectedDevice)
-
-               // try await session.addDeviceInput(selectedDevice)
+               // try await connectDevice(selectedDevice)
+                try await session.addDeviceInput(selectedDevice)
             } catch {
                 logger.error("Failed to add device input: \(error.localizedDescription)")
                 sessionError = .noVideo
@@ -115,12 +118,12 @@ extension VideoInputView {
 
             do {
                 if let previousDevice, previousDevice.id != device.id {
-                   // try await session.removeInput(for: previousDevice)
-                    await session.removeConnection(previousDevice)
+                    try await session.removeInput(for: previousDevice)
+                   // await session.removeConnection(previousDevice)
                     logger.warning("Successfully removed device: \(previousDevice.name)")
                 }
-               // try await session.addDeviceInput(device)
-                try await connectDevice(device)
+                try await session.addDeviceInput(device)
+               // try await connectDevice(device)
                 self.previousDevice = device
                 logger.notice("Successfully changed device to \(device.name)")
             } catch {

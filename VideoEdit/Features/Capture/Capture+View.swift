@@ -33,13 +33,9 @@ struct CaptureView: View {
             
             ZStack(alignment: .bottom) {
 
+                PlaceholderView()
+
                 VideoPreview(viewModel: $store.videoInput)
-//                if selectedCamera.isOn {
-//                    // MARK: Video preview
-//                    VideoOutput()
-//                } else {
-//                    placeholderView()
-//                }
 
                 // MARK: Crop mask for selected ratio
                 MaskAspectRatioView()
@@ -47,16 +43,20 @@ struct CaptureView: View {
                 // MARK: Bottom bar content
                 BottomBar()
                     .opacity(isHoveringWindow ? 1.0 : 0.0)
+                    .task {
+                        await store.start()
+                    }
 
             }
             .environmentObject(store)
             .environment(\.audioDevices, store.audioDevices)
             .environment(\.videoDevices, store.videoDevices)
+            .task {
+                await store.initialize()
+            }
         }
         // Keep the window resizable but constrained to 16:9.
         .windowAspectRatio(AspectPreset.youtube.ratio)
-        .task {
-            await store.initialize()
-        }
+
     }
 }

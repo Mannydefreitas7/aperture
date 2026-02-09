@@ -16,7 +16,6 @@ extension CaptureView {
 
     @ViewBuilder
     func BottomBar() -> some View {
-
         RecordingToolbar()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
                 .padding(.bottom, .small)
@@ -39,6 +38,19 @@ extension CaptureView {
         Text("")
             .font(.system(.title3, design: .monospaced))
             .foregroundStyle(store.isRecording ? .red : .secondary)
+    }
+
+    @ViewBuilder
+    func PlaceholderView() -> some View {
+        VStack {
+            Image(.videoPlaceholder)
+                .renderingMode(.template)
+                .tint(.primary)
+                .opacity(0.3)
+            Text(.noDeviceConnected)
+                .opacity(0.5)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
 }
