@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1000000000000001 /* VideoEditApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000001 /* VideoEditApp.swift */; };
+		1000000000000001 /* ApertureApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000001 /* ApertureApp.swift */; };
 		1000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000002 /* ContentView.swift */; };
 		1000000000000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2000000000000003 /* Assets.xcassets */; };
 		1000000000000005 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2000000000000005 /* ScreenRecorder.swift */; };
@@ -326,16 +326,16 @@
 		14FFBDB22F12949800B96C92 /* PauseButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseButtonView.swift; sourceTree = "<group>"; };
 		14FFBDB82F12DF0600B96C92 /* Toggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toggle.swift; sourceTree = "<group>"; };
 		14FFBDBA2F12E6AF00B96C92 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
-		2000000000000001 /* VideoEditApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditApp.swift; sourceTree = "<group>"; };
+		2000000000000001 /* ApertureApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApertureApp.swift; sourceTree = "<group>"; };
 		2000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2000000000000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2000000000000005 /* ScreenRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
 		2000000000000006 /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		2000000000000007 /* GIFExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GIFExporter.swift; sourceTree = "<group>"; };
 		2000000000000010 /* MouseClickVisualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseClickVisualizer.swift; sourceTree = "<group>"; };
-		2000000000000011 /* VideoEdit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = VideoEdit.entitlements; sourceTree = "<group>"; };
+		2000000000000011 /* Aperture.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aperture.entitlements; sourceTree = "<group>"; };
 		2000000000000012 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3000000000000001 /* VideoEdit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoEdit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3000000000000001 /* Aperture.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aperture.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -663,22 +663,22 @@
 		5000000000000001 = {
 			isa = PBXGroup;
 			children = (
-				5000000000000002 /* VideoEdit */,
+				5000000000000002 /* Aperture */,
 				14FC9ED32F16FB750053C019 /* Frameworks */,
 				5000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		5000000000000002 /* VideoEdit */ = {
+		5000000000000002 /* Aperture */ = {
 			isa = PBXGroup;
 			children = (
 				145D15E72F1D3EE500F8A4BB /* Delegates */,
 				146CAECC2F1C80A10021CE3A /* Actors */,
 				144E65F42F0966A100D044AD /* Controllers */,
 				148AAC642F0784CF0087D649 /* Windows */,
-				2000000000000011 /* VideoEdit.entitlements */,
+				2000000000000011 /* Aperture.entitlements */,
 				2000000000000012 /* Info.plist */,
-				2000000000000001 /* VideoEditApp.swift */,
+				2000000000000001 /* ApertureApp.swift */,
 				148AAC672F07854A0087D649 /* Constants.swift */,
 				2000000000000002 /* ContentView.swift */,
 				2000000000000003 /* Assets.xcassets */,
@@ -691,13 +691,13 @@
 				143AE5322F3335DE00DFED42 /* Resources */,
 				143AE5092F32ED8E00DFED42 /* Shared */,
 			);
-			path = VideoEdit;
+			path = Aperture;
 			sourceTree = "<group>";
 		};
 		5000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3000000000000001 /* VideoEdit.app */,
+				3000000000000001 /* Aperture.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -767,9 +767,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6000000000000001 /* VideoEdit */ = {
+		6000000000000001 /* Aperture */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7000000000000003 /* Build configuration list for PBXNativeTarget "VideoEdit" */;
+			buildConfigurationList = 7000000000000003 /* Build configuration list for PBXNativeTarget "Aperture" */;
 			buildPhases = (
 				6000000000000002 /* Sources */,
 				4000000000000001 /* Frameworks */,
@@ -782,7 +782,7 @@
 				143AE51A2F32EDCD00DFED42 /* Features */,
 				143AE5322F3335DE00DFED42 /* Resources */,
 			);
-			name = VideoEdit;
+			name = Aperture;
 			packageProductDependencies = (
 				14FFBDBD2F13194A00B96C92 /* Shimmer */,
 				14FC9ED42F16FB750053C019 /* Engine */,
@@ -802,7 +802,7 @@
 				14E2DD982F37DB760074AAEA /* AppInformation */,
 			);
 			productName = Claquette;
-			productReference = 3000000000000001 /* VideoEdit.app */;
+			productReference = 3000000000000001 /* Aperture.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -823,7 +823,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 7000000000000001 /* Build configuration list for PBXProject "VideoEdit" */;
+			buildConfigurationList = 7000000000000001 /* Build configuration list for PBXProject "Aperture" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -857,7 +857,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6000000000000001 /* VideoEdit */,
+				6000000000000001 /* Aperture */,
 			);
 		};
 /* End PBXProject section */
@@ -926,7 +926,7 @@
 				144E65E92F0961ED00D044AD /* OpenFileOrFolderButton.swift in Sources */,
 				1431F83C2F24F619000855C6 /* VideoOutputView.swift in Sources */,
 				1400C94B2F04C472001EF209 /* ExportFormat+Model.swift in Sources */,
-				1000000000000001 /* VideoEditApp.swift in Sources */,
+				1000000000000001 /* ApertureApp.swift in Sources */,
 				14FC9EC42F14B1C20053C019 /* VolumeHUD.swift in Sources */,
 				1000000000000002 /* ContentView.swift in Sources */,
 				1000000000000005 /* ScreenRecorder.swift in Sources */,
@@ -1023,7 +1023,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		7000000000000004 /* Debug configuration for PBXProject "VideoEdit" */ = {
+		7000000000000004 /* Debug configuration for PBXProject "Aperture" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1087,7 +1087,7 @@
 			};
 			name = Debug;
 		};
-		7000000000000005 /* Release configuration for PBXProject "VideoEdit" */ = {
+		7000000000000005 /* Release configuration for PBXProject "Aperture" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1143,15 +1143,16 @@
 			};
 			name = Release;
 		};
-		7000000000000006 /* Debug configuration for PBXNativeTarget "VideoEdit" */ = {
+		7000000000000006 /* Debug configuration for PBXNativeTarget "Aperture" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = Aperture;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				AUTOMATION_APPLE_EVENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = VideoEdit/VideoEdit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1177,7 +1178,7 @@
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoEdit/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = VideoEdit;
+				INFOPLIST_KEY_CFBundleDisplayName = Aperture;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "VideoEdit uses Apple Events for Finder integration.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "VideoEdit needs access to your camera to add a camera overlay to your recordings.";
@@ -1190,7 +1191,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.philagora.VideoEdit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.philagora.aperture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -1204,7 +1205,7 @@
 			};
 			name = Debug;
 		};
-		7000000000000007 /* Release configuration for PBXNativeTarget "VideoEdit" */ = {
+		7000000000000007 /* Release configuration for PBXNativeTarget "Aperture" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1213,6 +1214,7 @@
 				AUTOMATION_APPLE_EVENTS = YES;
 				CODE_SIGN_ENTITLEMENTS = VideoEdit/VideoEdit.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1238,7 +1240,7 @@
 				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VideoEdit/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = VideoEdit;
+				INFOPLIST_KEY_CFBundleDisplayName = Aperture;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "VideoEdit uses Apple Events for Finder integration.";
 				INFOPLIST_KEY_NSCameraUsageDescription = "VideoEdit needs access to your camera to add a camera overlay to your recordings.";
@@ -1251,7 +1253,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.philagora.VideoEdit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.philagora.aperture;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				RUNTIME_EXCEPTION_ALLOW_DYLD_ENVIRONMENT_VARIABLES = NO;
@@ -1268,19 +1270,19 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7000000000000001 /* Build configuration list for PBXProject "VideoEdit" */ = {
+		7000000000000001 /* Build configuration list for PBXProject "Aperture" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7000000000000004 /* Debug configuration for PBXProject "VideoEdit" */,
-				7000000000000005 /* Release configuration for PBXProject "VideoEdit" */,
+				7000000000000004 /* Debug configuration for PBXProject "Aperture" */,
+				7000000000000005 /* Release configuration for PBXProject "Aperture" */,
 			);
 			defaultConfigurationName = Debug;
 		};
-		7000000000000003 /* Build configuration list for PBXNativeTarget "VideoEdit" */ = {
+		7000000000000003 /* Build configuration list for PBXNativeTarget "Aperture" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				7000000000000006 /* Debug configuration for PBXNativeTarget "VideoEdit" */,
-				7000000000000007 /* Release configuration for PBXNativeTarget "VideoEdit" */,
+				7000000000000006 /* Debug configuration for PBXNativeTarget "Aperture" */,
+				7000000000000007 /* Release configuration for PBXNativeTarget "Aperture" */,
 			);
 			defaultConfigurationName = Debug;
 		};

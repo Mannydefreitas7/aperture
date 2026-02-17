@@ -40,6 +40,10 @@ extension CaptureView {
             .foregroundStyle(store.isRecording ? .red : .secondary)
     }
 
+}
+
+extension CapturePlaceholder {
+
     @ViewBuilder
     func PlaceholderView() -> some View {
         VStack {

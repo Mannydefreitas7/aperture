@@ -7,7 +7,7 @@ import AppInformation
 //import ScreenCaptureKit
 
 @main
-struct VideoEditApp: App {
+struct ApertureApp: App {
     @StateObject private var appState = IAppState()
     @AppStorage(.onboardingKey) var showOnboarding: Bool = true
     @Environment(\.appInfo) var appInfo

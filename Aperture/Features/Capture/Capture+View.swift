@@ -33,9 +33,10 @@ struct CaptureView: View {
             
             ZStack(alignment: .bottom) {
 
-                PlaceholderView()
+                CapturePlaceholder(viewModel: store)
 
                 VideoPreview(viewModel: $store.videoInput)
+                    .onAppear(perform: store.onVideoAppear)
 
                 // MARK: Crop mask for selected ratio
                 MaskAspectRatioView()
@@ -43,9 +44,7 @@ struct CaptureView: View {
                 // MARK: Bottom bar content
                 BottomBar()
                     .opacity(isHoveringWindow ? 1.0 : 0.0)
-                    .task {
-                        await store.start()
-                    }
+
 
             }
             .environmentObject(store)
@@ -53,6 +52,15 @@ struct CaptureView: View {
             .environment(\.videoDevices, store.videoDevices)
             .task {
                 await store.initialize()
+                await store.start()
+            }
+            // Toolbar
+            .toolbar {
+
+                ToolbarSpacer()
+
+
+
             }
         }
         // Keep the window resizable but constrained to 16:9.

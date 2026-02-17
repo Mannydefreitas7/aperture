@@ -15,7 +15,7 @@ extension VideoInputView {
 
         private var session: CaptureSession = .init()
         private let deviceDescovery = DeviceDiscovery.shared
-        private let defaultDeviceId = AVDevice.defaultDevice(.video).id
+        private let defaultDevice: AVDevice = .defaultDevice(.video)
         private var cancellables: Set<AnyCancellable> = []
 
         var previewLayer: AVCaptureVideoPreviewLayer? = nil
@@ -31,7 +31,7 @@ extension VideoInputView {
         @ObservationIgnored
         @Preference(\.isMirrored) var isMirrored: Bool?
         @ObservationIgnored
-        @Preference(\.selectedVideoID) var selectedVideoID
+        @Preference(\.selectedVideoID) var storedVideoID
 
         var isRunning: Bool { currentSession.isRunning }
 
@@ -56,7 +56,7 @@ extension VideoInputView {
         }
 
         var currentDevice: AVDevice {
-            get async { await deviceDescovery.getDevice(withUniqueID: selectedVideoID) ?? .defaultDevice(.video) }
+            get async { await deviceDescovery.getDevice(withUniqueID: storedVideoID) ?? defaultDevice }
         }
 
         func setSession(_ session: CaptureSession) {
@@ -71,14 +71,10 @@ extension VideoInputView {
             await session.initialize()
 
             logger.info("Initialized capture session...")
-//            do {
-//                try  await session.addDeviceInputs(deviceDescovery.cameras)
-//            } catch {
-//                logger.error("Failed to add device inputs: \(error.localizedDescription)")
-//            }
-            selectedID = selectedVideoID
+            selectedID = storedVideoID
 
-            if let device = await deviceDescovery.getDevice(withUniqueID: selectedVideoID) {
+            if let device = await deviceDescovery.getDevice(withUniqueID: storedVideoID) {
+                previousDevice = device
                 selectedDevice = device
                 logger.info("Selected device: \(device.name)")
             }
@@ -89,7 +85,6 @@ extension VideoInputView {
             do {
                 logger.info("Starting with device \(self.selectedDevice.name)")
                 previousDevice = selectedDevice
-
                // try await connectDevice(selectedDevice)
                 try await session.addDeviceInput(selectedDevice)
             } catch {

@@ -17,11 +17,13 @@ extension CaptureView {
         // Device discovery actor
         private let deviceDiscovery: DeviceDiscovery = .shared
 
+        @ObservationIgnored
+        @Preference(\.selectedVideoID) var selectedVideoID
+
         @Published private(set) var recordingDuration: TimeInterval = 0
         /// Waveform / meters
         @Published var audioLevel: Float = 0
         @Published var audioHistory: [Double] = []
-        @Published var selectedVideoDevice: AVDevice = .defaultDevice(.video)
         @Published var selectedAudioDevice: AVDevice = .defaultDevice(.audio)
         /// View models
         @Published var downsampledMagnitudes: [Float] = []
@@ -29,6 +31,8 @@ extension CaptureView {
         @Published var isRecording: Bool = false
         @Published var url: URL?
         @Published var error: CaptureError?
+        @Published var isConnecting: Bool = false
+        @Published var hasConnectionTimeout: Bool = false
 
         @Published var videoInput: VideoInputView.ViewModel = .init()
         @Published var audioInput: AudioInputView.ViewModel = .init()
@@ -56,7 +60,13 @@ extension CaptureView {
             /// Configure + start the single underlying session.
             logger.debug("Starting capture engine")
             /// Audio service
-
+            $isConnecting
+                .map { $0.isTruthy }
+                // If after 5 seconds we are still attemting,
+                // to make a connection to device, then timeout.
+                .delay(for: .seconds(10), scheduler: RunLoop.main)
+                .assign(to: \.hasConnectionTimeout, on: self)
+                .store(in: &cancellables)
             ///
             //downsampledMagnitudes = await captureSession.downsampledMagnitudes
             //fftMagnitudes = await captureSession.fftMagnitudes
@@ -83,7 +93,8 @@ extension CaptureView {
         func selectDevice(_ device: AVDevice) async {
             let isVideo = device.kind == .video
             if isVideo {
-                selectedVideoDevice = device
+                videoInput.selectedDevice = device
+                selectedVideoID = device.id
                 return
             }
             selectedAudioDevice = device
@@ -92,7 +103,16 @@ extension CaptureView {
 
         ///
         func start() async {
+            isConnecting = true
             await videoInput.start()
+        }
+
+
+        func onVideoAppear() {
+            isConnecting = false
+            hasConnectionTimeout = false
+
+            videoInput.selectedDevice.isOn = true
         }
 //
 //        /// Switch to a specific device

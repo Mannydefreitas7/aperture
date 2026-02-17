@@ -14,3 +14,9 @@ enum CaptureError: Error {
     case unknown(reason: String)
     case outputFileNotFound(url: URL, reason: String)
 }
+
+enum ConnectionError: Error {
+    case timeout
+    case deviceNotAvailable
+    case unknown(reason: String)
+}

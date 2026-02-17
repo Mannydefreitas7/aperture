@@ -37,9 +37,9 @@ struct DeviceLoading: View {
 }
 struct DeviceConnectionLoading: View {
     let device: AVDevice
-    let leftIcon: SFSymbol
-    let rightIcon: SFSymbol
-    let duration: TimeInterval
+    private let leftIcon: SFSymbol
+    private let rightIcon: SFSymbol
+    private let duration: TimeInterval = 3
 
     @State private var leftVisible = false
     @State private var rightVisible = false
@@ -48,15 +48,11 @@ struct DeviceConnectionLoading: View {
     private let dotCount = 12
 
     init(
-        _ device: AVDevice,
-        leftIcon: SFSymbol = .cameraAperture,
-        rightIcon: SFSymbol = .video,
-        duration: TimeInterval = 3
+        _ device: AVDevice
     ) {
         self.device = device
-        self.leftIcon = leftIcon
-        self.rightIcon = rightIcon
-        self.duration = duration
+        self.leftIcon = .macwindow
+        self.rightIcon = device.symbol
     }
 
     var body: some View {

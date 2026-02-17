@@ -14,6 +14,7 @@ struct CaptureWindow: Scene {
             CaptureView()
                 .frame(minWidth: .minWindowWidth, minHeight: .minWindowHeight)
                 .isHovering()
+                .ignoresSafeArea(edges: .top)
         }
         .commands {
             // General Commands
