@@ -97,6 +97,7 @@ iOSInjectionProject/
 
 # macOS
 .DS_Store
+Aperture/.DS_Store
 .AppleDouble
 .LSOverride
 
