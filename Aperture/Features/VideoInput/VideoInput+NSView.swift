@@ -11,7 +11,7 @@ import AVFoundation
 class VideoInputNSView: NSView {
     var previewLayer: AVCaptureVideoPreviewLayer?
 
-    var session: AVCaptureSession? {
+    var session: CaptureSession? {
         didSet {
             setupPreviewLayer()
         }
@@ -39,7 +39,7 @@ class VideoInputNSView: NSView {
 
         guard let session = session else { return }
 
-        let layer = AVCaptureVideoPreviewLayer(session: session)
+        let layer = AVCaptureVideoPreviewLayer(session: session.current)
         layer.videoGravity = .resizeAspectFill
         layer.frame = bounds
 

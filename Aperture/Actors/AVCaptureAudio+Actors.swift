@@ -62,7 +62,7 @@ actor AVAudioSampleListener {
     func setup(using connection: AVCaptureConnection?) throws {
         guard let connection, connection.isActive else { return }
         connection.audioChannels.forEach {
-            logger.info("\($0.averagePowerLevel) \($0.peakHoldLevel) \($0.volume)")
+            Console.info("\($0.averagePowerLevel) \($0.peakHoldLevel) \($0.volume)")
             peakLevel = $0.averagePowerLevel
         }
     }

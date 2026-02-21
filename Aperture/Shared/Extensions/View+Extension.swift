@@ -18,5 +18,28 @@ extension View {
     func styleMask(_ styles: Binding<NSWindow.StyleMask>) -> some View {
         modifier(WindowStyleMask(mask: styles))
     }
+
+    func onDisplay(layer: Binding<Layer>, action: @escaping () -> Void) -> some View {
+        onAppear {
+            layer.visibility.wrappedValue = .visible
+            action()
+        }
+    }
+
+    func onDisplay(layer: Binding<Layer>) -> some View {
+        onAppear {
+            layer.wrappedValue.visibility = .visible
+        }
+    }
+
+    func onDisplay(action: @escaping () -> Void) -> some View {
+        onAppear(perform: action)
+    }
+
+    func onDisappear(layer: Binding<Layer>) -> some View {
+        onDisappear {
+            layer.wrappedValue.visibility = .hidden
+        }
+    }
 }
 

@@ -18,18 +18,20 @@ extension VideoInputView {
             }
         } label: {
             Image(systemSymbol: .xmark)
-                .colorScheme(viewModel.isRunning ? .dark : .light)
                 .imageScale(.small)
         }
         .buttonStyle(.glass)
         .buttonBorderShape(.circle)
+        .colorScheme(viewModel.connected ? .light : .dark)
 
     }
 
     @ViewBuilder
     func ToolButton() -> some View {
         HStack(spacing: .small / 2) {
+            //
             Toggle(isOn: $viewModel.selectedDevice.isOn) {
+                //
                 Image(systemSymbol: .video)
                     .symbolVariant(viewModel.selectedDevice.isOn ? .none : .slash)
                     .contentTransition(.symbolEffect(.replace))
@@ -62,7 +64,7 @@ extension VideoInputView {
                 }
             }
         }
-        .frame(maxWidth: viewModel.showSettings ? .previewVideoWidth : nil)
+        .frame(maxWidth: viewModel.showSettings ? (.previewVideoWidth - .bottomPadding) : nil)
     }
 
     @ViewBuilder
@@ -75,12 +77,18 @@ extension VideoInputView {
                 currentDevice: viewModel.selectedDevice
             )
 
-            DeviceConnectionLoading(viewModel.selectedDevice)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if viewModel.hasSession && viewModel.isConnecting {
+                DeviceConnectionLoading(viewModel.selectedDevice)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
 
             if viewModel.isRunning {
+
                 VideoPreview(viewModel: $viewModel)
                         .clipShape(.rect(cornerRadius: .large, style: .continuous))
+                        .animation(.bouncy, value: viewModel.isRunning)
+                        .onDisplay(layer: $viewModel.videoLayer)
+                        .onDisappear(layer: $viewModel.videoLayer)
             }
 
             HStack {
@@ -109,7 +117,9 @@ extension VideoInputView {
             }
             .padding(.medium)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+
         }
         .frame(width: .previewVideoWidth, height: .popoverWidth)
+        .animation(.bouncy, value: viewModel.showSettings)
     }
 }

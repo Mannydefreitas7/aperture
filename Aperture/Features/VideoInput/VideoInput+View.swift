@@ -39,6 +39,5 @@ struct VideoInputView: View {
                         namespace: controlGroup
                     )
             }
-    }
-
+      }
 }

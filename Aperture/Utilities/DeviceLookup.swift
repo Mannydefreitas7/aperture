@@ -63,7 +63,7 @@ final class DeviceLookup {
 
     var microphones : [AVCaptureDevice] {
         let devices = audioDiscoverySession.devices
-        logger.info("devices \(devices)")
+        Console.info("devices \(devices)")
         return devices
     }
 }

@@ -75,24 +75,24 @@ actor AVAudioLevelMonitor: NSObject, AVCaptureAudioDataOutputSampleBufferDelegat
     /// Verifies that the audio input is properly connected to the audio data output.
     func verifyAudioConfiguration(_ audioInput: AVCaptureDeviceInput?) {
         guard let audioInput else {
-            logger.error("No active audio input configured!")
+            Console.error("No active audio input configured!")
             return
         }
 
-        logger.debug("Active audio device: \(audioInput.device.localizedName)")
+        Console.info("Active audio device: \(audioInput.device.localizedName)")
 
         // Check if the audio data output has a valid connection
         if let audioConnection = audioDataOutput.connection(with: .audio) {
-            logger.debug("Audio connection found - enabled: \(audioConnection.isEnabled), active: \(audioConnection.isActive)")
+            Console.info("Audio connection found - enabled: \(audioConnection.isEnabled), active: \(audioConnection.isActive)")
 
             if !audioConnection.isEnabled {
-                logger.warning("Audio connection is disabled. Attempting to enable...")
+                Console.warning("Audio connection is disabled. Attempting to enable...")
                 audioConnection.isEnabled = true
             }
         } else {
-            logger.error("⚠️ NO AUDIO CONNECTION - This is why you're getting zeros!")
-            logger.error("Audio input ports: \(audioInput.ports)")
-            logger.error("Audio output connections: \(self.audioDataOutput.connections)")
+            Console.error("⚠️ NO AUDIO CONNECTION - This is why you're getting zeros!")
+            Console.error("Audio input ports: \(audioInput.ports)")
+            Console.error("Audio output connections: \(self.audioDataOutput.connections)")
         }
     }
 

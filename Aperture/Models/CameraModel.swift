@@ -79,7 +79,7 @@ final class CameraModel: Camera {
             observeState()
             status = .running
         } catch {
-            logger.error("Failed to start capture service. \(error)")
+            Console.error("Failed to start capture service. \(error)")
             status = .failed
         }
     }

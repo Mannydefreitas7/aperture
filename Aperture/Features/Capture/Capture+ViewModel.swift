@@ -59,7 +59,7 @@ extension CaptureView {
 
         func initialize() async {
             /// Configure + start the single underlying session.
-            logger.debug("Starting capture engine")
+            Console.info("Starting capture engine")
             /// Audio service
             $isConnecting
                 .map { $0.isTruthy }
@@ -69,7 +69,7 @@ extension CaptureView {
                 .assign(to: \.hasConnectionTimeout, on: self)
                 .store(in: &cancellables)
             /// Switch to default devices
-            logger.info("Switch to default devices")
+            Console.info("Switch to default devices")
             videoDevices = deviceDiscovery.discoverDevices(.video)
             audioDevices = deviceDiscovery.discoverDevices(.audio)
         }
@@ -83,7 +83,7 @@ extension CaptureView {
         /// Mute device
         func muteDevice(_ device: AVDevice) async {
            // await captureSession.toggleMute(device.isOn)
-            logger.info("Mute device: \(device.name)")
+            Console.info("Mute device: \(device.name)")
         }
 
         /// Select device
@@ -112,7 +112,7 @@ extension CaptureView {
 
         func onDeviceChange(previousId: AVDevice.ID, newId: AVDevice.ID?) {
             Task {
-                logger.info("\(String(describing: #fileID)) - onceDeviceChange(): previousId: \(previousId), newId: \(String(describing: newId))")
+                Console.info("\(String(describing: #fileID)) - onceDeviceChange(): previousId: \(previousId), newId: \(String(describing: newId))")
                 await mainSession.onChangeDevice(previousId: previousId, newId: newId)
             }
         }
@@ -122,14 +122,14 @@ extension CaptureView {
 //            let isVideo = device.kind == .video
 //            /// Current device
 //            let currentDevice = isVideo ? selectedVideoDevice : selectedAudioDevice
-//            logger.info("No input or device to switch to: \(device.name)")
+//            Console.info("No input or device to switch to: \(device.name)")
 //            do {
 //                try await engine.removeInput(for: currentDevice)
 //                var newValue = device
 //                newValue.isOn = isOn
 //                try await engine.addInput(for: newValue)
 //            } catch {
-//                logger.error("Failed to remove input: \(error.localizedDescription)")
+//                Console.error("Failed to remove input: \(error.localizedDescription)")
 //                try? await engine.addInput(for: currentDevice)
 //            }
 //        }

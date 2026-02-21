@@ -18,6 +18,7 @@ struct RecordingToolbar: View {
             if viewModel.showRecordButton {
                 // MARK: - Record button
                 RecordCircleButton()
+                    
                     .transition(
                         .move(edge: .bottom)
                         .combined(with: .blurReplace)
@@ -61,5 +62,6 @@ struct RecordingToolbar: View {
                 }
             }
         }
+        .animation(.bouncy, value: viewModel.showRecordButton)
     }
 }

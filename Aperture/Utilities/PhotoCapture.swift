@@ -180,13 +180,13 @@ private class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
     }
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingLivePhotoToMovieFileAt outputFileURL: URL, duration: CMTime, photoDisplayTime: CMTime, resolvedSettings: AVCaptureResolvedPhotoSettings, error: Error?) {
         if let error {
-            logger.debug("Error processing Live Photo companion movie: \(String(describing: error))")
+            Console.info("Error processing Live Photo companion movie: \(String(describing: error))")
         }
         livePhotoMovieURL = outputFileURL
     }
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishCapturingDeferredPhotoProxy deferredPhotoProxy: AVCaptureDeferredPhotoProxy?, error: Error?) {
         if let error = error {
-            logger.debug("Error capturing deferred photo: \(error)")
+            Console.info("Error capturing deferred photo: \(error)")
             return
         }
         // Capture the data for this photo.
@@ -197,7 +197,7 @@ private class PhotoCaptureDelegate: NSObject, AVCapturePhotoCaptureDelegate {
 
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         if let error = error {
-            logger.debug("Error capturing photo: \(String(describing: error))")
+            Console.info("Error capturing photo: \(String(describing: error))")
             return
         }
         photoData = photo.fileDataRepresentation()

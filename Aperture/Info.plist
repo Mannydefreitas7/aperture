@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Aperture</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -28,25 +28,21 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.philagora.aperture</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Aperture</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundlePrimaryIcon</key>
-	<string>AppIcon</string>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.0</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.video</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>26.0</string>
-	<key>LSUIElement</key>
-	<false/>
 	<key>MetalCaptureEnabled</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
@@ -61,16 +57,10 @@
 	<string>Aperture needs access to save recordings to your Downloads.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
-	<key>NSMainStoryboardFile</key>
-	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Aperture needs microphone access to record audio.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Aperture needs access to your Photos library to save recorded videos and export them to your photo collection.</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>NSRequiresAquaSystemAppearance</key>
-	<false/>
 	<key>NSScreenCaptureUsageDescription</key>
 	<string>Aperture needs screen recording permission to capture your screen.</string>
 	<key>NSSupportsAutomaticGraphicsSwitching</key>

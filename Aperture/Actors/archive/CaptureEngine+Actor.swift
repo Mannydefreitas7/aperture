@@ -235,7 +235,7 @@ actor CaptureEngine {
             //activeVideoInput = try addInput(for: defaultCamera)
            // activeAudioInput = try addInput(for: defaultMic)
 
-            logger.info("active audio input \(String(describing: self.activeAudioInput))")
+            Console.info("active audio input \(String(describing: self.activeAudioInput))")
             try addOutput(photoCapture.output)
             // Configure the session preset based on the current capture mode.
             captureSession.sessionPreset = captureMode == .photo ? .photo : .hd4K3840x2160
@@ -280,7 +280,7 @@ actor CaptureEngine {
         activeAudioOutput = await audioLevelMonitor.startMonitor()
         // This is lightweight and does not create a second AVCaptureSession.
         guard captureSession.canAddOutput(activeAudioOutput) else {
-            logger.error("Cannot add audio data output to capture session.")
+            Console.error("Cannot add audio data output to capture session.")
             return
         }
 
@@ -288,22 +288,22 @@ actor CaptureEngine {
 
         //
         guard let audioConnection = activeAudioOutput.connection(with: .audio) else {
-            logger.error("No audio connection found for audioDataOutput. Audio samples will be empty.")
+            Console.error("No audio connection found for audioDataOutput. Audio samples will be empty.")
             return
         }
 
         guard audioConnection.isEnabled else {
-            logger.warning("Audio connection exists but is disabled.")
+            Console.warning("Audio connection exists but is disabled.")
             audioConnection.isEnabled = true
             // Retries
-            logger.warning("Retrieving audio data output connection.")
+            Console.warning("Retrieving audio data output connection.")
             try await addAudioMonitor()
             return
         }
 
 
 
-        logger.info("Audio data output successfully connected to audio input.")
+        Console.info("Audio data output successfully connected to audio input.")
         return
     }
 
@@ -326,7 +326,7 @@ actor CaptureEngine {
             if captureSession.canAddControl(control) {
                 captureSession.addControl(control)
             } else {
-                logger.info("Unable to add control \(control).")
+                Console.info("Unable to add control \(control).")
             }
         }
 
@@ -357,7 +357,7 @@ actor CaptureEngine {
                         device.setFocusModeLocked(lensPosition: lensPosition)
                         device.unlockForConfiguration()
                     } catch {
-                        logger.info("Unable to change the lens position: \(error)")
+                        Console.info("Unable to change the lens position: \(error)")
                     }
                 }
                 // Add the slider the controls array.
@@ -475,7 +475,7 @@ actor CaptureEngine {
             for await camera in systemPreferredCamera.changes {
                 // If the SPC isn't the currently selected camera, attempt to change to that device.
                 if let camera, currentDevice != camera {
-                    logger.debug("Switching camera selection to the system-preferred camera.")
+                    Console.info("Switching camera selection to the system-preferred camera.")
                     changeCaptureDevice(to: camera)
                 }
             }
@@ -502,7 +502,7 @@ actor CaptureEngine {
             // Perform a user-initiated focus and expose.
             try focusAndExpose(at: devicePoint, isUserInitiated: true)
         } catch {
-            logger.debug("Unable to perform focus and exposure operation. \(error)")
+            Console.info("Unable to perform focus and exposure operation. \(error)")
         }
     }
 
@@ -576,8 +576,8 @@ actor CaptureEngine {
 
         await audioLevelMonitor.verifyAudioConfiguration(activeAudioInput)
         // Log all session inputs and outputs for debugging
-        logger.debug("Session inputs: \(self.captureSession.inputs.count)")
-        logger.debug("Session outputs: \(self.captureSession.outputs.count)")
+        Console.info("Session inputs: \(self.captureSession.inputs.count)")
+        Console.info("Session outputs: \(self.captureSession.outputs.count)")
     }
 
     private func yieldAudioSample(_ sbuf: CMSampleBuffer) {
@@ -636,7 +636,7 @@ actor CaptureEngine {
                 isHDRVideoEnabled = false
             }
         } catch {
-            logger.error("Unable to obtain lock on device and can't enable HDR video capture.")
+            Console.error("Unable to obtain lock on device and can't enable HDR video capture.")
         }
     }
 

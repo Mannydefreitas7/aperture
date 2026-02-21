@@ -107,7 +107,7 @@ extension CaptureEngine {
             _ = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
             return checkScreenRecordingPermission()
         } catch {
-            logger.error("Failed to request screen recording permission: \(error)")
+            Console.error("Failed to request screen recording permission: \(error)")
             throw ScreenCaptureError.permissionDenied
         }
     }
@@ -131,7 +131,7 @@ extension CaptureEngine {
                 applications: content.applications
             )
         } catch {
-            logger.error("Failed to get available screen capture content: \(error)")
+            Console.error("Failed to get available screen capture content: \(error)")
             throw ScreenCaptureError.permissionDenied
         }
     }

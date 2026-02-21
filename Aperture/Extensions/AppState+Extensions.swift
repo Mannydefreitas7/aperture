@@ -65,9 +65,9 @@ final class IAppState: ObservableObject {
     }
 
     func startCapture() async {
-        logger.info("Capture engine status: \(self.status == .idle ? "idle" : "running")")
+        Console.info("Capture engine status: \(self.status == .idle ? "idle" : "running")")
         guard status == .idle else {
-            logger.debug("Capture engine is running")
+            Console.info("Capture engine is running")
             return
         }
         do {
@@ -75,15 +75,15 @@ final class IAppState: ObservableObject {
             try await captureState.initialize()
             status = .running
         } catch {
-            logger.error("Capture error: \(error.localizedDescription)")
+            Console.error("Capture error: \(error.localizedDescription)")
             status = .failed(message: "Failed to initialize capture engine")
         }
     }
 
     func endCapture() async {
-        logger.info("Ending capture engine...")
+        Console.info("Ending capture engine...")
         guard status == .running else {
-            logger.debug("Capture engine is not running")
+            Console.info("Capture engine is not running")
             return
         }
         status = .idle

@@ -41,17 +41,7 @@ extension RecordingToolbar {
 
         init() {
 
-            videoInput.$showSettings
-                .receive(on: RunLoop.main)
-                .map { $0.isTruthy ? AVMediaType.video : nil }
-                .assign(to: \.showSettings, on: self)
-                .store(in: &cancellables)
 
-            audioInput.$showSettings
-                .receive(on: RunLoop.main)
-                .map { $0.isTruthy ? AVMediaType.audio : nil }
-                .assign(to: \.self.showSettings, on: self)
-                .store(in: &cancellables)
 
 //            $microphone
 //                .drop(while: { $0.showSettings.isFalsy })
@@ -82,19 +72,46 @@ extension RecordingToolbar {
 
         func prepare() async {
             // Initialization
-            logger.info("\(String(describing: self)) - prepare(): initializing preview session")
+            Console.info("initializing preview session")
             await previewSession.initialize()
+            // Connecting the video input
+            if !videoInput.hasSession {
+                Console.info("connecting video input")
+                videoInput.setSession(previewSession.currentSession)
+
+                //
+                $videoInput
+                    .receive(on: RunLoop.main)
+                    .print("\(String(describing: #function))")
+                    .drop(while: { $0.selectedDevice.isOn && $0.connected })
+                    .sink(receiveValue: { $0.start() })
+                    .store(in: &cancellables)
+
+                Publishers.CombineLatest($videoInput, $audioInput)
+                    .receive(on: RunLoop.main)
+                    .map(\.0.selectedDevice, \.1.selectedDevice)
+                    .map { devices in devices.0.isOn || devices.1.isOn }
+                    .assign(to: \.showRecordButton, on: self)
+                    .store(in: &cancellables)
+            }
+        }
+
+        func start() async {
+            Console.info("\(String(describing: self)).\(String(describing: #function)) - starting preview session")
+            Task(priority: .background) {
+                _ = await previewSession.start(with: videoInput.selectedDevice, audioInput.selectedDevice)
+            }
         }
 
         func destroy() async {
             // Destroying the view
-            logger.info("\(String(describing: self)) - destroy(): deinitializing preview session")
+            Console.info("\(String(describing: self)).\(String(describing: #function)) - deinitializing preview session")
             await previewSession.stop()
         }
 
         func onDeviceChange(previousId: AVDevice.ID, newId: AVDevice.ID?) {
             Task {
-                logger.info("\(String(describing: #fileID)) - onceDeviceChange(): previousId: \(previousId), newId: \(String(describing: newId))")
+                Console.info("\(String(describing: #fileID)).\(String(describing: #function)) - previousId: \(previousId), newId: \(String(describing: newId))")
                 await previewSession.onChangeDevice(previousId: previousId, newId: newId)
             }
         }

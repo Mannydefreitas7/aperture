@@ -37,7 +37,7 @@ struct DeviceLoading: View {
     }
 }
 struct DeviceConnectionLoading: View {
-    let device: AVDevice?
+    let device: AVDevice
     private let leftIcon: SFSymbol
     private var rightIcon: SFSymbol
     private let duration: TimeInterval = 3
@@ -49,16 +49,13 @@ struct DeviceConnectionLoading: View {
     private let dotCount = 12
 
     init(
-        _ device: AVDevice?,
+        _ device: AVDevice,
         leftIcon: SFSymbol = .macwindow,
         rightIcon: SFSymbol = .macwindow
     ) {
         self.device = device
         self.leftIcon = .macwindow
-        if let symbol = device?.symbol {
-            self.rightIcon = symbol
-        }
-        self.rightIcon = rightIcon
+        self.rightIcon = device.symbol
     }
 
     var body: some View {
@@ -109,8 +106,9 @@ struct DeviceConnectionLoading: View {
                     try? await Task.sleep(for: .seconds(tailDelay))
                 }
             }
-            Text("Connecting to \(String(describing: device?.name))")
+            Text("Connecting to \(device.name)")
                 .font(.caption)
+                .padding(.top, .small)
                 .shimmering(animation: .easeInOut.repeatForever().speed(duration / Double(dotCount)), mode: .mask)
         }
     }

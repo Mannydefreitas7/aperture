@@ -25,6 +25,3 @@ struct ApertureApp: App {
     }
 }
 
-
-// General logger
-let logger = Logger(subsystem: AppInfo.current.id, category: "DEVELOPMENT")

@@ -4,7 +4,7 @@
 //
 //  Created by Emmanuel on 2026-02-19.
 //
-
+import Foundation
 
   struct Layer: Identifiable {
 

@@ -24,7 +24,7 @@ struct CapturePlaceholder: View {
                         //
                 }
 
-            } else if isConnecting {
+            } else if let currentDevice, isConnecting {
                     // If the device is connecting,
                     // display connection loader.
                 DeviceConnectionLoading(currentDevice)

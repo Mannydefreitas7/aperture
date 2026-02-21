@@ -19,7 +19,7 @@ struct HeartBeatModifier: ViewModifier {
                 if isBeating == false {
                     withAnimation(
                         .easeInOut(duration: 1.5 / 2)
-                        .repeatForever(autoreverses: true)
+                            .repeatForever(autoreverses: true)
                     ) {
                         isBeating = true
                     }

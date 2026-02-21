@@ -12,20 +12,20 @@ class CaptureControlsDelegate: NSObject, AVCaptureSessionControlsDelegate {
     @Published private(set) var isShowingFullscreenControls = false
 
     func sessionControlsDidBecomeActive(_ session: AVCaptureSession) {
-        logger.debug("Capture controls active.")
+        Console.info("Capture controls active.")
     }
 
     func sessionControlsWillEnterFullscreenAppearance(_ session: AVCaptureSession) {
         isShowingFullscreenControls = true
-        logger.debug("Capture controls will enter fullscreen appearance.")
+        Console.info("Capture controls will enter fullscreen appearance.")
     }
     
     func sessionControlsWillExitFullscreenAppearance(_ session: AVCaptureSession) {
         isShowingFullscreenControls = false
-        logger.debug("Capture controls will exit fullscreen appearance.")
+        Console.info("Capture controls will exit fullscreen appearance.")
     }
     
     func sessionControlsDidBecomeInactive(_ session: AVCaptureSession) {
-        logger.debug("Capture controls inactive.")
+        Console.info("Capture controls inactive.")
     }
 }

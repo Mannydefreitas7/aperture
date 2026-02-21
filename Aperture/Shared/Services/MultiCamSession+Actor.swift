@@ -38,7 +38,7 @@ actor MultiCamSession {
     func addDeviceInput(_ device: AVDevice) throws {
         let input = try device.input
         guard session.canAddInput(input) else {
-            logger.error("Device \(device.name) cannot be added to multi-cam session.")
+            Console.error("Device \(device.name) cannot be added to multi-cam session.")
             throw AVError(_nsError: .init(domain: "COULD NOT ADD INPUT", code: AVError.deviceNotConnected.rawValue))
         }
 

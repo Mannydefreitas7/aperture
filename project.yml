@@ -15,6 +15,10 @@ configs:
   Debug: debug
   Release: release
 
+configFiles:
+  Debug: config/debug.xcconfig
+  Release: config/release.xcconfig
+
 packages:
   SFSafeSymbols:
     url: https://github.com/SFSafeSymbols/SFSafeSymbols
@@ -61,6 +65,7 @@ targets:
     deploymentTarget: "26.0"
     sources:
       - path: Aperture
+        type: group
         excludes:
           - "**/.DS_Store"
       - path: Aperture/Assets.xcassets
@@ -130,73 +135,9 @@ targets:
         com.apple.security.temporary-exception.mach-lookup.global-name:
           - com.apple.screencapture.interactive
           - com.apple.audio.toolbox.AURemoteIO
-    settings:
-      base:
-        PRODUCT_NAME: Aperture
-        PROJECT_NAME: Aperture
-        PRODUCT_BUNDLE_IDENTIFIER: com.philagora.aperture
-        DEVELOPMENT_TEAM: "FUU334NWUK"
-        CODE_SIGN_STYLE: Automatic
-        CODE_SIGN_IDENTITY: "Apple Development"
-        ENABLE_HARDENED_RUNTIME: true
-        MACOSX_DEPLOYMENT_TARGET: "26.0"
-        SWIFT_VERSION: "5.10"
-        MARKETING_VERSION: "1.0.0"
-        CURRENT_PROJECT_VERSION: "1"
-        GENERATE_INFOPLIST_FILE: false
-        INFOPLIST_FILE: Aperture/Info.plist
-        CODE_SIGN_ENTITLEMENTS: Aperture/Aperture.entitlements
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-        ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS: YES
-        ENABLE_FILE_ACCESS_PICTURE_FOLDER: true
-        ENABLE_FILE_ACCESS_MOVIES_FOLDER: true
-        ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER: true
-        ENABLE_RESOURCE_ACCESS_AUDIO_INPUT: true
-        ENABLE_RESOURCE_ACCESS_CAMERA: true
-        ENABLE_USER_SELECTED_FILES: true
-        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        ASSETCATALOG_COMPILER_GENERATE_ASSET_SYMBOLS: YES
-        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
-        COMBINE_HIDPI_IMAGES: true
-        SWIFT_EMIT_LOC_STRINGS: true
-        SWIFT_OBJC_BRIDGING_HEADER: ""
-        SWIFT_STRICT_CONCURRENCY: minimal
-        GCC_C_LANGUAGE_STANDARD: c17
-        CLANG_CXX_LANGUAGE_STANDARD: "c++20"
-        METAL_ENABLE_DEBUG_INFO: true
-        MTL_ENABLE_DEBUG_INFO: true
-        INFOPLIST_KEY_CFBundleDisplayName: Aperture
-        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.photo-video
-        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Aperture needs access to your photo library to import photos."
-        ENABLE_STRICT_OBJC_MSGSEND: true
-        ENABLE_TESTABILITY: false
-        CLANG_ENABLE_MODULES: true
-        CLANG_ENABLE_OBJC_ARC: true
-        OTHER_LDFLAGS:
-          - "-framework AVFoundation"
-          - "-framework ScreenCaptureKit"
-          - "-framework CoreMedia"
-          - "-framework AVKit"
-          - "-framework Accelerate"
-          - "-framework Metal"
-          - "-framework CoreAudio"
-          - "-framework AudioToolbox"
-      configs:
-        Debug:
-          SWIFT_ACTIVE_COMPILATION_CONDITIONS:
-            - DEBUG
-          SWIFT_OPTIMIZATION_LEVEL: "-Onone"
-          GCC_OPTIMIZATION_LEVEL: "0"
-          ONLY_ACTIVE_ARCH: true
-          ENABLE_TESTABILITY: true
-        Release:
-          SWIFT_OPTIMIZATION_LEVEL: "-O"
-          SWIFT_COMPILATION_MODE: wholemodule
-          GCC_OPTIMIZATION_LEVEL: "3"
-          ENABLE_TESTABILITY: false
-          LLVM_LTO: true
-          DEAD_CODE_STRIPPING: true
-          STRIP_INSTALLED_PRODUCT: true
+    configFiles:
+      Debug: config/debug.xcconfig
+      Release: config/release.xcconfig
     dependencies:
       - package: SFSafeSymbols
       - package: Pow

@@ -20,6 +20,7 @@ extension String {
 
     static let notAvailable: Self  = "Not available"
     static let notAvailbleDescription: Self = "Select a device from the menu below."
+    static let currentOperationPath: Self = "\(String(#file))|\(String(#function))|\(String(#line)) -"
 
     var applicationName: Self {
         return Bundle.appName

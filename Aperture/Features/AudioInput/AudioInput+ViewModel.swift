@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import Combine
 
 extension AudioInputView {
 
@@ -15,11 +16,11 @@ extension AudioInputView {
 
         //var selectedDevice: AVDevice = .defaultDevice(.audio)
         
-        @ObservationIgnored
-        @Published public var showSettings: Bool = false
+        
+        public var showSettings: Bool = false
 
-        @ObservationIgnored
-        @Published public var selectedDevice: AVDevice = .defaultDevice(.audio)
+
+        public var selectedDevice: AVDevice = .defaultDevice(.audio)
 
         @ObservationIgnored
         @Published public var availableDevices: [AVDevice] = []
