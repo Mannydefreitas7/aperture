@@ -16,10 +16,11 @@ import AVFoundation
     // session
     private var session: CaptureSession = .init()
     private var cancellables: Set<AnyCancellable> = []
+    private var sessionName: String = .unknown
     // View related
     var currentSession: CaptureSession { session }
     var previewLayer: AVCaptureVideoPreviewLayer? = nil
-    var sessionError: CaptureError? = nil
+    var sessionError: SessionError? = nil
     var previewVideoID = AVDevice.defaultDevice(.video).id
     var previewAudioID = AVDevice.defaultDevice(.audio).id
     // Conditions
@@ -27,70 +28,53 @@ import AVFoundation
     var hasConnectionTimeout: Bool = false
     var showRecordButton: Bool = false
     // Initialize
-    func initialize() async {
+    func initialize(_ name: String) async throws {
         guard !session.current.isRunning else {
-            Console.warning("\(String.currentOperationPath) Session is already running, skipping initialization")
-            return
+            Console.info("Session (\(name)) is already running")
+            throw SessionError.alreadyRunning(name: name)
         }
+        sessionName = name
         await session.initialize()
-        Console.info("\(String(describing: #function)) - Initialized capture session...")
     }
 
     // Start
-    func start(with devices: AVDevice...) async -> Bool {
+    func start(with devices: AVDevice...) async throws -> Bool {
         guard session.current.isRunning else {
-            Console.info("\(String(describing: #function)) - Called while session is not running, ignored as session is not running.")
-            Console.info("\(String(describing: #function)) - Will try calling initialize() a second time.")
-            await initialize()
-            return false
+            throw SessionError.notRunning(name: sessionName)
         }
-        do {
-            for device in devices {
-                Console.info("\(String(describing: #function)) - Starting with \(device.kind.rawValue) device \(device.name)")
-                try await session.addDeviceInput(device)
-            }
-            return session.current.isRunning
-        } catch {
-            Console.error("\(String(describing: #function)) - Failed to add device input: \(error.localizedDescription)")
-            sessionError = .noVideo
+        for device in devices {
+            try await session.addDeviceInput(device)
+            Console.info("Adding device (\(device.kind.rawValue))\(device.name) to \(sessionName)")
         }
-        return false
+        return session.current.isRunning
     }
 
-    func onChangeDevice(previousId: AVDevice.ID, newId: AVDevice.ID?) async {
-        guard let newId, let newDevice = deviceDescovery.getDevice(withUniqueID: newId) else {
-            sessionError = .unknown(reason: "Could not change device for ID \(newId ?? "Unknown")")
-            return
+    func onChangeDevice(previousId: AVDevice.ID, newDevice: AVDevice) async throws {
+        guard let newDevice = deviceDescovery.getDevice(withUniqueID: newDevice.id) else {
+            throw SessionError.deviceNotFound(name: newDevice.name, session: sessionName)
         }
-        do {
-            // Ensure that the changed device is different
-            // than the previous selected id.
-            guard let previousDevice = deviceDescovery.getDevice(withUniqueID: previousId) else {
-                try await session.addDeviceInput(newDevice)
-                return
-            }
-            // Renmove the previous device input
-            try await session.removeInput(for: previousDevice)
-            Console.warning("\(String(describing: #function)) - Successfully removed device: \(previousDevice.name)")
-            // when previous input is successfully removed from session
-            // add new device to running session
+        // Ensure that the changed device is different
+        // than the previous selected id.
+        guard let previousDevice = deviceDescovery.getDevice(withUniqueID: previousId) else {
             try await session.addDeviceInput(newDevice)
-            Console.info("\(String(describing: #function)) - Successfully changed device to \(newDevice.name)")
-        } catch {
-            sessionError = .unknown(reason: "Could not change device for \(newDevice.name)")
+            throw SessionError.deviceAlreadyAdded(name: newDevice.name, session: sessionName)
         }
+        // Renmove the previous device input
+        try await session.removeInput(for: previousDevice)
+        Console.warning("Removed device: \(previousDevice.name)")
+        // when previous input is successfully removed from session
+        // add new device to running session
+        try await session.addDeviceInput(newDevice)
+        Console.info("Changed device to \(newDevice.name)")
     }
 
-    func stop(input devices: AVDevice...) async {
-        do {
-            for device in devices {
-                try await session.removeInput(for: device)
-                Console.info("\(String(describing: #function)) - Removing \(device.kind.rawValue)-\(device.name)")
-            }
-            await session.stop()
-        } catch {
-            Console.error("\(String(describing: #function)) - Failed to remove device input: \(error.localizedDescription)")
+    func stop(input devices: AVDevice...) async throws {
+        // Loop thru all devices passed down and remove input from session.
+        for device in devices {
+            try await session.removeInput(for: device)
+            Console.info("Removing \(device.kind.rawValue)-\(device.name)")
         }
+        await session.stop()
     }
 
     private func inputPort(for device: AVDevice, in session: AVCaptureSession) -> AVCaptureInput.Port? {

@@ -21,6 +21,8 @@ extension String {
     static let notAvailable: Self  = "Not available"
     static let notAvailbleDescription: Self = "Select a device from the menu below."
     static let currentOperationPath: Self = "\(String(#file))|\(String(#function))|\(String(#line)) -"
+    static let defaultVideoId: String = AVDevice.defaultDevice(.video).id
+    static let defaultAudioId: String = AVDevice.defaultDevice(.audio).id
 
     var applicationName: Self {
         return Bundle.appName
@@ -77,5 +79,6 @@ extension String {
 
         static let selectedAudioVolume: Self = "selected_audio_volume"
         static let unknown: Self = "unknown"
+
 
 }

@@ -12,66 +12,47 @@ extension VideoInputView {
 
     @MainActor
     @Observable public class ViewModel {
-
-        private var cancellables: Set<AnyCancellable> = []
+        // Session
         private var session: CaptureSession? = nil
-
+        private var cancellables: Set<AnyCancellable> = []
+        // Layer
         var previewLayer: AVCaptureVideoPreviewLayer? = nil
         //
-        var isConnecting: Bool = false
-        var connected: Bool = false
-        var videoLayer: Layer = .init(name: "Video")
-        var hasConnectionTimeout: Bool = false
+        public var hasConnectionTimeout: Bool = false
         // Computed
         var currentSession: CaptureSession { session ?? .init() }
         var hasSession: Bool { session != nil }
         var isRunning: Bool { currentSession.current.isRunning }
         //
+        public var isConnecting: Bool = false
+
+        public var videoLayer: Layer = .video
+        public var placeholderLayer: Layer = .placeholder
+        public var deviceId: AVDevice.ID = .defaultVideoId
         public var showSettings: Bool = false
         public var selectedDevice: AVDevice = .defaultDevice(.video)
+        public var selectedID: AVDevice.ID? = .defaultVideoId
+        @ObservationIgnored
+        @Preference(\.isMirrored) var isMirrored
         //
-        @ObservationIgnored
-        @Published public var availableDevices: [AVDevice] = []
-        @ObservationIgnored
-        @Published public var deviceId: AVDevice.ID = AVDevice.defaultDevice(.video).id
-        @ObservationIgnored
-        @Preference(\.selectedVideoID) var selectedVideoID: AVDevice.ID?
-        @ObservationIgnored
-        @Preference(\.isMirrored) var isMirrored: Bool?
-
-        init() {
-
-            var isConnected = Published(wrappedValue: connected)
-            isConnected.projectedValue.receive(on: RunLoop.main)
-                .print("\(String(describing: #fileID)).\(String(describing: #function))")
-                //.ignoreOutput()
-                .sink(receiveValue: { _ in })
-                .store(in: &cancellables)
-
-
-        }
 
         func setSession(_ session: CaptureSession) {
             self.session = session
+            setDevice()
         }
 
-        func onAppear() {
-            Console.info("\(String(describing: #fileID)).\(String(describing: #function)) - Appear")
-            videoLayer.visibility = .visible
-        }
 
         func onDisappear() {
-            Console.info("\(String(describing: #fileID)).\(String(describing: #function)) - Disappear")
-            connected = false
+            Console.info("\(videoLayer.name) is hidden")
+            videoLayer.visibility = .hidden
         }
 
-        func start() {
+        private func setDevice() {
             // Start the video input
-            Console.info(" Start video input session")
-            if let selectedVideoID, let device = DeviceDiscovery.shared.getDevice(withUniqueID: selectedVideoID) {
+            if let selectedID, let device = DeviceDiscovery.shared.getDevice(withUniqueID: selectedID) {
                 // start session with device
-                Console.info("User has a default stored video id, using that: \(selectedVideoID)")
-                deviceId = selectedVideoID
+                Console.info("User has a default stored video id \(selectedID), setting video to \(selectedDevice.name)")
+                deviceId = selectedID
                 selectedDevice = device
             }
         }

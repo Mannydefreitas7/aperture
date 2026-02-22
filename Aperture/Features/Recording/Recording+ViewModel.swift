@@ -11,7 +11,7 @@ import AVFoundation
 extension RecordingToolbar {
 
     @MainActor
-    final class ViewModel : ObservableObject {
+    @Observable final class ViewModel {
 
         private var cancellables: Set<AnyCancellable> = []
         private var previewSession: SessionStore = .init()
@@ -20,7 +20,15 @@ extension RecordingToolbar {
         var isRecording: Bool = false
         var isTimerEnabled: Bool = false
         var timerSelection: TimeInterval.Option = .threeSeconds
-        @Published var showRecordButton: Bool = false
+        var showRecordButton: Bool  {
+            if videoInput.selectedDevice.isOn {
+                return videoInput.showSettings.isFalsy
+            }
+            if audioInput.selectedDevice.isOn {
+                return audioInput.showSettings.isFalsy
+            }
+            return false
+        }
         /// Waveform / meters
         var audioLevel: Float = 0
         var audioHistory: [Double] = []
@@ -29,59 +37,18 @@ extension RecordingToolbar {
         var spacing: CGFloat { isTimerEnabled || isRecording ? .small : .zero }
         var toggleAnimation: Bool { isRecording || isTimerEnabled }
         // Inputs
-        @Published var videoInput: VideoInputView.ViewModel = .init()
-        @Published var audioInput: AudioInputView.ViewModel = .init()
-        @Published var showingSettings: AVMediaType? = nil
-        @Published var sessionStarted: Bool = false
+        var videoInput: VideoInputView.ViewModel = .init()
+        var audioInput: AudioInputView.ViewModel = .init()
+
+        var showingSettings: AVMediaType? = nil
+        var sessionStarted: Bool = false
         // Selected audio.
         @ObservationIgnored
         @Preference(\.selectedAudioID) var selectedAudioID: AVDevice.ID?
         // Computed properties
-        var isAudioInputEnabled: Bool { audioInput.selectedDevice.isOn.isTruthy }
-        var isVideoInputEnabled: Bool { videoInput.selectedDevice.isOn.isTruthy }
+       // var isAudioInputEnabled: Bool { audioInput.selectedDevice.isOn.isTruthy }
+       // var isVideoInputEnabled: Bool { videoInput.selectedDevice.isOn.isTruthy }
         var isSessionRunning: Bool { previewSession.currentSession.current.isRunning }
-
-        init() {
-
-            videoInput.$selectedDevice
-                .receive(on: RunLoop.main)
-                .merge(with: audioInput.$selectedDevice)
-                .map(\.isOn, \.showSettings)
-                .map { isOn, showSettings in isOn && !showSettings }
-                .assign(to: \.showRecordButton, on: self)
-                .store(in: &cancellables)
-
-
-            $videoInput
-                .map(\.showSettings)
-                .map(\.isTruthy)
-                .map { $0 ? AVMediaType.video : nil }
-                .receive(on: RunLoop.main)
-                .assign(to: \.showingSettings, on: self)
-                .store(in: &cancellables)
-
-            $audioInput
-                .map(\.showSettings)
-                .map(\.isTruthy)
-                .map { $0 ? AVMediaType.audio : nil }
-                .receive(on: RunLoop.main)
-                .assign(to: \.showingSettings, on: self)
-                .store(in: &cancellables)
-
-            videoInput.$videoLayer
-                .drop(while: { $0.visibility == .hidden })
-                .map { $0.visibility == .visible }
-                .receive(on: RunLoop.main)
-                .asyncSink { layer in
-                    Task { @MainActor in
-                        if layer && self.sessionStarted == false {
-                            await self.start()
-                        }
-                    }
-                }
-                .store(in: &cancellables)
-        }
-
 
         func prepare() async {
             // Initialization
@@ -97,14 +64,16 @@ extension RecordingToolbar {
             }
         }
 
-        func start() async {
-            guard sessionStarted == false else { return }
+        func start(_ visibility: Layer.Visibility)  {
+            guard sessionStarted == false && visibility == .visible else { return }
             Console.info("Starting preview session")
+            Task {
                 do {
                     sessionStarted = try await previewSession.start(with: videoInput.selectedDevice)
                 } catch {
                     Console.error("\(error.localizedDescription)")
                 }
+            }
         }
 
         func turn(_ on: Bool) async {

@@ -50,6 +50,7 @@ struct RecordingToolbar: View {
                         .onChange(of: viewModel.videoInput.deviceId) { previousId, newId in
                              viewModel.onDeviceChange(previousId: previousId, newId: newId)
                         }
+                        .onChange(of: viewModel.videoInput.videoLayer.visibility) { (_, newValue) in  viewModel.start(newValue) }
                 }
                 .animation(.bouncy, value: viewModel.toggleAnimation)
                 .glassEffectTransition(.matchedGeometry)

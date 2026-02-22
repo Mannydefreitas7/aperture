@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import Observation
 
 extension View {
     /// Injects a live `Binding<NSWindow.StyleMask>` for the current window into the environment.
@@ -28,6 +28,7 @@ extension View {
 
     func onDisplay(layer: Binding<Layer>) -> some View {
         onAppear {
+            Console.info("\(layer.name) is now visible")
             layer.wrappedValue.visibility = .visible
         }
     }

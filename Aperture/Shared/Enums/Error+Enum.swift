@@ -20,3 +20,11 @@ enum ConnectionError: Error {
     case deviceNotAvailable
     case unknown(reason: String)
 }
+
+enum SessionError: Error {
+    case alreadyRunning(name: String)
+    case notRunning(name: String)
+    case deviceAlreadyAdded(name: String, session: String)
+    case deviceNotFound(name: String, session: String)
+    case unknown(reason: String)
+}

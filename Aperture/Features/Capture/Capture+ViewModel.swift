@@ -75,9 +75,13 @@ extension CaptureView {
         }
 
         func onDisappear() async {
-            await mainSession.stop(input: videoInput.selectedDevice, audioInput.selectedDevice)
-            videoDevices = []
-            audioDevices = []
+            do {
+                try await mainSession.stop(input: videoInput.selectedDevice, audioInput.selectedDevice)
+                videoDevices = []
+                audioDevices = []
+            } catch {
+                Console.error(error.localizedDescription)
+            }
         }
 
         /// Mute device
@@ -100,8 +104,12 @@ extension CaptureView {
 
         ///
         func start() async {
-            isConnecting = true
-             _ = await mainSession.start(with: videoInput.selectedDevice, audioInput.selectedDevice)
+            do {
+                isConnecting = true
+                _ = try await mainSession.start(with: videoInput.selectedDevice, audioInput.selectedDevice)
+            } catch {
+                Console.error("Failed to start capture session: \(error.localizedDescription)")
+            }
         }
 
 
@@ -112,8 +120,13 @@ extension CaptureView {
 
         func onDeviceChange(previousId: AVDevice.ID, newId: AVDevice.ID?) {
             Task {
-                Console.info("\(String(describing: #fileID)) - onceDeviceChange(): previousId: \(previousId), newId: \(String(describing: newId))")
-                await mainSession.onChangeDevice(previousId: previousId, newId: newId)
+                do {
+                    Console.info("PreviousId: \(previousId), newId: \(String(describing: newId))")
+                    guard let newId, let device = DeviceDiscovery.shared.getDevice(withUniqueID: newId) else { return }
+                    try await mainSession.onChangeDevice(previousId: previousId, newDevice: device)
+                } catch {
+                    Console.error(error.localizedDescription)
+                }
             }
         }
 //

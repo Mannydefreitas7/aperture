@@ -35,10 +35,10 @@ extension RecordingToolbar {
 
     @ViewBuilder
     func SettingsButtonView() -> some View {
-        SettingsButton(isOn: $viewModel.isSettingsPresented)
-            .padding(.horizontal, .small)
-            .frame(height: .minHeight)
-            .glassEffect()
+//        SettingsButton(isOn: $viewModel.isSettingsPresented)
+//            .padding(.horizontal, .small)
+//            .frame(height: .minHeight)
+//            .glassEffect()
     }
 
     @ToolbarContentBuilder

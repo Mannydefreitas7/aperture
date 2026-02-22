@@ -11,9 +11,8 @@ import Accelerate
 actor CaptureSession {
 
     // Capture session
-   nonisolated
+    nonisolated
     private let session: AVCaptureSession = .init()
-
     /// Session Outputs
     private let audioDataOutput: AVCaptureAudioDataOutput = .init()
     private let metadataOutput: AVCaptureMetadataOutput = .init()
@@ -44,9 +43,7 @@ actor CaptureSession {
     }
 
    nonisolated
-   var current: AVCaptureSession {
-         session
-   }
+   var current: AVCaptureSession { session }
 
     // 1. The configuration parameter for the FFT
     internal let bufferSize = 8192
@@ -63,9 +60,11 @@ actor CaptureSession {
 
     // initialize
     func initialize(width preset: AVCaptureSession.Preset = .hd1920x1080) {
-
         // Ensures to initiate the session only if not already starting.
-        guard !session.isRunning else { return }
+        guard !session.isRunning else {
+            Console.error("Session is already running")
+            return
+        }
 
         // Outputs + delegates
         audioDataOutput.setSampleBufferDelegate(outputDelegate, queue: sessionAudioQueue)
@@ -110,15 +109,12 @@ actor CaptureSession {
         guard let existingInput = session.inputs
             .compactMap({ $0 as? AVCaptureDeviceInput })
             .first(where: { $0.device.uniqueID == device.id }) else {
-            Console.error("Session does not contain input for device: \(device.name)")
-            return
+            throw ConnectionError.deviceNotAvailable
         }
 
-        Console.info("Removing input: \(existingInput.device.localizedName)")
         session.beginConfiguration()
         session.removeInput(existingInput)
         session.commitConfiguration()
-        Console.info("Input removed: \(existingInput.device.localizedName)")
     }
 
     // remove connection
@@ -135,49 +131,23 @@ actor CaptureSession {
         session.commitConfiguration()
     }
 
-    // add device input
-    func addDeviceInput(_ device: AVDevice) throws {
-
+    func addDeviceInput(_ devices: AVDevice...) throws {
+        // Checking if session is running.
         guard session.isRunning else {
-            Console.error("Session is not running. Cannot add input.")
+            Console.error("Session \(session.sessionPreset.rawValue) is not running.")
             throw AVError(.sessionNotRunning)
         }
-
         // Begin changes to the current session without restarting
         session.beginConfiguration()
-        Console.info("Session is running. Adding input...")
-        let input = try device.input
-        // Check whether device isn't already in use by this or another session
-        guard session.canAddInput(input) else {
-            Console.error("Device \(device.name) is already in use by another session.")
-            throw AVError(_nsError: .init(domain: "COULD NOT ADD INPUT", code: AVError.deviceNotConnected.rawValue))
-        }
-        // add input to the session
-        Console.info("Adding input \(input.device.localizedName) to the session.")
-        session.addInput(input)
-        session.commitConfiguration()
-        Console.info("Input \(input.device.localizedName) added to the session.")
-    }
-
-    func addDeviceInputs(_ devices: [AVDevice]) async throws {
-        guard session.isRunning else {
-            Console.error("Session is not running. Cannot add input.")
-            throw AVError(.sessionNotRunning)
-        }
-
-            // Begin changes to the current session without restarting
-        session.beginConfiguration()
-        Console.info("Session is running. Adding inputs...")
 
         for device in devices {
             let input = try device.input
+            Console.info("Device input \(device.name) added to the session.")
             guard session.canAddInput(input) else {
-                Console.error("Device \(device.name) is already in use by another session.")
-                throw AVError(_nsError: .init(domain: "COULD NOT ADD INPUT", code: AVError.deviceNotConnected.rawValue))
+                continue
             }
-                // add input to the session
-            Console.info("Adding input \(input.device.localizedName) to the session.")
-            session.addInputWithNoConnections(input)
+            // add input to the session
+            session.addInput(input)
         }
         session.commitConfiguration()
         Console.info("\(devices.count) Inputs added to the session.")

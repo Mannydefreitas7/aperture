@@ -5,6 +5,7 @@
 //  Created by Emmanuel on 2026-02-06.
 //
 import SwiftUI
+import SFSafeSymbols
 
 extension VideoInputView {
 
@@ -12,17 +13,15 @@ extension VideoInputView {
 
     @ViewBuilder
     func ToolCloseButton() -> some View {
-        Button {
+        Button(.closeButton, systemImage: SFSymbol.xmark.rawValue, role: .close) {
             withAnimation(.bouncy) {
                 viewModel.showSettings = false
             }
-        } label: {
-            Image(systemSymbol: .xmark)
-                .imageScale(.small)
         }
-        .buttonStyle(.glass)
+        .labelStyle(.iconOnly)
         .buttonBorderShape(.circle)
-        .colorScheme(viewModel.connected ? .light : .dark)
+        .fontWeight(.bold)
+        .colorScheme(viewModel.videoLayer.visibility == .hidden ? .light : .dark)
 
     }
 
@@ -39,6 +38,7 @@ extension VideoInputView {
                     .frame(width: .recordWidth)
             }
             .toggleStyle(.secondary)
+            .disabled(viewModel.showSettings)
             .animation(.bouncy, value: viewModel.selectedDevice.isOn)
 
             if viewModel.selectedDevice.isOn {
@@ -76,13 +76,15 @@ extension VideoInputView {
                 hasConnectionTimeout: $viewModel.hasConnectionTimeout,
                 currentDevice: viewModel.selectedDevice
             )
+            .onDisplay(layer: $viewModel.placeholderLayer)
+            .onDisappear(layer: $viewModel.placeholderLayer)
 
             if viewModel.hasSession && viewModel.isConnecting {
                 DeviceConnectionLoading(viewModel.selectedDevice)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 
-            if viewModel.isRunning {
+            if viewModel.isRunning && viewModel.showSettings {
 
                 VideoPreview(viewModel: $viewModel)
                         .clipShape(.rect(cornerRadius: .large, style: .continuous))
@@ -107,7 +109,17 @@ extension VideoInputView {
                     .controlSize(.extraLarge)
                     .glassEffect()
 
+
                     Spacer()
+
+                Toggle("", systemImage: SFSymbol.trapezoidAndLineVertical.rawValue, isOn: $viewModel.isMirrored)
+                    .labelsHidden()
+                    .labelStyle(.iconOnly)
+                    .controlSize(.extraLarge)
+                    .toggleStyle(.button)
+                    .buttonBorderShape(.circle)
+                    .buttonSizing(.fitted)
+                    .buttonStyle(.glassProminent)
 
             }
             .padding(.small)

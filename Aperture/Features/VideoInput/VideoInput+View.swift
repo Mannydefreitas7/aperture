@@ -24,20 +24,17 @@ struct VideoInputView: View {
             if viewModel.showSettings {
                     ToolBarOptions()
                         .glassEffect(.regular, in: .rect(cornerRadius: .large))
-                        .toolEffectUnion(
-                            id: .settings,
-                            namespace: controlGroup
-                        )
-                }
 
+            } else {
                 ToolButton()
                     .frame(height: .minHeight)
                     .padding(.horizontal, .small)
                     .glassEffect(.regular, in: .capsule)
-                    .toolEffectUnion(
-                        id: viewModel.selectedDevice.isOn ? .video : .options,
-                        namespace: controlGroup
-                    )
             }
-      }
+        }
+        .toolEffectUnion(
+            id: viewModel.selectedDevice.isOn ? .video : .options,
+            namespace: controlGroup
+        )
+    }
 }
